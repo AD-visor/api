@@ -6,6 +6,9 @@ dependencies {
     implementation(project(":content:presentation"))
     implementation(project(":subscription:presentation"))
     implementation(project(":payment:presentation"))
+
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks.getByName("bootJar") {
