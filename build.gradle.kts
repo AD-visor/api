@@ -36,12 +36,9 @@ subprojects {
 
 	dependencies {
 		// Spring
+		implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.6"))
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-		// Lombok
-		compileOnly("org.projectlombok:lombok")
-		annotationProcessor("org.projectlombok:lombok")
 
 		// Test
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
