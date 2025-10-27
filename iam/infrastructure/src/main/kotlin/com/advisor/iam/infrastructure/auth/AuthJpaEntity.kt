@@ -1,7 +1,7 @@
 package com.advisor.iam.infrastructure.auth
 
 import com.advisor.api.common.core.domain.vo.identifier.AuthId
-import com.advisor.api.common.core.domain.vo.identifier.UserId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.iam.domain.auth.Auth
 import com.advisor.iam.domain.auth.AuthProps
 import jakarta.persistence.*
@@ -11,10 +11,10 @@ import java.time.Instant
 @Table(name = "auth")
 class AuthJpaEntity(
     @Id
-    val id: String,
+    val id: Long,
 
     @Column
-    val userId: String,
+    val memberId: Long,
 
     @Embedded
     val refreshToken: RefreshTokenEmbeddable,
@@ -37,7 +37,7 @@ class AuthJpaEntity(
     companion object {
         fun toDomain(jpaEntity: AuthJpaEntity): Auth {
             val authProps = AuthProps(
-                userId = UserId(jpaEntity.userId.toLong()),
+                memberId = MemberId(jpaEntity.memberId),
                 refreshToken = RefreshTokenEmbeddable.toDomain(jpaEntity.refreshToken),
                 oAuthCredential = OAuthCredentialEmbeddable.toDomain(jpaEntity.oAuthCredential),
                 createdAt = jpaEntity.createdAt,
@@ -46,13 +46,13 @@ class AuthJpaEntity(
                 deletedAt = jpaEntity.deletedAt
             )
 
-            return Auth.of(AuthId(jpaEntity.userId.toLong()), authProps)
+            return Auth.of(AuthId(jpaEntity.memberId), authProps)
         }
 
         fun toPersistence(domain: Auth): AuthJpaEntity {
             return AuthJpaEntity(
-                id = domain.id.value.toString(),
-                userId = domain.userId.toString(),
+                id = domain.id.value,
+                memberId = domain.memberId.value,
                 refreshToken = RefreshTokenEmbeddable.toPersistence(domain.refreshToken),
                 oAuthCredential = OAuthCredentialEmbeddable.toPersistence(domain.oAuthCredential),
                 createdAt = domain.createdAt,

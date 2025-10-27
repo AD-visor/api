@@ -2,7 +2,7 @@ package com.advisor.iam.domain.auth
 
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.AuthId
-import com.advisor.api.common.core.domain.vo.identifier.UserId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.iam.domain.auth.vo.OAuthCredential
 import com.advisor.iam.domain.auth.vo.RefreshToken
 import java.time.Instant
@@ -48,7 +48,7 @@ class Auth(
 
     val refreshToken: RefreshToken get() = props.refreshToken
     val oAuthCredential: OAuthCredential get() = props.oAuthCredential
-    val userId: UserId get() = props.userId
+    val memberId: MemberId get() = props.memberId
     val createdAt: Instant get() = props.createdAt
     val updatedAt: Instant get() = props.updatedAt
     val isDeleted: Boolean get() = props.isDeleted
