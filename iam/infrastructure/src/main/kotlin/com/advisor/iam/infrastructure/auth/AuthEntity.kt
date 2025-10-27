@@ -9,7 +9,7 @@ import java.time.Instant
 
 @Entity
 @Table(name = "auth")
-class AuthJpaEntity(
+class AuthEntity(
     @Id
     val id: Long,
 
@@ -35,7 +35,7 @@ class AuthJpaEntity(
     val deletedAt: Instant?
 ) {
     companion object {
-        fun toDomain(jpaEntity: AuthJpaEntity): Auth {
+        fun toDomain(jpaEntity: AuthEntity): Auth {
             val authProps = AuthProps(
                 memberId = MemberId(jpaEntity.memberId),
                 refreshToken = jpaEntity.refreshToken?.let { RefreshTokenEmbeddable.toDomain(it) },
@@ -49,8 +49,8 @@ class AuthJpaEntity(
             return Auth.of(AuthId(jpaEntity.memberId), authProps)
         }
 
-        fun toPersistence(domain: Auth): AuthJpaEntity {
-            return AuthJpaEntity(
+        fun toPersistence(domain: Auth): AuthEntity {
+            return AuthEntity(
                 id = domain.id.value,
                 memberId = domain.memberId.value,
                 refreshToken = domain.refreshToken?.let { RefreshTokenEmbeddable.toPersistence(it) },

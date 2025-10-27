@@ -1,6 +1,5 @@
 package com.advisor.iam.infrastructure.auth
 
-import com.advisor.api.common.core.domain.vo.identifier.AuthId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.iam.domain.auth.Auth
@@ -12,7 +11,7 @@ class AuthStoreImpl(
     private val authJpaRepository: AuthJpaRepository
 ): AuthStore {
     override fun save(auth: Auth) {
-        val jpaEntity = AuthJpaEntity.toPersistence(auth)
+        val jpaEntity = AuthEntity.toPersistence(auth)
         authJpaRepository.save(jpaEntity)
     }
 
@@ -22,6 +21,6 @@ class AuthStoreImpl(
             "[Auth] ${id}에 해당하는 유저의 인증 정보가 존재하지 않습니다."
         ) }
 
-        return AuthJpaEntity.toDomain(jpaEntity)
+        return AuthEntity.toDomain(jpaEntity)
     }
 }
