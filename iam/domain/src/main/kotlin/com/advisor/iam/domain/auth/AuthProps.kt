@@ -6,7 +6,7 @@ import com.advisor.iam.domain.auth.vo.RefreshToken
 import java.time.Instant
 
 data class AuthProps(
-    val refreshToken: RefreshToken,
+    val refreshToken: RefreshToken?,
     val oAuthCredential: OAuthCredential,
     val memberId: MemberId,
     val createdAt: Instant,

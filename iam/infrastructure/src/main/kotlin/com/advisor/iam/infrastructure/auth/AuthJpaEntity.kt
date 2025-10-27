@@ -17,7 +17,7 @@ class AuthJpaEntity(
     val memberId: Long,
 
     @Embedded
-    val refreshToken: RefreshTokenEmbeddable,
+    val refreshToken: RefreshTokenEmbeddable?,
 
     @Embedded
     val oAuthCredential: OAuthCredentialEmbeddable,
@@ -38,7 +38,7 @@ class AuthJpaEntity(
         fun toDomain(jpaEntity: AuthJpaEntity): Auth {
             val authProps = AuthProps(
                 memberId = MemberId(jpaEntity.memberId),
-                refreshToken = RefreshTokenEmbeddable.toDomain(jpaEntity.refreshToken),
+                refreshToken = jpaEntity.refreshToken?.let { RefreshTokenEmbeddable.toDomain(it) },
                 oAuthCredential = OAuthCredentialEmbeddable.toDomain(jpaEntity.oAuthCredential),
                 createdAt = jpaEntity.createdAt,
                 updatedAt = jpaEntity.updatedAt,
@@ -53,7 +53,7 @@ class AuthJpaEntity(
             return AuthJpaEntity(
                 id = domain.id.value,
                 memberId = domain.memberId.value,
-                refreshToken = RefreshTokenEmbeddable.toPersistence(domain.refreshToken),
+                refreshToken = domain.refreshToken?.let { RefreshTokenEmbeddable.toPersistence(it) },
                 oAuthCredential = OAuthCredentialEmbeddable.toPersistence(domain.oAuthCredential),
                 createdAt = domain.createdAt,
                 updatedAt = domain.updatedAt,

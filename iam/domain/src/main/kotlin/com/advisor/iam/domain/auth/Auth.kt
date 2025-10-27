@@ -46,7 +46,7 @@ class Auth(
         ))
     }
 
-    val refreshToken: RefreshToken get() = props.refreshToken
+    val refreshToken: RefreshToken? get() = props.refreshToken
     val oAuthCredential: OAuthCredential get() = props.oAuthCredential
     val memberId: MemberId get() = props.memberId
     val createdAt: Instant get() = props.createdAt
