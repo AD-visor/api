@@ -17,5 +17,15 @@ enum class AuthDomainExceptionCode(
         status = ErrorStatus.BAD_REQUEST,
         code = "AUTH_REFRESH_TOKEN_BLANK",
         message = "[Auth] Refresh Token은 필수입니다."
+    ),
+    AUTH_REFRESH_TOKEN_JTI_BLANK(
+        status = ErrorStatus.BAD_REQUEST,
+        code = "AUTH_REFRESH_TOKEN_JTI_BLANK",
+        message = "[Auth] jti는 필수 입니다."
+    ),
+    AUTH_REFRESH_TOKEN_EXPIRED(
+        status = ErrorStatus.BAD_REQUEST,
+        code = "AUTH_REFRESH_TOKEN_EXPIRED",
+        message = "[Auth] 만료된 토큰 입니다."
     )
 }
