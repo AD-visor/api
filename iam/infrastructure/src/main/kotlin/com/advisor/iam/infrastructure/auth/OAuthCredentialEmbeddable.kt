@@ -8,13 +8,13 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 class OAuthCredentialEmbeddable (
-    @Column(nullable = false)
+    @Column(name = "oauth_provider", nullable = false)
     val provider: String,
 
-    @Column(nullable = false)
+    @Column(name = "oauth_id", nullable = false)
     val oAuthId: String,
 
-    @Column
+    @Column(name = "oauth_access_token")
     val accessToken: String?,
 ) {
     companion object {

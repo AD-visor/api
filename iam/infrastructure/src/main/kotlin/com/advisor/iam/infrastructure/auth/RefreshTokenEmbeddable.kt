@@ -8,16 +8,16 @@ import java.time.Instant
 
 @Embeddable
 class RefreshTokenEmbeddable (
-    @Column(nullable = false)
+    @Column(name = "refresh_token_token", nullable = false)
     val token: String,
 
-    @Column(nullable = false)
+    @Column(name = "refresh_token_jti", nullable = false)
     val jti: String,
 
-    @Column(nullable = false)
+    @Column(name = "refresh_token_created_at", nullable = false)
     val createdAt: Instant,
 
-    @Column(nullable = false)
+    @Column(name = "refresh_token_expires_at", nullable = false)
     val expiresAt: Instant
 ) {
     companion object {
