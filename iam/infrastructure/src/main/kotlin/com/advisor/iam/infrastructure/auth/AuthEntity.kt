@@ -46,7 +46,7 @@ class AuthEntity(
                 deletedAt = jpaEntity.deletedAt
             )
 
-            return Auth.of(AuthId(jpaEntity.memberId), authProps)
+            return Auth.of(AuthId(jpaEntity.id), authProps)
         }
 
         fun toPersistence(domain: Auth): AuthEntity {
