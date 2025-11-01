@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository
 class AuthReaderImpl(
     private val authViewMapper: AuthViewMapper
 ): AuthReader {
-    override fun findByMemberId(memberId: MemberId): AuthView {
-        val authEntity = authViewMapper.findByMemberId(memberId.value).orElseThrow{ CustomException(
+    override fun findByMemberId(memberId: Long): AuthView {
+        val authEntity = authViewMapper.findByMemberId(memberId).orElseThrow{ CustomException(
             AuthInfrastructureExceptionCode.AUTH_NOT_FOUND,
             "[Auth] ${memberId}에 해당하는 유저의 인증 정보가 존재하지 않습니다."
         ) }
