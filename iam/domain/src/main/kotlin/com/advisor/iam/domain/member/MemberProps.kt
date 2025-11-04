@@ -7,6 +7,6 @@ data class MemberProps(
     val email: Email,
     val createdAt: Instant,
     val updatedAt: Instant,
-    val isDeleted: Boolean,
-    val deletedAt: Instant?,
+    val isDeleted: Boolean = false,
+    val deletedAt: Instant? = null,
 )
