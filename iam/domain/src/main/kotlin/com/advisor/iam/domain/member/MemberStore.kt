@@ -4,5 +4,6 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 
 interface MemberStore {
     fun save(member: Member)
-    fun load(id: MemberId): Member
+    fun loadById(id: MemberId): Member
+    fun findById(id: MemberId): Member?
 }
