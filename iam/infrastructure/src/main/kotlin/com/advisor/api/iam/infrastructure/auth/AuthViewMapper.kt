@@ -1,4 +1,4 @@
-package com.advisor.iam.infrastructure.auth
+package com.advisor.api.iam.infrastructure.auth
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Param

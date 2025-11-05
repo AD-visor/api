@@ -1,4 +1,4 @@
-package com.advisor.iam.domain.auth.vo
+package com.advisor.api.iam.domain.auth.vo
 
 import java.time.Instant
 

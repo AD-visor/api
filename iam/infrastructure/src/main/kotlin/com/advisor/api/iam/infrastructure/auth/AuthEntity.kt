@@ -1,4 +1,4 @@
-package com.advisor.iam.infrastructure.auth
+package com.advisor.api.iam.infrastructure.auth
 
 import com.advisor.api.common.core.domain.vo.identifier.AuthId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
@@ -17,10 +17,10 @@ class AuthEntity(
     val memberId: Long,
 
     @Embedded
-    val refreshToken: RefreshTokenEmbeddable?,
+    val refreshToken: com.advisor.api.iam.infrastructure.auth.RefreshTokenEmbeddable?,
 
     @Embedded
-    val oAuthCredential: OAuthCredentialEmbeddable,
+    val oAuthCredential: com.advisor.api.iam.infrastructure.auth.OAuthCredentialEmbeddable,
 
     @Column(nullable = false)
     val createdAt: Instant,
@@ -35,11 +35,17 @@ class AuthEntity(
     val deletedAt: Instant?
 ) {
     companion object {
-        fun toDomain(jpaEntity: AuthEntity): Auth {
+        fun toDomain(jpaEntity: com.advisor.api.iam.infrastructure.auth.AuthEntity): Auth {
             val authProps = AuthProps(
                 memberId = MemberId(jpaEntity.memberId),
-                refreshToken = jpaEntity.refreshToken?.let { RefreshTokenEmbeddable.toDomain(it) },
-                oAuthCredential = OAuthCredentialEmbeddable.toDomain(jpaEntity.oAuthCredential),
+                refreshToken = jpaEntity.refreshToken?.let {
+                    com.advisor.api.iam.infrastructure.auth.RefreshTokenEmbeddable.Companion.toDomain(
+                        it
+                    )
+                },
+                oAuthCredential = com.advisor.api.iam.infrastructure.auth.OAuthCredentialEmbeddable.Companion.toDomain(
+                    jpaEntity.oAuthCredential
+                ),
                 createdAt = jpaEntity.createdAt,
                 updatedAt = jpaEntity.updatedAt,
                 isDeleted = jpaEntity.isDeleted,
@@ -49,12 +55,18 @@ class AuthEntity(
             return Auth.of(AuthId(jpaEntity.id), authProps)
         }
 
-        fun toPersistence(domain: Auth): AuthEntity {
-            return AuthEntity(
+        fun toPersistence(domain: Auth): com.advisor.api.iam.infrastructure.auth.AuthEntity {
+            return com.advisor.api.iam.infrastructure.auth.AuthEntity(
                 id = domain.id.value,
                 memberId = domain.memberId.value,
-                refreshToken = domain.refreshToken?.let { RefreshTokenEmbeddable.toPersistence(it) },
-                oAuthCredential = OAuthCredentialEmbeddable.toPersistence(domain.oAuthCredential),
+                refreshToken = domain.refreshToken?.let {
+                    com.advisor.api.iam.infrastructure.auth.RefreshTokenEmbeddable.Companion.toPersistence(
+                        it
+                    )
+                },
+                oAuthCredential = com.advisor.api.iam.infrastructure.auth.OAuthCredentialEmbeddable.Companion.toPersistence(
+                    domain.oAuthCredential
+                ),
                 createdAt = domain.createdAt,
                 updatedAt = domain.updatedAt,
                 isDeleted = domain.isDeleted,

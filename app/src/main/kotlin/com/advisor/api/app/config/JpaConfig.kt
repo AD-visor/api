@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "com.advisor.iam.infrastructure",
 ])
 @EnableJpaRepositories(basePackages = [
-    "com.advisor.iam.infrastructure",
+    "com.advisor.iam.infrastructure.auth",
 ])
 class JpaConfig

@@ -1,4 +1,4 @@
-package com.advisor.iam.infrastructure.auth
+package com.advisor.api.iam.infrastructure.auth
 
 import com.advisor.iam.domain.auth.AuthView
 import jakarta.persistence.Column

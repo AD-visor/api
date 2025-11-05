@@ -1,4 +1,4 @@
-package com.advisor.iam.infrastructure.auth
+package com.advisor.api.iam.infrastructure.auth
 
 import com.advisor.api.common.exception.CustomExceptionCode
 import com.advisor.api.common.exception.ErrorStatus

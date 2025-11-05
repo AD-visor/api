@@ -1,7 +1,7 @@
-package com.advisor.iam.domain.member.vo
+package com.advisor.api.iam.domain.member.vo
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.iam.domain.member.MemberDomainExceptionCode
+import com.advisor.api.iam.domain.member.MemberDomainExceptionCode
 
 data class Email(val value: String) {
     init { validate() }

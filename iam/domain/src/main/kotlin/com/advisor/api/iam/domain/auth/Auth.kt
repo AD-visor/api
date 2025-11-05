@@ -1,10 +1,10 @@
-package com.advisor.iam.domain.auth
+package com.advisor.api.iam.domain.auth
 
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.AuthId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.iam.domain.auth.vo.OAuthCredential
-import com.advisor.iam.domain.auth.vo.RefreshToken
+import com.advisor.api.iam.domain.auth.vo.OAuthCredential
+import com.advisor.api.iam.domain.auth.vo.RefreshToken
 import java.time.Instant
 
 class Auth(

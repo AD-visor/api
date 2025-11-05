@@ -1,7 +1,7 @@
-package com.advisor.iam.domain.auth.vo
+package com.advisor.api.iam.domain.auth.vo
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.iam.domain.auth.AuthDomainExceptionCode
+import com.advisor.api.iam.domain.auth.AuthDomainExceptionCode
 import java.time.Instant
 
 class RefreshToken(private val props: RefreshTokenProps) {
