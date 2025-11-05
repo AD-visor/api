@@ -6,11 +6,11 @@ plugins {
 	kotlin("plugin.jpa") version "1.9.25" apply false
 }
 
-allprojects {
-	group = "com.advisor"
-	version = "0.0.1-SNAPSHOT"
-	description = "advisor api server"
+group = "com.advisor"
+version = "0.0.1-SNAPSHOT"
+description = "advisor api server"
 
+allprojects {
 	repositories {
 		mavenCentral()
 	}
@@ -37,6 +37,7 @@ subprojects {
 	dependencies {
 		// Spring
 		implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.6"))
+		annotationProcessor(platform(("org.springframework.boot:spring-boot-dependencies:3.5.6")))
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 

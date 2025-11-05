@@ -6,11 +6,12 @@ object SecurityPathFilter {
     private val pathMatcher = AntPathMatcher()
 
     val PUBLIC_PATHS = arrayOf(
-        "/"
+        "/",
+        "/member/**"
     )
 
     val AUTH_PATHS = arrayOf(
-        "/"
+        "/auth"
     )
 
     val PROTECTED_PATHS = arrayOf(
