@@ -5,6 +5,7 @@ import com.advisor.api.app.config.security.SecurityPathFilter.PUBLIC_PATHS
 import com.advisor.api.app.config.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -17,13 +18,16 @@ class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .httpBasic { it.disable() }
             .csrf { it.disable() }
             .formLogin { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .cors { }
 
         http.authorizeHttpRequests {
             it.requestMatchers(*PUBLIC_PATHS).permitAll()
             it.requestMatchers(*AUTH_PATHS).permitAll()
+            it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             it.anyRequest().authenticated()
         }
 
