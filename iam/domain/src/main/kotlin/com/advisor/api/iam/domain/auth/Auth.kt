@@ -7,7 +7,7 @@ import com.advisor.api.iam.domain.auth.vo.OAuthCredential
 import com.advisor.api.iam.domain.auth.vo.RefreshToken
 import java.time.Instant
 
-class Auth(
+class Auth private constructor(
     id: AuthId,
     private val props: AuthProps
 ): AggregateRoot<AuthId>(id) {

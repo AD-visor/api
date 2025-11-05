@@ -19,7 +19,7 @@ class OAuthCredentialEmbeddable (
 ) {
     companion object {
         fun toDomain(oAuthCredentialEmbeddable: OAuthCredentialEmbeddable): OAuthCredential {
-            return OAuthCredential(OAuthCredentialProps(
+            return OAuthCredential.create(OAuthCredentialProps(
                 provider = OAuthProvider.fromString(oAuthCredentialEmbeddable.provider),
                 oAuthId = oAuthCredentialEmbeddable.oAuthId,
                 accessToken = oAuthCredentialEmbeddable.accessToken,

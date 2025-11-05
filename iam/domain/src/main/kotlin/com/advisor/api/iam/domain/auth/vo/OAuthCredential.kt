@@ -1,6 +1,6 @@
 package com.advisor.api.iam.domain.auth.vo
 
-class OAuthCredential (private val props: OAuthCredentialProps) {
+class OAuthCredential private constructor(private val props: OAuthCredentialProps) {
     init { validate() }
 
     companion object {

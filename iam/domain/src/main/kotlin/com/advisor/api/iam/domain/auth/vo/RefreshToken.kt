@@ -4,7 +4,7 @@ import com.advisor.api.common.exception.CustomException
 import com.advisor.api.iam.domain.auth.AuthDomainExceptionCode
 import java.time.Instant
 
-class RefreshToken(private val props: RefreshTokenProps) {
+class RefreshToken private constructor(private val props: RefreshTokenProps) {
     init { validate() }
 
     companion object {

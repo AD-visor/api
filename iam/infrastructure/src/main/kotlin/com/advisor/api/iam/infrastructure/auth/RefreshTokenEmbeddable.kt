@@ -22,7 +22,7 @@ class RefreshTokenEmbeddable (
 ) {
     companion object {
         fun toDomain(refreshTokenEmbeddable: RefreshTokenEmbeddable): RefreshToken {
-            return RefreshToken(
+            return RefreshToken.create(
                 RefreshTokenProps(
                     token = refreshTokenEmbeddable.token,
                     jti = refreshTokenEmbeddable.jti,
