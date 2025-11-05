@@ -1,6 +1,6 @@
-package com.advisor.iam.infrastructure.member
+package com.advisor.api.iam.infrastructure.member
 
-import com.advisor.iam.domain.member.MemberView
+import com.advisor.api.iam.domain.member.MemberView
 import java.time.Instant
 
 class MemberViewEntity(
@@ -9,7 +9,7 @@ class MemberViewEntity(
     val createdAt: Instant,
 ) {
     companion object {
-        fun toModel(entity: MemberViewEntity): MemberView{
+        fun toModel(entity: MemberViewEntity): MemberView {
             return MemberView(
                 id = entity.id,
                 email = entity.email,

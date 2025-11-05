@@ -1,8 +1,8 @@
-package com.advisor.iam.domain.member
+package com.advisor.api.iam.domain.member
 
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.iam.domain.member.vo.Email
+import com.advisor.api.iam.domain.member.vo.Email
 import java.time.Instant
 
 class Member(

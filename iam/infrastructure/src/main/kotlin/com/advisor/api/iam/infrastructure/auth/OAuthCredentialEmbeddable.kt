@@ -1,8 +1,8 @@
 package com.advisor.api.iam.infrastructure.auth
 
-import com.advisor.iam.domain.auth.vo.OAuthCredential
-import com.advisor.iam.domain.auth.vo.OAuthCredentialProps
-import com.advisor.iam.domain.auth.vo.OAuthProvider
+import com.advisor.api.iam.domain.auth.vo.OAuthCredential
+import com.advisor.api.iam.domain.auth.vo.OAuthCredentialProps
+import com.advisor.api.iam.domain.auth.vo.OAuthProvider
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 

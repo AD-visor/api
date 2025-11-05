@@ -1,9 +1,9 @@
-package com.advisor.iam.infrastructure.member
+package com.advisor.api.iam.infrastructure.member
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
-import com.advisor.iam.domain.member.Member
-import com.advisor.iam.domain.member.MemberStore
+import com.advisor.api.iam.domain.member.Member
+import com.advisor.api.iam.domain.member.MemberStore
 import org.springframework.stereotype.Repository
 
 @Repository

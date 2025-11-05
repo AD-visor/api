@@ -1,4 +1,4 @@
-package com.advisor.iam.domain.member
+package com.advisor.api.iam.domain.member
 
 interface MemberReader {
     fun findById(id: Long): MemberView

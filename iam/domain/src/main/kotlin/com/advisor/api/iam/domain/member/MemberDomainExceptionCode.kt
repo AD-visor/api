@@ -1,4 +1,4 @@
-package com.advisor.iam.domain.member
+package com.advisor.api.iam.domain.member
 
 import com.advisor.api.common.exception.CustomExceptionCode
 import com.advisor.api.common.exception.ErrorStatus

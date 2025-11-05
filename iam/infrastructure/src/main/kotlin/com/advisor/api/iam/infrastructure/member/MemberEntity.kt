@@ -1,9 +1,9 @@
-package com.advisor.iam.infrastructure.member
+package com.advisor.api.iam.infrastructure.member
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.iam.domain.member.Member
-import com.advisor.iam.domain.member.MemberProps
-import com.advisor.iam.domain.member.vo.Email
+import com.advisor.api.iam.domain.member.Member
+import com.advisor.api.iam.domain.member.MemberProps
+import com.advisor.api.iam.domain.member.vo.Email
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

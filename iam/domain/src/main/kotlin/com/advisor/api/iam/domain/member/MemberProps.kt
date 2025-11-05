@@ -1,6 +1,6 @@
-package com.advisor.iam.domain.member
+package com.advisor.api.iam.domain.member
 
-import com.advisor.iam.domain.member.vo.Email
+import com.advisor.api.iam.domain.member.vo.Email
 import java.time.Instant
 
 data class MemberProps(
