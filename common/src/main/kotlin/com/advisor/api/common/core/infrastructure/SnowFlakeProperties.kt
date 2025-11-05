@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "snowflake")
 data class SnowFlakeProperties (
-    val datacenterId: Long = 0,
-    val workerId: Long = 0
+    var datacenterId: Long = 0,
+    var workerId: Long = 0
 )
