@@ -15,10 +15,10 @@ class AuthViewEntity (
     @Id
     val id: Long,
 
-    @Column
+    @Column(nullable = false)
     val oAuthProvider: String,
 
-    @Column
+    @Column(nullable = false)
     val createdAt: Instant
 ) {
     companion object {
