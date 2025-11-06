@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MemberStoreImpl(
-    private val memberJpaRepository: MemberJpaRepository
+    private val memberJpaRepository: MemberJpaStore
 ) : MemberStore {
     override fun save(member: Member) {
         val jpaEntity = MemberEntity.toPersistence(member)

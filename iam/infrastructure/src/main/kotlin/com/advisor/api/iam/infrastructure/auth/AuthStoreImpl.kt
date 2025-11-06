@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class AuthStoreImpl(
-    private val authJpaRepository: AuthJpaRepository
+    private val authJpaRepository: AuthJpaStore
 ): AuthStore {
     override fun save(auth: Auth) {
         val jpaEntity = AuthEntity.toPersistence(auth)
