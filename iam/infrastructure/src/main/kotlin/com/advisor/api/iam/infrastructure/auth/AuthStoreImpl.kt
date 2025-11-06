@@ -21,6 +21,6 @@ class AuthStoreImpl(
             "[Auth] ${id}에 해당하는 유저의 인증 정보가 존재하지 않습니다."
         ) }
 
-        return AuthEntity.toDomain(jpaEntity)
+        return jpaEntity.toDomain()
     }
 }

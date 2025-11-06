@@ -21,17 +21,6 @@ class RefreshTokenEmbeddable (
     val expiresAt: Instant
 ) {
     companion object {
-        fun toDomain(refreshTokenEmbeddable: RefreshTokenEmbeddable): RefreshToken {
-            return RefreshToken.create(
-                RefreshTokenProps(
-                    token = refreshTokenEmbeddable.token,
-                    jti = refreshTokenEmbeddable.jti,
-                    createdAt = refreshTokenEmbeddable.createdAt,
-                    expiresAt = refreshTokenEmbeddable.expiresAt
-                )
-            )
-        }
-
         fun toPersistence(refreshToken: RefreshToken): RefreshTokenEmbeddable {
             return RefreshTokenEmbeddable(
                 token = refreshToken.token,
@@ -40,5 +29,16 @@ class RefreshTokenEmbeddable (
                 expiresAt = refreshToken.expiresAt
             )
         }
+    }
+
+    fun toDomain(): RefreshToken {
+        return RefreshToken.create(
+            RefreshTokenProps(
+                token = token,
+                jti = jti,
+                createdAt = createdAt,
+                expiresAt = expiresAt
+            )
+        )
     }
 }

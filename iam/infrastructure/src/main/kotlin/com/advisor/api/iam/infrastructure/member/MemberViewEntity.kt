@@ -22,20 +22,20 @@ class MemberViewEntity(
     val createdAt: Instant,
 ) {
     companion object {
-        fun toModel(entity: MemberViewEntity): MemberView {
-            return MemberView(
-                id = entity.id,
-                email = entity.email,
-                createdAt = entity.createdAt,
-            )
-        }
-
-        fun toPersistence(model: MemberViewEntity): MemberViewEntity {
+        fun fromModel(model: MemberViewEntity): MemberViewEntity {
             return MemberViewEntity(
                 id = model.id,
                 email = model.email,
                 createdAt = model.createdAt,
             )
         }
+    }
+
+    fun toModel(): MemberView {
+        return MemberView(
+            id = id,
+            email = email,
+            createdAt = createdAt,
+        )
     }
 }

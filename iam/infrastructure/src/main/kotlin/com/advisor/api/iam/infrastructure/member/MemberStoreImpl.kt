@@ -23,12 +23,12 @@ class MemberStoreImpl(
             )
         }
 
-        return MemberEntity.toDomain(jpaEntity)
+        return jpaEntity.toDomain()
     }
 
     override fun findById(id: MemberId): Member? {
         return memberJpaRepository.findById(id.value)
-            .map { MemberEntity.toDomain(it) }
+            .map { it.toDomain() }
             .orElse(null)
     }
 }
