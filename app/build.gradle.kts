@@ -8,6 +8,9 @@ dependencies {
     implementation(project(":payment:presentation"))
 
     implementation(project(":iam:infrastructure"))
+    implementation(project(":content:infrastructure"))
+    implementation(project(":subscription:infrastructure"))
+    implementation(project(":payment:infrastructure"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
