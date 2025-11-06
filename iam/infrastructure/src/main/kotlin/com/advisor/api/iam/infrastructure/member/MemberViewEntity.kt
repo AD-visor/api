@@ -21,16 +21,6 @@ class MemberViewEntity(
     @Column(nullable = false)
     val createdAt: Instant,
 ) {
-    companion object {
-        fun fromModel(model: MemberViewEntity): MemberViewEntity {
-            return MemberViewEntity(
-                id = model.id,
-                email = model.email,
-                createdAt = model.createdAt,
-            )
-        }
-    }
-
     fun toModel(): MemberView {
         return MemberView(
             id = id,

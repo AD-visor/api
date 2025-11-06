@@ -21,16 +21,6 @@ class AuthViewEntity (
     @Column(nullable = false)
     val createdAt: Instant
 ) {
-    companion object {
-        fun toPersistence(model: AuthView): AuthViewEntity {
-            return AuthViewEntity(
-                id = model.id,
-                oAuthProvider = model.oAuthProvider,
-                createdAt = model.createdAt
-            )
-        }
-    }
-
     fun toModel(): AuthView {
         return AuthView(
             id = id,
