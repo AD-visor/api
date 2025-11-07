@@ -4,6 +4,7 @@ import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.subscription.domain.plan.Plan
 import com.advisor.api.subscription.domain.plan.PlanProps
+import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -45,7 +46,7 @@ class PlanEntity(
             return PlanEntity(
                 id = domain.id.value,
                 name = domain.name,
-                monthlyLimit = domain.monthlyLimit,
+                monthlyLimit = domain.monthlyLimit.value,
                 price = domain.price.value,
                 description = domain.description,
                 createdAt = domain.createdAt,
@@ -59,7 +60,7 @@ class PlanEntity(
     fun toDomain(): Plan {
         val props = PlanProps(
             name = name,
-            monthlyLimit = monthlyLimit,
+            monthlyLimit = MonthlyLimit.create(monthlyLimit),
             price = Money.create(price),
             description = description,
             createdAt = createdAt,

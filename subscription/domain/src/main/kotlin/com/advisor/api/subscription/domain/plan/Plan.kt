@@ -4,6 +4,7 @@ import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.exception.CustomException
+import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
 import java.time.Instant
 
 class Plan private constructor(
@@ -32,11 +33,6 @@ class Plan private constructor(
             "[PLAN] 이름은 최대 40자 입니다."
         ) }
 
-        require(props.monthlyLimit >= 0) { CustomException(
-            PlanDomainExceptionCode.PLAN_MONTHLY_LIMIT_NEGATIVE,
-            "[PLAN] 월간 한도는 음수일 수 없습니다."
-        ) }
-
         require((props.description?.length ?: 0) < 256) { CustomException(
             PlanDomainExceptionCode.PLAN_DESCRIPTION_LENGTH_EXCEEDED,
             "[PLAN] 설명은 최대 255자 입니다."
@@ -44,7 +40,7 @@ class Plan private constructor(
     }
 
     val name: String get() = props.name
-    val monthlyLimit: Long get() = props.monthlyLimit
+    val monthlyLimit: MonthlyLimit get() = props.monthlyLimit
     val price: Money get() = props.price
     val description: String? get() = props.description
     val createdAt: Instant get() = props.createdAt
