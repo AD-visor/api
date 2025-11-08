@@ -63,4 +63,8 @@ subprojects {
 	tasks.withType<Test> {
 		useJUnitPlatform()
 	}
+
+	tasks.withType<Jar> {
+		archiveBaseName.set("${project.parent?.name ?: ""}-${project.name}")
+	}
 }
