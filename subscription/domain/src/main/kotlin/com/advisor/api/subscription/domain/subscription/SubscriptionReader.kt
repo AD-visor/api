@@ -1,0 +1,6 @@
+package com.advisor.api.subscription.domain.subscription
+
+interface SubscriptionReader {
+    fun findById(id: Long): SubscriptionView
+    fun findByMemberId(memberId: Long): SubscriptionView
+}

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class AuthStoreImpl(
-    private val authJpaRepository: AuthJpaRepository
+    private val authJpaRepository: AuthJpaStore
 ): AuthStore {
     override fun save(auth: Auth) {
         val jpaEntity = AuthEntity.toPersistence(auth)
@@ -21,6 +21,6 @@ class AuthStoreImpl(
             "[Auth] ${id}에 해당하는 유저의 인증 정보가 존재하지 않습니다."
         ) }
 
-        return AuthEntity.toDomain(jpaEntity)
+        return jpaEntity.toDomain()
     }
 }

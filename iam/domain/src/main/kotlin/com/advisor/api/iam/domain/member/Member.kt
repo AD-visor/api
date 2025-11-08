@@ -5,7 +5,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.iam.domain.member.vo.Email
 import java.time.Instant
 
-class Member(
+class Member private constructor(
     id: MemberId,
     private val props: MemberProps,
 ): AggregateRoot<MemberId>(id) {

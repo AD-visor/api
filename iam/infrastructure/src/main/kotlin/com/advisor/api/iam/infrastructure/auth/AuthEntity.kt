@@ -35,24 +35,6 @@ class AuthEntity(
     val deletedAt: Instant?
 ) {
     companion object {
-        fun toDomain(jpaEntity: AuthEntity): Auth {
-            val authProps = AuthProps(
-                memberId = MemberId(jpaEntity.memberId),
-                refreshToken = jpaEntity.refreshToken?.let {
-                    RefreshTokenEmbeddable.toDomain(it)
-                },
-                oAuthCredential = OAuthCredentialEmbeddable.toDomain(
-                    jpaEntity.oAuthCredential
-                ),
-                createdAt = jpaEntity.createdAt,
-                updatedAt = jpaEntity.updatedAt,
-                isDeleted = jpaEntity.isDeleted,
-                deletedAt = jpaEntity.deletedAt
-            )
-
-            return Auth.of(AuthId(jpaEntity.id), authProps)
-        }
-
         fun toPersistence(domain: Auth): AuthEntity {
             return AuthEntity(
                 id = domain.id.value,
@@ -71,5 +53,19 @@ class AuthEntity(
                 deletedAt = domain.deletedAt
             )
         }
+    }
+
+    fun toDomain(): Auth {
+        val authProps = AuthProps(
+            memberId = MemberId(memberId),
+            refreshToken = refreshToken?.toDomain(),
+            oAuthCredential = oAuthCredential.toDomain(),
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            isDeleted = isDeleted,
+            deletedAt = deletedAt
+        )
+
+        return Auth.of(AuthId(id), authProps)
     }
 }

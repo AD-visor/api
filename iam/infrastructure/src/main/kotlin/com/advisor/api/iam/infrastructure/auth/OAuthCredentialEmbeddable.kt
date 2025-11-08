@@ -18,14 +18,6 @@ class OAuthCredentialEmbeddable (
     val accessToken: String?,
 ) {
     companion object {
-        fun toDomain(oAuthCredentialEmbeddable: OAuthCredentialEmbeddable): OAuthCredential {
-            return OAuthCredential(OAuthCredentialProps(
-                provider = OAuthProvider.fromString(oAuthCredentialEmbeddable.provider),
-                oAuthId = oAuthCredentialEmbeddable.oAuthId,
-                accessToken = oAuthCredentialEmbeddable.accessToken,
-            ))
-        }
-
         fun toPersistence(oAuthCredential: OAuthCredential): OAuthCredentialEmbeddable {
             return OAuthCredentialEmbeddable(
                 provider = oAuthCredential.provider.value,
@@ -33,5 +25,13 @@ class OAuthCredentialEmbeddable (
                 accessToken = oAuthCredential.accessToken,
             )
         }
+    }
+
+    fun toDomain(): OAuthCredential {
+        return OAuthCredential.create(OAuthCredentialProps(
+            provider = OAuthProvider.fromString(provider),
+            oAuthId = oAuthId,
+            accessToken = accessToken,
+        ))
     }
 }

@@ -32,18 +32,6 @@ class MemberEntity(
     val deletedAt: Instant?,
 ) {
     companion object {
-        fun toDomain(jpaEntity: MemberEntity): Member {
-            val memberProps = MemberProps(
-                email = Email.create(jpaEntity.email),
-                createdAt = jpaEntity.createdAt,
-                updatedAt = jpaEntity.updatedAt,
-                isDeleted = jpaEntity.isDeleted,
-                deletedAt = jpaEntity.deletedAt
-            )
-
-            return Member.of(MemberId(jpaEntity.id), memberProps)
-        }
-
         fun toPersistence(domain: Member): MemberEntity {
             return MemberEntity(
                 id = domain.id.value,
@@ -54,5 +42,17 @@ class MemberEntity(
                 deletedAt = domain.deletedAt
             )
         }
+    }
+
+    fun toDomain(): Member {
+        val memberProps = MemberProps(
+            email = Email.create(email),
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            isDeleted = isDeleted,
+            deletedAt = deletedAt
+        )
+
+        return Member.of(MemberId(id), memberProps)
     }
 }

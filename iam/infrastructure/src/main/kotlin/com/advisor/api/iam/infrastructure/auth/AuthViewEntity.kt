@@ -15,27 +15,17 @@ class AuthViewEntity (
     @Id
     val id: Long,
 
-    @Column
+    @Column(nullable = false)
     val oAuthProvider: String,
 
-    @Column
+    @Column(nullable = false)
     val createdAt: Instant
 ) {
-    companion object {
-        fun toModel(entity: AuthViewEntity): AuthView {
-            return AuthView(
-                id = entity.id,
-                oAuthProvider = entity.oAuthProvider,
-                createdAt = entity.createdAt
-            )
-        }
-
-        fun toPersistence(model: AuthView): AuthViewEntity {
-            return AuthViewEntity(
-                id = model.id,
-                oAuthProvider = model.oAuthProvider,
-                createdAt = model.createdAt
-            )
-        }
+    fun toModel(): AuthView {
+        return AuthView(
+            id = id,
+            oAuthProvider = oAuthProvider,
+            createdAt = createdAt
+        )
     }
 }

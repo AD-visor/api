@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MemberStoreImpl(
-    private val memberJpaRepository: MemberJpaRepository
+    private val memberJpaRepository: MemberJpaStore
 ) : MemberStore {
     override fun save(member: Member) {
         val jpaEntity = MemberEntity.toPersistence(member)
@@ -23,12 +23,12 @@ class MemberStoreImpl(
             )
         }
 
-        return MemberEntity.toDomain(jpaEntity)
+        return jpaEntity.toDomain()
     }
 
     override fun findById(id: MemberId): Member? {
         return memberJpaRepository.findById(id.value)
-            .map { MemberEntity.toDomain(it) }
+            .map { it.toDomain() }
             .orElse(null)
     }
 }
