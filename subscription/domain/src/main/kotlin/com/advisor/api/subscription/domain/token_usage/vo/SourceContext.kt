@@ -11,7 +11,7 @@ class SourceContext private constructor(val value: String) {
         val CONTENT_REVISION = SourceContext("CONTENT_REVISION")
         val CONTENT = SourceContext("CONTENT")
 
-        val allowedSourceContexts = setOf(CONTENT_REQUEST, CONTENT_REVISION, CONTENT_REVISION)
+        val allowedSourceContexts = setOf(CONTENT_REQUEST, CONTENT_REVISION, CONTENT)
 
         fun create(value: String): SourceContext {
             return when (value) {

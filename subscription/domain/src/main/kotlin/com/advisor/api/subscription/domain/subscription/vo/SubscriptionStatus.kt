@@ -17,6 +17,7 @@ class SubscriptionStatus private constructor(val value: String) {
         fun create(value: String): SubscriptionStatus {
             return when (value) {
                 "ACTIVE" -> ACTIVE
+                "SUSPENDED" -> SUSPENDED
                 "EXPIRED" -> EXPIRED
                 "CANCELED" -> CANCELED
                 else -> throw CustomException(

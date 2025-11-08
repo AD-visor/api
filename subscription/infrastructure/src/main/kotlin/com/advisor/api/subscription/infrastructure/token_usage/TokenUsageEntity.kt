@@ -48,7 +48,7 @@ class TokenUsageEntity(
             return TokenUsageEntity(
                 id = domain.id.value,
                 memberId = domain.memberId.value,
-                planId =  domain.planId.value,
+                planId = domain.planId.value,
                 subscriptionId = domain.subscriptionId.value,
                 usedTokens = domain.usedTokens,
                 usedAt = domain.usedAt,
@@ -69,7 +69,7 @@ class TokenUsageEntity(
             usedAt = usedAt,
             sourceContext = SourceContext.create(sourceContext),
             contentRequestId = contentRequestId?.let { ContentRequestId(it) },
-            contentRevisionId =  contentRevisionId?.let { ContentRevisionId(it) },
+            contentRevisionId = contentRevisionId?.let { ContentRevisionId(it) },
             contentId = contentId?.let { ContentId(it) }
         )
 

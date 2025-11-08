@@ -16,8 +16,8 @@ class TokenUsageReaderImpl(
     ): List<TokenUsageView> {
         val entities = jpaReader.findTokenUsageViewsBySubscriptionId(
             subscriptionId,
-            startAt?.toEpochMilli(),
-            endAt?.toEpochMilli()
+            startAt,
+            endAt
         )
 
         return entities.map { it.toModel() }

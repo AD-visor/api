@@ -54,5 +54,5 @@ class TokenUsage private constructor(
     val sourceContext: SourceContext get() = props.sourceContext
     val contentRequestId: ContentRequestId? get() = props.contentRequestId
     val contentRevisionId: ContentRevisionId? get() = props.contentRevisionId
-    val contentId get(): ContentId? = props.contentId
+    val contentId: ContentId? get() = props.contentId
 }
