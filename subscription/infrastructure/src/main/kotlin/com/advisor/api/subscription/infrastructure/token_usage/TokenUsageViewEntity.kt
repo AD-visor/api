@@ -39,22 +39,6 @@ class TokenUsageViewEntity(
     @Column
     val contentId: Long?
 ) {
-    companion object {
-        fun fromModel(model: TokenUsageView): TokenUsageViewEntity {
-            return TokenUsageViewEntity(
-                id = model.id,
-                memberId = model.memberId,
-                subscriptionId = model.subscriptionId,
-                usedTokens = model.usedTokens,
-                usedAt = Instant.ofEpochMilli(model.usedAt),
-                sourceContext = model.sourceContext,
-                contentRequestId = model.contentRequestId,
-                contentRevisionId = model.contentRevisionId,
-                contentId = model.contentId
-            )
-        }
-    }
-
     fun toModel(): TokenUsageView {
         return TokenUsageView(
             id = this.id,

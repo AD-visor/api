@@ -15,22 +15,22 @@ class SubscriptionViewEntity(
     @Id
     val id: Long,
 
-    @Column
+    @Column(nullable = false)
     val subscriptionStatus: String,
 
-    @Column
+    @Column(nullable = false)
     val monthlyUsage: Long,
 
-    @Column
+    @Column(nullable = false)
     val memberId: Long,
 
-    @Column
+    @Column(nullable = false)
     val planId: Long,
 
-    @Column
+    @Column(nullable = false)
     val startAt: Instant,
 
-    @Column
+    @Column(nullable = false)
     val expiredAt: Instant,
 ) {
     fun toModel(): SubscriptionView {

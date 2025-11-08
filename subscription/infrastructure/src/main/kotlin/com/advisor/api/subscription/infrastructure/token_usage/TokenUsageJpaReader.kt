@@ -1,8 +1,8 @@
 package com.advisor.api.subscription.infrastructure.token_usage
 
-import org.apache.ibatis.annotations.Param
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import java.time.Instant
 
 interface TokenUsageJpaReader: JpaRepository<TokenUsageViewEntity, Long> {

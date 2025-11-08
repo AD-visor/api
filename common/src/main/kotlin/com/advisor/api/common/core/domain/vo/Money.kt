@@ -1,12 +1,11 @@
 package com.advisor.api.common.core.domain.vo
 
 class Money private constructor(val value: Float) {
+    init { validate() }
+
     companion object {
         fun create(value: Float): Money {
-            val money = Money(value)
-            money.validate()
-
-            return money
+            return Money(value)
         }
     }
 

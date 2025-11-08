@@ -10,7 +10,7 @@ enum class TokenUsageInfraExceptionCode(
 ): CustomExceptionCode {
     TOKEN_USAGE_NOT_FOUND(
         status = ErrorStatus.NOT_FOUND,
-        code = "TOKEN_USAGE_ENTITY_NOT_FOUND",
+        code = "TOKEN_USAGE_NOT_FOUND",
         message = "[TokenUsage] 해당 토큰 사용 정보를 찾을 수 없습니다."
     ),
 }
