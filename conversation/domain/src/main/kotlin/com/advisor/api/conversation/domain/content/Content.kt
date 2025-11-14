@@ -8,7 +8,7 @@ import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.content.vo.ContentPlatform
 import java.time.Instant
 
-class Content(
+class Content private constructor(
     id: ContentId,
     private val props: ContentProps
 ): AggregateRoot<ContentId>(id) {

@@ -22,7 +22,7 @@ class ConversationMessageViewEntity(
     val body: String,
 
     @Column
-    val revisionOf: String?,
+    val revisionOf: Long?,
 
     @Column(nullable = false)
     val createdAt: Instant

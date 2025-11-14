@@ -24,7 +24,7 @@ class ConversationStoreImpl(
     override fun loadById(id: ConversationId): Conversation {
         val entity = jpaStore.findById(id.value).orElseThrow { CustomException(
             ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
-            "[Conversation] id=${id.value}에 해당하는 대화을 찾을 수 없습니다."
+            "[Conversation] id=${id.value}에 해당하는 대화를 찾을 수 없습니다."
         ) }
 
         return entity.toDomain()

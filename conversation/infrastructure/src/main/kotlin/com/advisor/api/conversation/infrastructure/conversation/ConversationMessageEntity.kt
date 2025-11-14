@@ -28,7 +28,7 @@ class ConversationMessageEntity(
     @Column(nullable = false)
     val role: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5000)
     val body: String,
 
     @Column(nullable = true)

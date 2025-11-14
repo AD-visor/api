@@ -13,7 +13,7 @@ class ContentPlatform private constructor(val value: String) {
         fun create(value: String): ContentPlatform {
             return when (value) {
                 "INSTAGRAM" -> INSTAGRAM
-                "NAVER_BLOG" ->  NAVER_BLOG
+                "NAVER_BLOG" -> NAVER_BLOG
                 else -> throw CustomException(
                     ContentDomainExceptionCode.CONTENT_PLATFORM_INVALID,
                     "[Content] 유효하지 않은 콘텐츠 플랫폼입니다."
