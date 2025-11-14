@@ -3,12 +3,12 @@ apply(plugin = "org.springframework.boot")
 dependencies {
     implementation(project(":common"))
     implementation(project(":iam:presentation"))
-    implementation(project(":content:presentation"))
+    implementation(project(":conversation:presentation"))
     implementation(project(":subscription:presentation"))
     implementation(project(":payment:presentation"))
 
     implementation(project(":iam:infrastructure"))
-    implementation(project(":content:infrastructure"))
+    implementation(project(":conversation:infrastructure"))
     implementation(project(":subscription:infrastructure"))
     implementation(project(":payment:infrastructure"))
 

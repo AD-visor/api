@@ -13,10 +13,10 @@ include(":iam:infrastructure")
 include(":iam:presentation")
 
 // Content
-include(":content:application")
-include(":content:domain")
-include(":content:infrastructure")
-include(":content:presentation")
+include(":conversation:application")
+include(":conversation:domain")
+include(":conversation:infrastructure")
+include(":conversation:presentation")
 
 // Subscription
 include(":subscription:application")
