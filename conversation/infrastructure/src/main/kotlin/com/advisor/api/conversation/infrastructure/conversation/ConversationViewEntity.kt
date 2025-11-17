@@ -18,16 +18,16 @@ class ConversationViewEntity(
     @Column(nullable = false)
     val memberId: Long,
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     val businessType: String,
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     val productName: String,
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false)
     val description: String,
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false)
     val targetAudience: String,
 
     @Column(nullable = false)
