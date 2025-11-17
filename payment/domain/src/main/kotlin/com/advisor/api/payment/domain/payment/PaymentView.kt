@@ -1,5 +1,7 @@
 package com.advisor.api.payment.domain.payment
 
+import java.time.Instant
+
 data class PaymentView(
     val id: Long,
     val memberId: Long,
@@ -10,7 +12,7 @@ data class PaymentView(
     val pgProvider: String,
     val status: String,
     val failureReason: String?,
-    val requestedAt: String,
-    val completedAt: String,
-    val refundedAt: String?
+    val requestedAt: Instant,
+    val completedAt: Instant,
+    val refundedAt: Instant?
 )

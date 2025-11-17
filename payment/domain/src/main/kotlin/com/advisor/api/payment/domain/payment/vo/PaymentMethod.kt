@@ -11,7 +11,7 @@ class PaymentMethod private constructor(val value: String) {
         val PAYPAL = PaymentMethod("PAYPAL")
         val BANK_TRANSFER = PaymentMethod("BANK_TRANSFER")
 
-        fun from(value: String): PaymentMethod {
+        fun create(value: String): PaymentMethod {
             return when (value) {
                 "CREDIT_CARD" -> CREDIT_CARD
                 "PAYPAL" -> PAYPAL

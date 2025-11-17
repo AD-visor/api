@@ -6,6 +6,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.exception.CustomException
+import com.advisor.api.payment.domain.payment.vo.PaymentMethod
 import com.advisor.api.payment.domain.payment.vo.PaymentStatus
 import com.advisor.api.payment.domain.payment.vo.PgProvider
 import java.time.Instant
@@ -45,6 +46,7 @@ class Payment private constructor(
     val currency: String get() = props.currency
     val pgProvider: PgProvider get() = props.pgProvider
     val status: PaymentStatus get() = props.status
+    val paymentMethod: PaymentMethod get() = props.paymentMethod
     val failureReason: String? get() = props.failureReason
     val requestedAt: Instant get() = props.requestedAt
     val completedAt: Instant get() = props.completedAt

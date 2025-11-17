@@ -15,7 +15,7 @@ interface PaymentJpaReader: JpaRepository<PaymentViewEntity, Long> {
     """)
     fun findAllByMemberId(
         @Param("memberId") memberId: Long,
-        @Param("startAt") startAt: Instant?,
-        @Param("endAt") endAt: Instant?,
+        @Param("start_at") startAt: Instant?,
+        @Param("end_at") endAt: Instant?,
     ): List<PaymentViewEntity>
 }

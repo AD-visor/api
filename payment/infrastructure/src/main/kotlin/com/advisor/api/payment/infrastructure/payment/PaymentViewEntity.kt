@@ -6,6 +6,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.springframework.data.annotation.Immutable
+import java.time.Instant
 
 @Entity
 @Immutable
@@ -24,7 +25,7 @@ class PaymentViewEntity(
     val transactionId: String,
 
     @Column
-    val amount: Long,
+    val amount: Float,
 
     @Column
     val currency: String,
@@ -39,13 +40,13 @@ class PaymentViewEntity(
     val failureReason: String?,
 
     @Column
-    val requestedAt: String,
+    val requestedAt: Instant,
 
     @Column
-    val completedAt: String,
+    val completedAt: Instant,
 
     @Column
-    val refundedAt: String?
+    val refundedAt: Instant?
 ) {
     fun toModel(): PaymentView {
         return PaymentView(
@@ -53,7 +54,7 @@ class PaymentViewEntity(
             memberId = memberId,
             planId = planId,
             transactionId = transactionId,
-            amount = amount.toFloat(),
+            amount = amount,
             currency = currency,
             pgProvider = pgProvider,
             status = status,
