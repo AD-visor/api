@@ -2,6 +2,7 @@ package com.advisor.api.iam.presentation.member
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.iam.application.member.MemberFacade
+import com.advisor.api.iam.application.member.command.DeleteMemberCommand
 import com.advisor.api.iam.application.member.query.GetMemberQuery
 import com.advisor.api.iam.presentation.member.dto.request.CreateMemberReqDto
 import com.advisor.api.iam.presentation.member.dto.response.MemberResDto
@@ -30,6 +31,20 @@ class MemberController(
         )
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
+    }
+
+    @PostMapping
+    fun deleteMember(): ResponseEntity<BaseApiResponse<Unit>> {
+        val command = DeleteMemberCommand(id = 1L) // TODO: 임시로 고정 ID 사용, 추후 인증 정보에서 ID 가져오도록 수정
+        memberFacade.deleteMember(command)
+
+        val response = BaseApiResponse<Unit>(
+            success = true,
+            message = "회원 삭제 성공",
+            httpStatus = HttpStatus.OK,
+        )
+
+        return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
     @GetMapping
