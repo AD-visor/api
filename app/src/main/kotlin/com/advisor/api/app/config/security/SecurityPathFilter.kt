@@ -11,7 +11,9 @@ object SecurityPathFilter {
     )
 
     val AUTH_PATHS = arrayOf(
-        "/auth"
+        "/auth",
+        "/oauth2/**",
+        "/login/**"
     )
 
     val PROTECTED_PATHS = arrayOf(
