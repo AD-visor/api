@@ -6,6 +6,8 @@ import com.advisor.api.iam.application.member.command.DeleteMemberCommand
 import com.advisor.api.iam.adapter.inbound.member.dto.request.CreateMemberReqDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -30,7 +32,7 @@ class MemberController(
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
-    @PostMapping
+    @PostMapping("/withdraw")
     fun deleteMember(): ResponseEntity<BaseApiResponse<Unit>> {
         val command = DeleteMemberCommand(id = 1L) // TODO: 임시로 고정 ID 사용, 추후 인증 정보에서 ID 가져오도록 수정
         memberFacade.deleteMember(command)
