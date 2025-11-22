@@ -6,6 +6,7 @@ dependencies {
     implementation(project(":iam:adapter:inbound"))
     implementation(project(":iam:adapter:outbound"))
     implementation(project(":iam:port:outbound"))
+    implementation(project(":iam:application"))
 
     implementation(project(":conversation:presentation"))
     implementation(project(":subscription:presentation"))
