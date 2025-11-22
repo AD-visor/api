@@ -16,10 +16,13 @@ dependencies {
     implementation(project(":subscription:infrastructure"))
     implementation(project(":payment:infrastructure"))
 
-
+    // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    // OAuth2
+    implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 
     // Database
     runtimeOnly("org.postgresql:postgresql")
