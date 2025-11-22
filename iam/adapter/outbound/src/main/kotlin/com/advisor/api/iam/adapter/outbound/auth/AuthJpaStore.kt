@@ -5,4 +5,8 @@ import java.util.Optional
 
 interface AuthJpaStore: JpaRepository<AuthEntity, Long> {
     fun findByMemberId(memberId: Long): Optional<AuthEntity>
+    fun findByOAuthCredentialProviderAndOAuthCredentialOAuthId(
+        providerName: String,
+        oAuthId: String
+    ): Optional<AuthEntity>
 }

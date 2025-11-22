@@ -8,19 +8,29 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class AuthStoreImpl(
-    private val authJpaRepository: AuthJpaStore
-): AuthStore {
+    private val authJpaStore: AuthJpaStore
+) : AuthStore {
     override fun save(auth: Auth) {
         val jpaEntity = AuthEntity.toPersistence(auth)
-        authJpaRepository.save(jpaEntity)
+        authJpaStore.save(jpaEntity)
     }
 
-    override fun load(id: MemberId): Auth {
-        val jpaEntity = authJpaRepository.findByMemberId(id.value).orElseThrow { CustomException(
-            AuthInfrastructureExceptionCode.AUTH_NOT_FOUND,
-            "[Auth] ${id}에 해당하는 유저의 인증 정보가 존재하지 않습니다."
-        ) }
+    override fun loadByMemberId(memberId: MemberId): Auth {
+        val jpaEntity = authJpaStore.findByMemberId(memberId.value).orElseThrow {
+            CustomException(
+                AuthInfrastructureExceptionCode.AUTH_NOT_FOUND,
+                "[Auth] ${memberId.value}에 해당하는 유저의 인증 정보가 존재하지 않습니다."
+            )
+        }
 
         return jpaEntity.toDomain()
+    }
+
+    override fun loadByProviderAndOAuthId(providerName: String, oAuthId: String): Auth? {
+        val jpaEntity = authJpaStore.findByOAuthCredentialProviderAndOAuthCredentialOAuthId(
+            providerName, oAuthId
+        )
+
+        return jpaEntity.orElse(null)?.toDomain()
     }
 }
