@@ -1,4 +1,4 @@
-package com.advisor.api.iam.application.member.command
+package com.advisor.api.iam.port.inbound.member.command
 
 data class CreateMemberCommand(
     val memberId: Long,

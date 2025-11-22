@@ -1,7 +1,7 @@
-package com.advisor.api.iam.application.member.usecase
+package com.advisor.api.iam.port.inbound.member.usecase
 
-import com.advisor.api.iam.application.member.query.GetMemberQuery
 import com.advisor.api.iam.domain.member.MemberView
+import com.advisor.api.iam.port.inbound.member.query.GetMemberQuery
 
 interface GetMemberUseCase {
     fun execute(query: GetMemberQuery): MemberView
