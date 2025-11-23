@@ -5,4 +5,5 @@ dependencies {
     implementation(project(":iam:port:inbound"))
 
     implementation("org.springframework:spring-context")
+    implementation("org.springframework:spring-tx")
 }
