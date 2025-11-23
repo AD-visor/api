@@ -1,9 +1,9 @@
 package com.advisor.api.iam.application.member.service
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.api.iam.application.member.command.DeleteMemberCommand
-import com.advisor.api.iam.application.member.usecase.DeleteMemberUseCase
+import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand
 import com.advisor.api.iam.domain.member.MemberStore
+import com.advisor.api.iam.port.inbound.member.usecase.DeleteMemberUseCase
 import org.springframework.stereotype.Service
 
 @Service
