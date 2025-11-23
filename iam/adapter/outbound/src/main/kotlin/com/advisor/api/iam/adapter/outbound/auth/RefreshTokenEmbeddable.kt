@@ -1,5 +1,6 @@
 package com.advisor.api.iam.adapter.outbound.auth
 
+import com.advisor.api.common.exception.CustomException
 import com.advisor.api.iam.domain.auth.vo.RefreshToken
 import com.advisor.api.iam.domain.auth.vo.RefreshTokenProps
 import jakarta.persistence.Column
@@ -8,17 +9,17 @@ import java.time.Instant
 
 @Embeddable
 class RefreshTokenEmbeddable (
-    @Column(name = "refresh_token_token", nullable = false)
-    val token: String,
+    @Column(name = "refresh_token_token")
+    val token: String?,
 
-    @Column(name = "refresh_token_jti", nullable = false)
-    val jti: String,
+    @Column(name = "refresh_token_jti")
+    val jti: String?,
 
-    @Column(name = "refresh_token_created_at", nullable = false)
-    val createdAt: Instant,
+    @Column(name = "refresh_token_created_at")
+    val createdAt: Instant?,
 
-    @Column(name = "refresh_token_expires_at", nullable = false)
-    val expiresAt: Instant
+    @Column(name = "refresh_token_expires_at")
+    val expiresAt: Instant?
 ) {
     companion object {
         fun toPersistence(refreshToken: RefreshToken): RefreshTokenEmbeddable {
@@ -31,13 +32,24 @@ class RefreshTokenEmbeddable (
         }
     }
 
-    fun toDomain(): RefreshToken {
+    fun toDomain(): RefreshToken? {
+        if (token == null && jti == null && createdAt == null && expiresAt == null) {
+            return null
+        }
+
+        if (token == null || jti == null || createdAt == null || expiresAt == null) {
+            throw CustomException(
+                AuthInfrastructureExceptionCode.AUTH_REFRESH_TOKEN_PERSISTENCE_ERROR,
+                "[Auth] RefreshToken 데이터가 불완전합니다."
+            )
+        }
+
         return RefreshToken.create(
             RefreshTokenProps(
-                token = token,
-                jti = jti,
-                createdAt = createdAt,
-                expiresAt = expiresAt
+                token = requireNotNull(token),
+                jti = requireNotNull(jti),
+                createdAt = requireNotNull(createdAt),
+                expiresAt = requireNotNull(expiresAt)
             )
         )
     }

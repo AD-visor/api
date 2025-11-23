@@ -1,9 +1,11 @@
 package com.advisor.api.iam.adapter.inbound.member
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
-import com.advisor.api.iam.application.member.MemberFacade
-import com.advisor.api.iam.application.member.command.DeleteMemberCommand
 import com.advisor.api.iam.adapter.inbound.member.dto.request.CreateMemberReqDto
+import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand
+import com.advisor.api.iam.port.inbound.member.usecase.CreateMemberUseCase
+import com.advisor.api.iam.port.inbound.member.usecase.DeleteMemberUseCase
+import com.advisor.api.iam.port.inbound.member.usecase.GetMemberUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/member")
 class MemberController(
-    private val memberFacade: MemberFacade
+    private val createMemberUseCase: CreateMemberUseCase,
+    private val deleteMemberUseCase: DeleteMemberUseCase,
+    private val getMemberUseCase: GetMemberUseCase,
 ) {
     @PostMapping
     fun createMember(@RequestBody dto: CreateMemberReqDto): ResponseEntity<BaseApiResponse<Unit>> {
         val command = dto.toCommand()
-        memberFacade.createMember(command)
+        createMemberUseCase.execute(command)
 
         val response = BaseApiResponse<Unit>(
             success = true,
@@ -33,7 +37,7 @@ class MemberController(
     @PostMapping("/withdraw")
     fun deleteMember(): ResponseEntity<BaseApiResponse<Unit>> {
         val command = DeleteMemberCommand(id = 1L) // TODO: 임시로 고정 ID 사용, 추후 인증 정보에서 ID 가져오도록 수정
-        memberFacade.deleteMember(command)
+        deleteMemberUseCase.execute(command)
 
         val response = BaseApiResponse<Unit>(
             success = true,
@@ -48,7 +52,7 @@ class MemberController(
     @GetMapping
     fun getMember(): ResponseEntity<BaseApiResponse<MemberResDto>> {
         val query = GetMemberQuery(id = 1L) // TODO: 임시로 고정 ID 사용, 추후 인증 정보에서 ID 가져오도록 수정
-        val result = memberFacade.getMember(query)
+        val result = getMemberUseCase.execute(query)
 
         val response = BaseApiResponse<MemberResDto>(
             success = true,
