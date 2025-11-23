@@ -4,19 +4,16 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.iam.domain.member.Member
 import com.advisor.api.iam.domain.member.MemberProps
 import com.advisor.api.iam.domain.member.vo.Email
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.Instant
 
 @Entity
-@Table(name = "member")
+@Table(name = "member", indexes = [Index(name = "idx_member_email", columnList = "email")])
 class MemberEntity(
     @Id
     val id: Long,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val email: String,
 
     @Column(nullable = false)

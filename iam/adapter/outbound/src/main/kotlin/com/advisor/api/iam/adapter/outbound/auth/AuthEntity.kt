@@ -8,12 +8,22 @@ import jakarta.persistence.*
 import java.time.Instant
 
 @Entity
-@Table(name = "auth")
+@Table(name = "auth", indexes = [
+    Index(name = "idx_auth_member_id", columnList = "memberId"),
+    Index(name = "idx_auth_oauth_provider_oauth_id", columnList = "oauth_provider, oauth_id"),
+],
+    uniqueConstraints = [
+        UniqueConstraint(
+            name = "uc_auth_oauth_provider_oauth_id",
+            columnNames = ["oauth_provider", "oauth_id"]
+        )
+    ]
+)
 class AuthEntity(
     @Id
     val id: Long,
 
-    @Column
+    @Column(unique = true, nullable = false)
     val memberId: Long,
 
     @Embedded
