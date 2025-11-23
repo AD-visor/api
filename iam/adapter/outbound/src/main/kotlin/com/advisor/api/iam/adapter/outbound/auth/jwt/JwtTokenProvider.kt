@@ -1,9 +1,14 @@
 package com.advisor.api.iam.adapter.outbound.auth.jwt
 
+import com.advisor.api.common.exception.CustomException
+import com.advisor.api.iam.adapter.outbound.auth.AuthInfrastructureExceptionCode
 import com.advisor.api.iam.domain.auth.vo.JwtTokenType
 import com.advisor.api.iam.port.outbound.auth.AuthTokenPort
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.Date
@@ -75,8 +80,31 @@ class JwtTokenProvider(
             .parseSignedClaims(token)
 
         claims.payload.expiration.after(Date())
+    } catch (e: ExpiredJwtException) {
+        throw CustomException(
+            AuthInfrastructureExceptionCode.AUTH_TOKEN_EXPIRED,
+            "[Auth] 토큰이 만료되었습니다."
+        )
+    } catch (e: MalformedJwtException) {
+        throw CustomException(
+            AuthInfrastructureExceptionCode.AUTH_MALFORMED_TOKEN,
+            "[Auth] 지원하지 않는 토큰 형식입니다."
+        )
+    } catch (e: SignatureException) {
+        throw CustomException(
+            AuthInfrastructureExceptionCode.AUTH_TOKEN_INVALID_SIGNATURE,
+            "[Auth] 토큰 서명이 유효하지 않습니다."
+        )
+    } catch (e: IllegalArgumentException) {
+        throw CustomException(
+            AuthInfrastructureExceptionCode.AUTH_TOKEN_EMPTY,
+            "[Auth] 토큰이 비어있습니다."
+        )
     } catch (e: Exception) {
-        false
+        throw CustomException(
+            AuthInfrastructureExceptionCode.AUTH_UNEXPECTED_TOKEN_ERROR,
+            "[Auth] 토큰 처리 중 알 수 없는 오류가 발생했습니다."
+        )
     }
 
     private fun parse(token: String, key: SecretKey) =
