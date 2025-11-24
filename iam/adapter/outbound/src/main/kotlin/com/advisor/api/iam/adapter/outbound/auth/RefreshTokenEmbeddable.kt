@@ -22,12 +22,19 @@ class RefreshTokenEmbeddable (
     val expiresAt: Instant?
 ) {
     companion object {
-        fun toPersistence(refreshToken: RefreshToken): RefreshTokenEmbeddable {
-            return RefreshTokenEmbeddable(
-                token = refreshToken.token,
-                jti = refreshToken.jti,
-                createdAt = refreshToken.createdAt,
-                expiresAt = refreshToken.expiresAt
+        fun toPersistence(refreshToken: RefreshToken?): RefreshTokenEmbeddable {
+            return refreshToken?.let {
+                RefreshTokenEmbeddable(
+                    token = it.token,
+                    jti = it.jti,
+                    createdAt = it.createdAt,
+                    expiresAt = it.expiresAt
+                )
+            } ?: RefreshTokenEmbeddable(
+                token = null,
+                jti = null,
+                createdAt = null,
+                expiresAt = null
             )
         }
     }
