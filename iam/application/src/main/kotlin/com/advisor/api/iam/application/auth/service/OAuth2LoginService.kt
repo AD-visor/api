@@ -90,7 +90,7 @@ class OAuth2LoginService(
             token = refreshToken,
             jti = "a",
             createdAt = Instant.now(),
-            expiresAt = Instant.from(Instant.now().plusSeconds(2592000000))
+            expiresAt = Instant.now().plusSeconds(2592000)
         ))
 
         val updatedAuth = auth.updateRefreshToken(refreshTokenObject)
