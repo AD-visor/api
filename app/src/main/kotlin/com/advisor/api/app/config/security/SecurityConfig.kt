@@ -8,7 +8,6 @@ import com.advisor.api.iam.adapter.inbound.auth.oauth.OAuth2LoginSuccessHandler
 import com.advisor.api.iam.port.outbound.auth.AuthTokenPort
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -20,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfig(
     private val authTokenPort: AuthTokenPort,
-    @Lazy private val customOAuth2UserService: CustomOAuth2UserService,
-    @Lazy private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
+    private val customOAuth2UserService: CustomOAuth2UserService,
+    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
