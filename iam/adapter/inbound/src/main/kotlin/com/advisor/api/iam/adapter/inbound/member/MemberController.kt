@@ -4,11 +4,11 @@ import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.iam.adapter.inbound.member.dto.request.CreateMemberReqDto
 import com.advisor.api.iam.adapter.inbound.member.dto.response.MemberResDto
-import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand
+import com.advisor.api.iam.port.inbound.member.command.WithdrawMemberCommand
 import com.advisor.api.iam.port.inbound.member.query.GetMemberQuery
 import com.advisor.api.iam.port.inbound.member.usecase.CreateMemberUseCase
-import com.advisor.api.iam.port.inbound.member.usecase.DeleteMemberUseCase
 import com.advisor.api.iam.port.inbound.member.usecase.GetMemberUseCase
+import com.advisor.api.iam.port.inbound.member.usecase.WithdrawMemberUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/member")
 class MemberController(
     private val createMemberUseCase: CreateMemberUseCase,
-    private val deleteMemberUseCase: DeleteMemberUseCase,
+    private val withdrawMemberUseCase: WithdrawMemberUseCase,
     private val getMemberUseCase: GetMemberUseCase,
 ) {
     @PostMapping
@@ -40,9 +40,9 @@ class MemberController(
     }
 
     @PostMapping("/withdraw")
-    fun deleteMember(@AuthenticationPrincipal member: CustomUserDetails): ResponseEntity<BaseApiResponse<Unit>> {
-        val command = DeleteMemberCommand(member.id)
-        deleteMemberUseCase.execute(command)
+    fun withdrawMember(@AuthenticationPrincipal member: CustomUserDetails): ResponseEntity<BaseApiResponse<Unit>> {
+        val command = WithdrawMemberCommand(member.id)
+        withdrawMemberUseCase.execute(command)
 
         val response = BaseApiResponse<Unit>(
             success = true,
