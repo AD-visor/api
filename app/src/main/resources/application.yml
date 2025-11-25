@@ -50,3 +50,6 @@ jwt:
 snowflake:
   datacenter-id: 1
   worker-id: 10
+
+frontend:
+  url: ${FRONTEND_URL}
