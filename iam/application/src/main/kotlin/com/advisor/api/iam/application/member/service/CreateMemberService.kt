@@ -1,5 +1,6 @@
 package com.advisor.api.iam.application.member.service
 
+import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.iam.port.inbound.member.command.CreateMemberCommand
 import com.advisor.api.iam.domain.member.Member
@@ -13,6 +14,7 @@ import java.time.Instant
 @Service
 class CreateMemberService(
     private val memberStore: MemberStore,
+    private val domainEventPublisher: DomainEventPublisher
 ): CreateMemberUseCase {
     override fun execute(command: CreateMemberCommand) {
         val existingMember = memberStore.findById(MemberId(command.memberId))
@@ -30,10 +32,14 @@ class CreateMemberService(
         val member = Member.create(MemberId(command.memberId), memberProps)
 
         memberStore.save(member)
+
+        domainEventPublisher.publish(member)
     }
 
     private fun unDelete(existingMember: Member) {
         val updatedMember = existingMember.unDelete()
         memberStore.save(updatedMember)
+
+        domainEventPublisher.publish(updatedMember)
     }
 }
