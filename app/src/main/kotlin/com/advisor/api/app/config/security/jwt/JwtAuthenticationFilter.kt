@@ -2,6 +2,7 @@ package com.advisor.api.app.config.security.jwt
 
 import com.advisor.api.app.config.security.SecurityExceptionCode
 import com.advisor.api.app.config.security.SecurityPathFilter
+import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.iam.port.outbound.auth.AuthTokenPort
 import jakarta.servlet.FilterChain
@@ -85,8 +86,14 @@ class JwtAuthenticationFilter(
     }
 
     private fun setAuthenticationContext(subject: String) {
+        val userDetails = CustomUserDetails(
+            id = subject.toLong(),
+            username = subject,
+            roles = emptyList()
+        )
+
         val authentication = UsernamePasswordAuthenticationToken(
-            subject,
+            userDetails,
             null,
             emptyList()
         )
