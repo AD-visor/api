@@ -20,7 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig(
     private val authTokenPort: AuthTokenPort,
     private val customOAuth2UserService: CustomOAuth2UserService,
-    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
+    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
+    private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -44,6 +45,13 @@ class SecurityConfig(
         http.oauth2Login {
             it.userInfoEndpoint { u ->  u.userService(customOAuth2UserService) }
             it.successHandler(oAuth2LoginSuccessHandler)
+            it.failureHandler(oAuth2LoginFailureHandler)
+        }
+
+        // Security 예외 처리
+        http.exceptionHandling {
+            it.authenticationEntryPoint(CustomAuthenticationEntryPoint())
+            it.accessDeniedHandler(CustomAccessDeniedHandler())
         }
 
         // JWT 인증 필터
