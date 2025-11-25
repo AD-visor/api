@@ -7,7 +7,6 @@ object SecurityPathFilter {
 
     val PUBLIC_PATHS = arrayOf(
         "/member",
-        "/member/withdraw",
         "/swagger-ui/**",
         "/swagger-resources/**",
         "/favicon.ico",
