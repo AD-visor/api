@@ -10,10 +10,11 @@ object SecurityPathFilter {
         "/swagger-ui/**",
         "/swagger-resources/**",
         "/favicon.ico",
+        "/default-ui.css",
+        "/error/**"
     )
 
     val AUTH_PATHS = arrayOf(
-        "/auth/**",
         "/oauth2/**",
         "/login/**"
     )
