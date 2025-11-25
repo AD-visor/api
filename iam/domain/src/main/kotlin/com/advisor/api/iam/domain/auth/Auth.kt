@@ -32,6 +32,13 @@ class Auth private constructor(
         ))
     }
 
+    fun logout(): Auth {
+        return Auth(id, props.copy(
+            refreshToken = null,
+            updatedAt = Instant.now()
+        ))
+    }
+
     fun delete(): Auth {
         return Auth(id, props.copy(
             isDeleted = true,
