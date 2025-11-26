@@ -38,10 +38,14 @@ class Member private constructor(
     }
 
     fun unDelete(): Member {
-        return Member(id, props.copy(
+        val member = Member(id, props.copy(
             isDeleted = false,
             deletedAt = null
         ))
+
+        member.addDomainEvent(MemberCreatedEvent())
+
+        return member
     }
 
     private fun validate() {}

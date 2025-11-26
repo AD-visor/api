@@ -18,7 +18,7 @@ class CreateMemberService(
 ): CreateMemberUseCase {
     override fun execute(command: CreateMemberCommand) {
         val existingMember = memberStore.findById(MemberId(command.memberId))
-        if (existingMember !== null && existingMember.isDeleted) unDelete(existingMember)
+        if (existingMember != null && existingMember.isDeleted) unDelete(existingMember)
         else createNew(command)
     }
 
