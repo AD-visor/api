@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.CookieValue
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -24,7 +23,7 @@ class AuthController(
     private val oAuth2LogoutUseCase: OAuth2LogoutUseCase,
     private val cookieManager: CookieManager
 ) {
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     fun renewToken(
         @CookieValue("refreshToken") refreshToken: String,
         @AuthenticationPrincipal member: CustomUserDetails,
@@ -49,7 +48,7 @@ class AuthController(
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     fun logout(
         @AuthenticationPrincipal member: CustomUserDetails,
         response: HttpServletResponse

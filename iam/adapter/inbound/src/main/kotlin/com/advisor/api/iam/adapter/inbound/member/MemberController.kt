@@ -1,6 +1,7 @@
 package com.advisor.api.iam.adapter.inbound.member
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
+import com.advisor.api.common.core.presentation.CookieManager
 import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.iam.adapter.inbound.member.dto.request.CreateMemberReqDto
 import com.advisor.api.iam.adapter.inbound.member.dto.response.MemberResDto
@@ -9,6 +10,7 @@ import com.advisor.api.iam.port.inbound.member.query.GetMemberQuery
 import com.advisor.api.iam.port.inbound.member.usecase.CreateMemberUseCase
 import com.advisor.api.iam.port.inbound.member.usecase.GetMemberUseCase
 import com.advisor.api.iam.port.inbound.member.usecase.WithdrawMemberUseCase
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -24,6 +26,7 @@ class MemberController(
     private val createMemberUseCase: CreateMemberUseCase,
     private val withdrawMemberUseCase: WithdrawMemberUseCase,
     private val getMemberUseCase: GetMemberUseCase,
+    private val cookieManager: CookieManager
 ) {
     @PostMapping
     fun createMember(@RequestBody dto: CreateMemberReqDto): ResponseEntity<BaseApiResponse<Unit>> {
@@ -40,17 +43,23 @@ class MemberController(
     }
 
     @PostMapping("/withdraw")
-    fun withdrawMember(@AuthenticationPrincipal member: CustomUserDetails): ResponseEntity<BaseApiResponse<Unit>> {
+    fun withdrawMember(
+        @AuthenticationPrincipal member: CustomUserDetails,
+        response: HttpServletResponse
+    ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = WithdrawMemberCommand(member.id)
         withdrawMemberUseCase.execute(command)
 
-        val response = BaseApiResponse<Unit>(
+        cookieManager.deleteCookie(response, "accessToken")
+        cookieManager.deleteCookie(response, "refreshToken")
+
+        val apiResponse = BaseApiResponse<Unit>(
             success = true,
             message = "회원 삭제 성공",
             httpStatus = HttpStatus.OK,
         )
 
-        return ResponseEntity.status(HttpStatus.OK).body(response)
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
     }
 
     @GetMapping("/me")
