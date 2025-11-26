@@ -14,11 +14,13 @@ include(":iam:port:outbound")
 include(":iam:adapter:inbound")
 include(":iam:adapter:outbound")
 
-// Content
+// Conversation
 include(":conversation:application")
 include(":conversation:domain")
-include(":conversation:infrastructure")
-include(":conversation:presentation")
+include(":conversation:port:inbound")
+include(":conversation:port:outbound")
+include(":conversation:adapter:inbound")
+include(":conversation:adapter:outbound")
 
 // Subscription
 include(":subscription:application")

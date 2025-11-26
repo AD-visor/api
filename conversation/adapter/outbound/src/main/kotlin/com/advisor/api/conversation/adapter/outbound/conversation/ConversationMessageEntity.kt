@@ -1,4 +1,4 @@
-package com.advisor.api.conversation.infrastructure.conversation
+package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId

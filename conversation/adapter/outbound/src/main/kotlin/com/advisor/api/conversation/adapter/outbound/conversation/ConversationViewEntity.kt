@@ -1,4 +1,4 @@
-package com.advisor.api.conversation.infrastructure.conversation
+package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.conversation.domain.conversation.ConversationView
 import jakarta.persistence.Column
@@ -45,19 +45,21 @@ class ConversationViewEntity(
     @Column(nullable = false)
     val createdAt: Instant
 ) {
-    fun toModel(): ConversationView {
-        return ConversationView(
-            id = this.id,
-            memberId = this.memberId,
-            businessType = this.businessType,
-            productName = this.productName,
-            description = this.description,
-            targetAudience = this.targetAudience,
-            toneStyle = this.toneStyle,
-            speechStyle = this.speechStyle,
-            contentLength = this.contentLength,
-            platform = this.platform,
-            createdAt = this.createdAt
-        )
+    companion object {
+        fun toModel(entity: ConversationViewEntity): ConversationView {
+            return ConversationView(
+                id = entity.id,
+                memberId = entity.memberId,
+                businessType = entity.businessType,
+                productName = entity.productName,
+                description = entity.description,
+                targetAudience = entity.targetAudience,
+                toneStyle = entity.toneStyle,
+                speechStyle = entity.speechStyle,
+                contentLength = entity.contentLength,
+                platform = entity.platform,
+                createdAt = entity.createdAt
+            )
+        }
     }
 }

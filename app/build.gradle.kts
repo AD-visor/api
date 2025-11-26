@@ -18,9 +18,10 @@ dependencies {
     implementation(project(":payment:port:outbound"))
     implementation(project(":payment:application"))
 
-    implementation(project(":conversation:presentation"))
-
-    implementation(project(":conversation:infrastructure"))
+    implementation(project(":conversation:adapter:inbound"))
+    implementation(project(":conversation:adapter:outbound"))
+    implementation(project(":conversation:port:outbound"))
+    implementation(project(":conversation:application"))
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")

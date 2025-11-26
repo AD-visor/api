@@ -1,4 +1,4 @@
-package com.advisor.api.conversation.infrastructure.conversation
+package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import jakarta.persistence.Column
@@ -27,13 +27,15 @@ class ConversationMessageViewEntity(
     @Column(nullable = false)
     val createdAt: Instant
 ) {
-    fun toModel(): ConversationMessageView {
-        return ConversationMessageView(
-            id = this.id,
-            role = this.role,
-            body = this.body,
-            revisionOf = this.revisionOf,
-            createdAt = this.createdAt
-        )
+    companion object {
+        fun toModel(entity: ConversationMessageViewEntity): ConversationMessageView {
+            return ConversationMessageView(
+                id = entity.id,
+                role = entity.role,
+                body = entity.body,
+                revisionOf = entity.revisionOf,
+                createdAt = entity.createdAt,
+            )
+        }
     }
 }
