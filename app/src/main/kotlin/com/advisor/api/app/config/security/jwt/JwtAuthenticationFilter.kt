@@ -63,8 +63,8 @@ class JwtAuthenticationFilter(
         accessToken: String,
         request: HttpServletRequest
     ) {
-        authTokenPort.validateAccessToken(accessToken)
         if (SecurityContextHolder.getContext().authentication != null) return
+        authTokenPort.validateAccessToken(accessToken)
 
         val subject = authTokenPort.getAccessSubject(accessToken)
         request.setAttribute("accessToken", accessToken)
@@ -76,8 +76,8 @@ class JwtAuthenticationFilter(
         refreshToken: String,
         request: HttpServletRequest
     ) {
-        authTokenPort.validateRefreshToken(refreshToken)
         if (SecurityContextHolder.getContext().authentication != null) return
+        authTokenPort.validateRefreshToken(refreshToken)
 
         val subject = authTokenPort.getRefreshSubject(refreshToken)
         request.setAttribute("refreshToken", refreshToken)
