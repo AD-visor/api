@@ -36,8 +36,8 @@ subprojects {
 
 	dependencies {
 		// Spring
-		implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.6"))
-		annotationProcessor(platform(("org.springframework.boot:spring-boot-dependencies:3.5.6")))
+		implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
+		annotationProcessor(platform(("org.springframework.boot:spring-boot-dependencies:3.5.7")))
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -65,6 +65,10 @@ subprojects {
 	}
 
 	tasks.withType<Jar> {
-		archiveBaseName.set("${project.parent?.name ?: ""}-${project.name}")
+		val modulePath = project.path
+			.removePrefix(":")
+			.replace(":", "-")
+
+		archiveBaseName.set(modulePath)
 	}
 }

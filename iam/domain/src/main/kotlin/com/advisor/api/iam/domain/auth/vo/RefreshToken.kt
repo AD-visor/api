@@ -24,7 +24,7 @@ class RefreshToken private constructor(private val props: RefreshTokenProps) {
             "[Auth] jti는 필수 입니다."
         ) }
 
-        require(props.expiresAt <= Instant.now()) { throw CustomException(
+        require(props.expiresAt > Instant.now()) { throw CustomException(
             AuthDomainExceptionCode.AUTH_REFRESH_TOKEN_EXPIRED,
             "[Auth] 만료된 토큰 입니다."
         ) }

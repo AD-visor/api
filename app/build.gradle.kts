@@ -2,20 +2,27 @@ apply(plugin = "org.springframework.boot")
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":iam:presentation"))
+
+    implementation(project(":iam:adapter:inbound"))
+    implementation(project(":iam:adapter:outbound"))
+    implementation(project(":iam:port:outbound"))
+    implementation(project(":iam:application"))
+
     implementation(project(":conversation:presentation"))
     implementation(project(":subscription:presentation"))
     implementation(project(":payment:presentation"))
 
-    implementation(project(":iam:infrastructure"))
     implementation(project(":conversation:infrastructure"))
     implementation(project(":subscription:infrastructure"))
     implementation(project(":payment:infrastructure"))
 
+    // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    // OAuth2
+    implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 
     // Database
     runtimeOnly("org.postgresql:postgresql")

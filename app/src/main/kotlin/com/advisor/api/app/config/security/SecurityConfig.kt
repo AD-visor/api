@@ -3,6 +3,9 @@ package com.advisor.api.app.config.security
 import com.advisor.api.app.config.security.SecurityPathFilter.AUTH_PATHS
 import com.advisor.api.app.config.security.SecurityPathFilter.PUBLIC_PATHS
 import com.advisor.api.app.config.security.jwt.JwtAuthenticationFilter
+import com.advisor.api.iam.adapter.inbound.auth.oauth.CustomOAuth2UserService
+import com.advisor.api.iam.adapter.inbound.auth.oauth.OAuth2LoginSuccessHandler
+import com.advisor.api.iam.port.outbound.auth.AuthTokenPort
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -14,9 +17,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+    private val authTokenPort: AuthTokenPort,
+    private val customOAuth2UserService: CustomOAuth2UserService,
+    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
+    private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler
+) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        // 기본 설정
         http
             .httpBasic { it.disable() }
             .csrf { it.disable() }
@@ -24,6 +33,7 @@ class SecurityConfig {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .cors { }
 
+        // 경로별 권한 설정
         http.authorizeHttpRequests {
             it.requestMatchers(*PUBLIC_PATHS).permitAll()
             it.requestMatchers(*AUTH_PATHS).permitAll()
@@ -31,13 +41,22 @@ class SecurityConfig {
             it.anyRequest().authenticated()
         }
 
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+        // OAuth2 로그인 설정
+        http.oauth2Login {
+            it.userInfoEndpoint { u ->  u.userService(customOAuth2UserService) }
+            it.successHandler(oAuth2LoginSuccessHandler)
+            it.failureHandler(oAuth2LoginFailureHandler)
+        }
+
+        // Security 예외 처리
+        http.exceptionHandling {
+            it.authenticationEntryPoint(CustomAuthenticationEntryPoint())
+            it.accessDeniedHandler(CustomAccessDeniedHandler())
+        }
+
+        // JWT 인증 필터
+        http.addFilterBefore(JwtAuthenticationFilter(authTokenPort), UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
-    }
-
-    @Bean
-    fun jwtAuthenticationFilter(): JwtAuthenticationFilter {
-        return JwtAuthenticationFilter()
     }
 }

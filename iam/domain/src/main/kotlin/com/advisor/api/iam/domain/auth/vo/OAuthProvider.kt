@@ -4,9 +4,9 @@ import com.advisor.api.common.exception.CustomException
 import com.advisor.api.iam.domain.auth.AuthDomainExceptionCode
 
 enum class OAuthProvider(val value: String) {
-    KAKAO("KAKAO"),
-    GOOGLE("GOOGLE"),
-    NAVER("NAVER");
+    KAKAO("kakao"),
+    GOOGLE("google"),
+    NAVER("naver");
 
     companion object {
         fun fromString(value: String): OAuthProvider =
