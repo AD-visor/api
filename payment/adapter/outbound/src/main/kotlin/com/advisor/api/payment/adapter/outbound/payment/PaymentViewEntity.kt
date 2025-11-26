@@ -1,4 +1,4 @@
-package com.advisor.api.payment.infrastructure.payment
+package com.advisor.api.payment.adapter.outbound.payment
 
 import com.advisor.api.payment.domain.payment.PaymentView
 import jakarta.persistence.Column

@@ -1,4 +1,4 @@
-package com.advisor.api.payment.infrastructure.payment
+package com.advisor.api.payment.adapter.outbound.payment
 
 import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.MemberId

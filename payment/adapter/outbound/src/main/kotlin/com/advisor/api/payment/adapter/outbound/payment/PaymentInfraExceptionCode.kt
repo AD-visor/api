@@ -1,4 +1,4 @@
-package com.advisor.api.payment.infrastructure.payment
+package com.advisor.api.payment.adapter.outbound.payment
 
 import com.advisor.api.common.exception.CustomExceptionCode
 import com.advisor.api.common.exception.ErrorStatus

@@ -1,9 +1,12 @@
 dependencies {
     implementation(project(":payment:domain"))
+    implementation(project(":payment:port:outbound"))
     implementation(project(":common"))
 
     // Spring
     implementation("org.springframework:spring-context")
+    implementation("org.springframework.boot:spring-boot")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")
