@@ -23,8 +23,10 @@ include(":conversation:presentation")
 // Subscription
 include(":subscription:application")
 include(":subscription:domain")
-include(":subscription:infrastructure")
-include(":subscription:presentation")
+include(":subscription:port:inbound")
+include(":subscription:port:outbound")
+include(":subscription:adapter:inbound")
+include(":subscription:adapter:outbound")
 
 // Payment
 include(":payment:application")

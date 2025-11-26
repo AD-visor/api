@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @Configuration
 @EntityScan(basePackages = [
     "com.advisor.api.iam.adapter.outbound",
-    "com.advisor.api.subscription.infrastructure",
+    "com.advisor.api.subscription.adapter.outbound",
     "com.advisor.api.conversation.infrastructure",
     "com.advisor.api.payment.infrastructure"
 ])
 @EnableJpaRepositories(basePackages = [
     "com.advisor.api.iam.adapter.outbound",
-    "com.advisor.api.subscription.infrastructure",
+    "com.advisor.api.subscription.adapter.outbound",
     "com.advisor.api.conversation.infrastructure",
     "com.advisor.api.payment.infrastructure"
 ])
