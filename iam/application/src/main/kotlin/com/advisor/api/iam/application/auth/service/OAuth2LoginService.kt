@@ -27,11 +27,11 @@ class OAuth2LoginService(
     @Transactional
     override fun execute(command: OAuth2LoginCommand): OAuth2LoginResult {
         val auth = findOrCreateAuth(
-            memberId = MemberId(snowFlakeIdUtil.generateId()),
             provider = command.providerName,
-            oAuthId = command.oAuthId,
-            email = command.email
+            oAuthId = command.oAuthId
         )
+
+        createNewMember(auth.memberId, command.email)
 
         val (accessToken, refreshToken) = generateTokens(auth.memberId)
         updateRefreshToken(auth, refreshToken)
@@ -45,14 +45,20 @@ class OAuth2LoginService(
     }
 
     private fun findOrCreateAuth(
-        memberId: MemberId,
         provider: String,
-        oAuthId: String,
-        email: String
+        oAuthId: String
     ): Auth {
         val existingAuth = authStore.loadByProviderAndOAuthId(provider, oAuthId)
-        if (existingAuth != null) return existingAuth
+        existingAuth?.let { return if (it.isDeleted) unDeleteAuth(it) else it }
 
+        return createNewAuth(
+            memberId = MemberId(snowFlakeIdUtil.generateId()),
+            provider = provider,
+            oAuthId = oAuthId
+        )
+    }
+
+    private fun createNewAuth(memberId: MemberId, provider: String, oAuthId: String): Auth {
         val authProps = AuthProps(
             memberId = memberId,
             oAuthCredential = OAuthCredential.create(
@@ -70,11 +76,17 @@ class OAuth2LoginService(
         )
 
         val auth = Auth.create(AuthId(snowFlakeIdUtil.generateId()), authProps)
-        createNewMember(memberId, email)
 
         authStore.save(auth)
 
         return auth
+    }
+
+    private fun unDeleteAuth(existingAuth: Auth): Auth {
+        val updatedAuth = existingAuth.unDelete()
+        authStore.save(updatedAuth)
+
+        return updatedAuth
     }
 
     private fun createNewMember(memberId: MemberId, email: String) {
