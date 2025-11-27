@@ -49,6 +49,15 @@ class Plan private constructor(
         return updatedPlan
     }
 
+    fun delete(): Plan {
+        val updatedPlan = Plan(id, props.copy(
+            isDeleted = true,
+            deletedAt = Instant.now()
+        ))
+
+        return updatedPlan
+    }
+
     private fun validate() {
         require(props.name.isNotBlank()) { CustomException(
             PlanDomainExceptionCode.PLAN_NAME_EMPTY,
