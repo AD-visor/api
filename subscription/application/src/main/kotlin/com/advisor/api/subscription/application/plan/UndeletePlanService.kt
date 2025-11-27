@@ -14,8 +14,8 @@ class UndeletePlanService(
         val plan = planStore.loadById(PlanId(command.planId))
 
         if (plan.isDeleted) {
-            plan.undelete()
-            planStore.save(plan)
+            val updatedPlan = plan.undelete()
+            planStore.save(updatedPlan)
         }
     }
 }
