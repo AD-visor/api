@@ -19,7 +19,7 @@ class UpdatePlanService(
             newName = command.name ?: plan.name,
             newMonthlyLimit = command.monthlyLimit?.let { MonthlyLimit.create(it) } ?: plan.monthlyLimit,
             newPrice = command.price?.let { Money.create(it) } ?: plan.price,
-            newDescription = command.description
+            newDescription = command.description?.let { command.description } ?: plan.description
         )
 
         planStore.save(updatedPlan)
