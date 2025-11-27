@@ -32,6 +32,23 @@ class Plan private constructor(
         return plan
     }
 
+    fun update(
+        newName: String,
+        newMonthlyLimit: MonthlyLimit,
+        newPrice: Money,
+        newDescription: String?
+    ): Plan {
+        val updatedPlan = Plan(id, props.copy(
+            name = newName,
+            monthlyLimit = newMonthlyLimit,
+            price = newPrice,
+            description = newDescription,
+            updatedAt = Instant.now()
+        ))
+
+        return updatedPlan
+    }
+
     private fun validate() {
         require(props.name.isNotBlank()) { CustomException(
             PlanDomainExceptionCode.PLAN_NAME_EMPTY,
