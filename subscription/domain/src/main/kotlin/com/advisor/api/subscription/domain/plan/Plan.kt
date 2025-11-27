@@ -23,6 +23,15 @@ class Plan private constructor(
         }
     }
 
+    fun undelete(): Plan {
+        val plan = Plan(id, props.copy(
+            isDeleted = false,
+            deletedAt = null
+        ))
+
+        return plan
+    }
+
     private fun validate() {
         require(props.name.isNotBlank()) { CustomException(
             PlanDomainExceptionCode.PLAN_NAME_EMPTY,
