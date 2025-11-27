@@ -1,25 +1,36 @@
 package com.advisor.api.subscription.adapter.inbound.plan
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
+import com.advisor.api.subscription.adapter.inbound.plan.dto.request.CreatePlanReqDto
 import com.advisor.api.subscription.adapter.inbound.plan.dto.request.UpdatePlanReqDto
+import com.advisor.api.subscription.port.inbound.plan.CreatePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.UndeletePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.UpdatePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.command.UndeletePlanCommand
-import com.advisor.api.subscription.port.inbound.plan.command.UpdatePlanCommand
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/plan")
 class PlanController(
+    private val createPlanUseCase: CreatePlanUseCase,
     private val undeletePlanUseCase: UndeletePlanUseCase,
     private val updatePlanUseCase: UpdatePlanUseCase
 ) {
+    @PostMapping
+    fun createPlan(@RequestBody dto: CreatePlanReqDto): ResponseEntity<BaseApiResponse<Unit>> {
+        createPlanUseCase.execute(dto.toCommand())
+
+        val response = BaseApiResponse<Unit>(
+            success = true,
+            message = "플랜 생성 성공",
+            httpStatus = HttpStatus.CREATED
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response)
+    }
+
     @PatchMapping("{planId}/undelete")
     fun undeletePlan(@PathVariable planId: Long): ResponseEntity<BaseApiResponse<Unit>> {
         val command = UndeletePlanCommand(planId)
@@ -37,9 +48,9 @@ class PlanController(
     @PatchMapping("/{planId}")
     fun updatePlan(
         @PathVariable planId: Long,
-        @RequestBody updatePlanReqDto: UpdatePlanReqDto
+        @RequestBody dto: UpdatePlanReqDto
     ): ResponseEntity<BaseApiResponse<Unit>> {
-        val command = updatePlanReqDto.toCommand(planId)
+        val command = dto.toCommand(planId)
         updatePlanUseCase.execute(command)
 
         val response = BaseApiResponse<Unit>(
