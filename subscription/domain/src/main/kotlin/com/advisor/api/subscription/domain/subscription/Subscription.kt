@@ -12,7 +12,7 @@ import java.time.Instant
 class Subscription(
     id: SubscriptionId,
     private val props: SubscriptionProps
-): AggregateRoot<SubscriptionId>(id) {
+) : AggregateRoot<SubscriptionId>(id) {
     init { validate() }
 
     companion object {
@@ -23,6 +23,26 @@ class Subscription(
         fun of(id: SubscriptionId, props: SubscriptionProps): Subscription {
             return Subscription(id, props)
         }
+    }
+
+    fun cancel(): Subscription =
+        updateStatus(SubscriptionStatus.create(SubscriptionStatus.CANCELED.value))
+
+    fun expire(): Subscription =
+        updateStatus(SubscriptionStatus.create(SubscriptionStatus.EXPIRED.value))
+
+    fun suspend(): Subscription =
+        updateStatus(SubscriptionStatus.create(SubscriptionStatus.SUSPENDED.value))
+
+
+    private fun updateStatus(status: SubscriptionStatus): Subscription {
+        val updatedSubscription = Subscription(
+            id, props.copy(
+                subscriptionStatus = status,
+            )
+        )
+
+        return updatedSubscription
     }
 
     private fun validate() {}
