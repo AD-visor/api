@@ -8,6 +8,7 @@ data class SubscriptionView(
     val monthlyUsage: Long,
     val memberId: Long,
     val planId: Long,
+    val paymentId: Long,
     val startAt: Instant,
     val expiredAt: Instant
 )

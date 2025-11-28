@@ -28,6 +28,9 @@ class SubscriptionViewEntity(
     val planId: Long,
 
     @Column(nullable = false)
+    val paymentId: Long,
+
+    @Column(nullable = false)
     val startAt: Instant,
 
     @Column(nullable = false)
@@ -40,6 +43,7 @@ class SubscriptionViewEntity(
             monthlyUsage = monthlyUsage,
             memberId = memberId,
             planId = planId,
+            paymentId = paymentId,
             startAt = startAt,
             expiredAt = expiredAt
         )

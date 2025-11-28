@@ -1,6 +1,7 @@
 package com.advisor.api.subscription.adapter.outbound.subscription
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.subscription.domain.subscription.Subscription
@@ -32,6 +33,9 @@ class SubscriptionEntity(
     val memberId: Long,
 
     @Column(nullable = false)
+    val paymentId: Long,
+
+    @Column(nullable = false)
     val startedAt: Instant,
 
     @Column(nullable = false)
@@ -51,6 +55,7 @@ class SubscriptionEntity(
                 monthlyUsage = domain.monthlyUsage.value,
                 planId = domain.planId.value,
                 memberId = domain.memberId.value,
+                paymentId = domain.paymentId.value,
                 startedAt = domain.startedAt,
                 expiredAt = domain.expiredAt,
                 isDeleted = domain.isDeleted,
@@ -65,6 +70,7 @@ class SubscriptionEntity(
             monthlyUsage = MonthlyUsage.create(monthlyUsage),
             planId = PlanId(planId),
             memberId = MemberId(memberId),
+            paymentId = PaymentId(paymentId),
             startedAt = startedAt,
             expiredAt = expiredAt,
             isDeleted = isDeleted,

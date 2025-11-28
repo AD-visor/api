@@ -2,6 +2,7 @@ package com.advisor.api.subscription.domain.subscription
 
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
@@ -30,6 +31,7 @@ class Subscription(
     val monthlyUsage: MonthlyUsage get() = props.monthlyUsage
     val planId: PlanId get() = props.planId
     val memberId: MemberId get() = props.memberId
+    val paymentId: PaymentId get() = props.paymentId
     val startedAt: Instant get() = props.startedAt
     val expiredAt: Instant get() = props.expiredAt
     val isDeleted: Boolean get() = props.isDeleted
