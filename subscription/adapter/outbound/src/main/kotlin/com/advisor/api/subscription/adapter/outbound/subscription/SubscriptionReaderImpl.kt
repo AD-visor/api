@@ -39,4 +39,12 @@ class SubscriptionReaderImpl(
 
         return entity.toModel()
     }
+
+    override fun existsByPaymentId(paymentId: Long) {
+        val result = jpaReader.existsByPaymentId(paymentId)
+        if (result) { throw CustomException(
+            SubscriptionInfraExceptionCode.SUBSCRIPTION_ALREADY_EXISTS,
+            "[Subscription] paymentId: ${paymentId}에 해당하는 Subscription가 이미 존재합니다."
+        ) }
+    }
 }

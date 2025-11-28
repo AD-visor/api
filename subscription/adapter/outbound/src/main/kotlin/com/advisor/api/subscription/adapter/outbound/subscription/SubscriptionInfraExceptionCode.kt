@@ -13,4 +13,9 @@ enum class SubscriptionInfraExceptionCode(
         code = "SUBSCRIPTION_NOT_FOUND",
         message = "[Subscription] 해당 구독 정보를 찾을 수 없습니다."
     ),
+    SUBSCRIPTION_ALREADY_EXISTS(
+        status = ErrorStatus.CONFLICT,
+        code = "SUBSCRIPTION_ALREADY_EXISTS",
+        message = "[Subscription] 이미 존재하는 구독 정보입니다."
+    )
 }
