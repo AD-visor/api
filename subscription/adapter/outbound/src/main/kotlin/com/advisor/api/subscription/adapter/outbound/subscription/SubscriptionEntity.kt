@@ -11,11 +11,15 @@ import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import java.time.Instant
 
 @Entity
-@Table(name = "subscription")
+@Table(
+    name = "subscription",
+    indexes = [Index(name = "idx_subscription_payment", unique = true, columnList = "payment_id")]
+)
 class SubscriptionEntity(
     @Id
     val id: Long,
