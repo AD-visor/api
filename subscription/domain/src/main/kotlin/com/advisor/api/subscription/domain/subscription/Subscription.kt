@@ -34,6 +34,9 @@ class Subscription(
     fun suspend(): Subscription =
         updateStatus(SubscriptionStatus.create(SubscriptionStatus.SUSPENDED.value))
 
+    fun resume(): Subscription =
+        updateStatus(SubscriptionStatus.create(SubscriptionStatus.ACTIVE.value))
+
 
     private fun updateStatus(status: SubscriptionStatus): Subscription {
         val updatedSubscription = Subscription(
