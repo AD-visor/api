@@ -5,4 +5,5 @@ interface SubscriptionReader {
     fun findByMemberId(memberId: Long): SubscriptionView
     fun findActiveByMemberId(memberId: Long): SubscriptionView
     fun existsByPaymentId(paymentId: Long)
+    fun refreshView()
 }

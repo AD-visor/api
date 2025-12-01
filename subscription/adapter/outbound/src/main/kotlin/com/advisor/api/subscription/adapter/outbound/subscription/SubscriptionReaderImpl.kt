@@ -4,11 +4,13 @@ import com.advisor.api.common.exception.CustomException
 import com.advisor.api.subscription.domain.subscription.SubscriptionReader
 import com.advisor.api.subscription.domain.subscription.SubscriptionView
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
+import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 
 @Repository
 class SubscriptionReaderImpl(
-    private val jpaReader: SubscriptionJpaReader
+    private val jpaReader: SubscriptionJpaReader,
+    private val em: EntityManager
 ): SubscriptionReader {
     override fun findById(id: Long): SubscriptionView {
         val entity = jpaReader.findById(id).orElseThrow { CustomException(
@@ -46,5 +48,10 @@ class SubscriptionReaderImpl(
             SubscriptionInfraExceptionCode.SUBSCRIPTION_ALREADY_EXISTS,
             "[Subscription] paymentId: ${paymentId}에 해당하는 Subscription가 이미 존재합니다."
         ) }
+    }
+
+    override fun refreshView() {
+        em.createNativeQuery("REFRESH MATERIALIZED VIEW CONCURRENTLY vw_subscription")
+            .executeUpdate()
     }
 }
