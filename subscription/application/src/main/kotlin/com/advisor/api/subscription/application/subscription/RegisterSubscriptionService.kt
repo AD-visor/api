@@ -1,5 +1,6 @@
 package com.advisor.api.subscription.application.subscription
 
+import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
@@ -14,6 +15,7 @@ import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import com.advisor.api.subscription.port.inbound.subscription.RegisterSubscriptionUseCase
 import com.advisor.api.subscription.port.inbound.subscription.command.RegisterSubscriptionCommand
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.ZoneId
 
@@ -21,8 +23,10 @@ import java.time.ZoneId
 class RegisterSubscriptionService(
     private val subscriptionStore: SubscriptionStore,
     private val subscriptionReader: SubscriptionReader,
-    private val snowFlakeIdUtil: SnowFlakeIdUtil
+    private val snowFlakeIdUtil: SnowFlakeIdUtil,
+    private val domainEventPublisher: DomainEventPublisher
 ): RegisterSubscriptionUseCase {
+    @Transactional
     override fun execute(command: RegisterSubscriptionCommand) {
         subscriptionReader.existsByPaymentId(command.paymentId)
 
@@ -47,6 +51,8 @@ class RegisterSubscriptionService(
         )
 
         subscriptionStore.save(subscription)
+
+        domainEventPublisher.publish(subscription)
     }
 
     private fun calculateExpiredAt(startedAt: Instant, term: String): Instant {

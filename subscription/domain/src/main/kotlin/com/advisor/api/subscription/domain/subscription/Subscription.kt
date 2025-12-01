@@ -5,6 +5,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
+import com.advisor.api.subscription.domain.subscription.event.SubscriptionRegisteredEvent
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import java.time.Instant
@@ -17,7 +18,10 @@ class Subscription(
 
     companion object {
         fun create(id: SubscriptionId, props: SubscriptionProps): Subscription {
-            return Subscription(id, props)
+            val subscription = Subscription(id, props)
+            subscription.addDomainEvent(SubscriptionRegisteredEvent())
+
+            return subscription
         }
 
         fun of(id: SubscriptionId, props: SubscriptionProps): Subscription {
