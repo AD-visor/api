@@ -20,7 +20,7 @@ data class GetSubscriptionResult(
                 monthlyUsage = model.monthlyUsage,
                 planId = model.planId,
                 memberId = model.memberId,
-                startedAt = model.startAt,
+                startedAt = model.startedAt,
                 expiredAt = model.expiredAt
             )
         }
