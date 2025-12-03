@@ -2,13 +2,13 @@ package com.advisor.api.subscription.adapter.inbound.subscription
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.subscription.adapter.inbound.subscription.dto.request.RegisterSubscriptionReqDto
-import com.advisor.api.subscription.port.inbound.subscription.CancelSubscriptionUseCase
-import com.advisor.api.subscription.port.inbound.subscription.ExpireSubscriptionUseCase
-import com.advisor.api.subscription.port.inbound.subscription.RegisterSubscriptionUseCase
-import com.advisor.api.subscription.port.inbound.subscription.SuspendSubscriptionUseCase
+import com.advisor.api.subscription.port.inbound.subscription.*
 import com.advisor.api.subscription.port.inbound.subscription.command.UpdateSubscriptionStatusCommand
+import com.advisor.api.subscription.port.inbound.subscription.query.GetMemberSubscriptionQuery
+import com.advisor.api.subscription.port.inbound.subscription.result.GetSubscriptionResult
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,12 +23,13 @@ class SubscriptionController(
     private val cancelSubscriptionUseCase: CancelSubscriptionUseCase,
     private val suspendSubscriptionUseCase: SuspendSubscriptionUseCase,
     private val expireSubscriptionUseCase: ExpireSubscriptionUseCase,
+    private val getMemberSubscriptionUseCase: GetMemberSubscriptionUseCase,
 ) {
     @PostMapping
     fun registerSubscription(
         @RequestBody dto: RegisterSubscriptionReqDto
     ): ResponseEntity<BaseApiResponse<Unit>> {
-        val command = dto.toCommand(1L) // TODO: 회원 ID 추후 수정
+        val command = dto.toCommand(352568200891899904L) // TODO: 회원 ID 추후 수정
 
         registerSubscriptionUseCase.execute(command)
 
@@ -84,6 +85,21 @@ class SubscriptionController(
             success = true,
             message = "구독 만료 성공",
             httpStatus = HttpStatus.OK,
+        )
+
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
+    }
+
+    @GetMapping
+    fun getMemberSubscription(): ResponseEntity<BaseApiResponse<GetSubscriptionResult>> {
+        val query = GetMemberSubscriptionQuery(352568200891899904L)
+        val result = getMemberSubscriptionUseCase.execute(query)
+
+        val apiResponse = BaseApiResponse(
+            success = true,
+            message = "회원 구독 조회 성공",
+            httpStatus = HttpStatus.OK,
+            data = result
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
