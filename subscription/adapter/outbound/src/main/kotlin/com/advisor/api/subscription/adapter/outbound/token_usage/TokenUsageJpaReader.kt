@@ -11,12 +11,29 @@ interface TokenUsageJpaReader: JpaRepository<TokenUsageViewEntity, Long> {
             SELECT tu
             FROM TokenUsageViewEntity tu
             WHERE tu.subscriptionId = :subscriptionId
-            AND (:startAt IS NULL OR tu.usedAt >= :startAt) AND (:endAt IS NULL OR tu.usedAt <= :endAt)
+            AND tu.usedAt >= COALESCE(:startAt, tu.usedAt)
+            AND tu.usedAt <= COALESCE(:endAt, tu.usedAt)
             ORDER BY tu.usedAt DESC
         """
     )
     fun findTokenUsageViewsBySubscriptionId(
         @Param("subscriptionId") subscriptionId: Long,
+        @Param("startAt") startAt: Instant?,
+        @Param("endAt") endAt: Instant?,
+    ): List<TokenUsageViewEntity>
+
+    @Query(
+        """
+            SELECT tu
+            FROM TokenUsageViewEntity tu
+            WHERE tu.memberId = :memberId
+            AND tu.usedAt >= COALESCE(:startAt, tu.usedAt)
+            AND tu.usedAt <= COALESCE(:endAt, tu.usedAt)
+            ORDER BY tu.usedAt DESC
+        """
+    )
+    fun findTokenUsageViewsByMemberId(
+        @Param("memberId") memberId: Long,
         @Param("startAt") startAt: Instant?,
         @Param("endAt") endAt: Instant?,
     ): List<TokenUsageViewEntity>

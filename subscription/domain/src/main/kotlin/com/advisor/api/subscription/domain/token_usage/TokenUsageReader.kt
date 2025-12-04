@@ -8,4 +8,10 @@ interface TokenUsageReader {
         startAt: Instant?,
         endAt: Instant?,
     ): List<TokenUsageView>
+
+    fun findTokenUsageViewsByMemberId(
+        memberId: Long,
+        startAt: Instant?,
+        endAt: Instant?,
+    ): List<TokenUsageView>
 }

@@ -22,4 +22,14 @@ class TokenUsageReaderImpl(
 
         return entities.map { it.toModel() }
     }
+
+    override fun findTokenUsageViewsByMemberId(
+        memberId: Long,
+        startAt: Instant?,
+        endAt: Instant?
+    ): List<TokenUsageView> {
+        val entities = jpaReader.findTokenUsageViewsByMemberId(memberId, startAt, endAt)
+
+        return entities.map { it.toModel() }
+    }
 }
