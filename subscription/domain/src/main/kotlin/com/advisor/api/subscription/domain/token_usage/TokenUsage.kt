@@ -28,6 +28,7 @@ class TokenUsage private constructor(
             "[TokenUsage] 사용된 토큰 수는 양수여야 합니다."
         ) }
 
+        /*
         require(
             listOf(contentRequestId, contentRevisionId, contentId).count { it != null } == 1
         ) { CustomException(
@@ -43,7 +44,7 @@ class TokenUsage private constructor(
             TokenUsageDomainExceptionCode.TOKEN_USAGE_SOURCE_CONTEXT_MISMATCH,
             "[TokenUsage] 토큰 사용처와 Id type이 일치하지 않습니다."
         ) }
-
+        */
     }
 
     val memberId: MemberId get() = props.memberId
@@ -51,8 +52,5 @@ class TokenUsage private constructor(
     val subscriptionId: SubscriptionId get() = props.subscriptionId
     val usedTokens: Long get() = props.usedTokens
     val usedAt: Instant get() = props.usedAt
-    val sourceContext: SourceContext get() = props.sourceContext
-    val contentRequestId: ContentRequestId? get() = props.contentRequestId
-    val contentRevisionId: ContentRevisionId? get() = props.contentRevisionId
-    val contentId: ContentId? get() = props.contentId
+    val conversationId: ConversationMessageId get() = props.conversationMessageId
 }

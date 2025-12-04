@@ -3,7 +3,6 @@ package com.advisor.api.subscription.adapter.outbound.token_usage
 import com.advisor.api.common.core.domain.vo.identifier.*
 import com.advisor.api.subscription.domain.token_usage.TokenUsage
 import com.advisor.api.subscription.domain.token_usage.TokenUsageProps
-import com.advisor.api.subscription.domain.token_usage.vo.SourceContext
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -32,16 +31,7 @@ class TokenUsageEntity(
     val usedAt: Instant,
 
     @Column(nullable = false)
-    val sourceContext: String,
-
-    @Column
-    val contentRequestId: Long?,
-
-    @Column
-    val contentRevisionId: Long?,
-
-    @Column
-    val contentId: Long?
+    val conversationMessageId: Long,
 ) {
     companion object {
         fun fromDomain(domain: TokenUsage): TokenUsageEntity {
@@ -52,10 +42,7 @@ class TokenUsageEntity(
                 subscriptionId = domain.subscriptionId.value,
                 usedTokens = domain.usedTokens,
                 usedAt = domain.usedAt,
-                sourceContext = domain.sourceContext.value,
-                contentRequestId = domain.contentRequestId?.value,
-                contentRevisionId = domain.contentRevisionId?.value,
-                contentId = domain.contentId?.value
+                conversationMessageId = domain.conversationId.value
             )
         }
     }
@@ -67,10 +54,7 @@ class TokenUsageEntity(
             subscriptionId = SubscriptionId(subscriptionId),
             usedTokens = usedTokens,
             usedAt = usedAt,
-            sourceContext = SourceContext.create(sourceContext),
-            contentRequestId = contentRequestId?.let { ContentRequestId(it) },
-            contentRevisionId = contentRevisionId?.let { ContentRevisionId(it) },
-            contentId = contentId?.let { ContentId(it) }
+            conversationMessageId = ConversationMessageId(conversationMessageId)
         )
 
         return TokenUsage.of(TokenUsageId(id), tokenUsageProps)

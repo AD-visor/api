@@ -10,8 +10,5 @@ data class TokenUsageProps(
     val subscriptionId: SubscriptionId,
     val usedTokens: Long,
     val usedAt: Instant,
-    val sourceContext: SourceContext,
-    val contentRequestId: ContentRequestId?,
-    val contentRevisionId: ContentRevisionId?,
-    val contentId: ContentId?
+    val conversationMessageId: ConversationMessageId,
 )

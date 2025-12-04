@@ -28,28 +28,16 @@ class TokenUsageViewEntity(
     val usedAt: Instant,
 
     @Column(nullable = false)
-    val sourceContext: String,
-
-    @Column
-    val contentRequestId: Long?,
-
-    @Column
-    val contentRevisionId: Long?,
-
-    @Column
-    val contentId: Long?
+    val conversationMessageId: Long,
 ) {
     fun toModel(): TokenUsageView {
         return TokenUsageView(
-            id = this.id,
-            memberId = this.memberId,
-            subscriptionId = this.subscriptionId,
-            usedTokens = this.usedTokens,
-            usedAt = this.usedAt.toEpochMilli(),
-            sourceContext = this.sourceContext,
-            contentRequestId = this.contentRequestId,
-            contentRevisionId = this.contentRevisionId,
-            contentId = this.contentId
+            id = id,
+            memberId = memberId,
+            subscriptionId = subscriptionId,
+            usedTokens = usedTokens,
+            usedAt = usedAt,
+            conversationMessageId = conversationMessageId
         )
     }
 }
