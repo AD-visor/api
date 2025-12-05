@@ -1,9 +1,10 @@
-package com.advisor.api.subscription.application.token_usage
+package com.advisor.api.token_usage.application
 
-import com.advisor.api.subscription.domain.token_usage.TokenUsageReader
-import com.advisor.api.subscription.port.inbound.token_usage.GetTokenUsageListUseCase
-import com.advisor.api.subscription.port.inbound.token_usage.query.GetTokenUsageListQuery
-import com.advisor.api.subscription.port.inbound.token_usage.result.GetTokenUsageResult
+
+import com.advisor.api.token_usage.domain.TokenUsageReader
+import com.advisor.api.token_usage.port.inbound.GetTokenUsageListUseCase
+import com.advisor.api.token_usage.port.inbound.query.GetTokenUsageListQuery
+import com.advisor.api.token_usage.port.inbound.result.GetTokenUsageResult
 import org.springframework.stereotype.Service
 
 @Service
