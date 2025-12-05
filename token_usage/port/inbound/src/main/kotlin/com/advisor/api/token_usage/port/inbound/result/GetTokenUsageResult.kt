@@ -1,6 +1,6 @@
-package com.advisor.api.subscription.port.inbound.token_usage.result
+package com.advisor.api.token_usage.port.inbound.result
 
-import com.advisor.api.subscription.domain.token_usage.TokenUsageView
+import com.advisor.api.token_usage.domain.TokenUsageView
 import java.time.Instant
 
 data class GetTokenUsageResult(

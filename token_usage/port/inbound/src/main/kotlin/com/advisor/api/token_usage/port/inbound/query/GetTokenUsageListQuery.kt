@@ -1,4 +1,4 @@
-package com.advisor.api.subscription.port.inbound.token_usage.query
+package com.advisor.api.token_usage.port.inbound.query
 
 import java.time.Instant
 
