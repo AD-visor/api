@@ -1,7 +1,6 @@
-package com.advisor.api.subscription.domain.token_usage
+package com.advisor.api.token_usage.domain
 
 import com.advisor.api.common.core.domain.vo.identifier.*
-import com.advisor.api.subscription.domain.token_usage.vo.SourceContext
 import java.time.Instant
 
 data class TokenUsageProps(

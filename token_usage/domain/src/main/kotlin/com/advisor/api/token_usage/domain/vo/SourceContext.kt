@@ -1,7 +1,7 @@
-package com.advisor.api.subscription.domain.token_usage.vo
+package com.advisor.api.token_usage.domain.vo
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.subscription.domain.token_usage.TokenUsageDomainExceptionCode
+import com.advisor.api.token_usage.domain.TokenUsageDomainExceptionCode
 
 class SourceContext private constructor(val value: String) {
     init { validate() }

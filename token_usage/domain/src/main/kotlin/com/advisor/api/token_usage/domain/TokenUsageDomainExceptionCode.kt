@@ -1,4 +1,4 @@
-package com.advisor.api.subscription.domain.token_usage
+package com.advisor.api.token_usage.domain
 
 import com.advisor.api.common.exception.CustomExceptionCode
 import com.advisor.api.common.exception.ErrorStatus

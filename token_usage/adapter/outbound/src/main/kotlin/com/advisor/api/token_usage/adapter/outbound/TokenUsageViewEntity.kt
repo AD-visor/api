@@ -1,6 +1,6 @@
-package com.advisor.api.subscription.adapter.outbound.token_usage
+package com.advisor.api.token_usage.adapter.outbound
 
-import com.advisor.api.subscription.domain.token_usage.TokenUsageView
+import com.advisor.api.token_usage.domain.TokenUsageView
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

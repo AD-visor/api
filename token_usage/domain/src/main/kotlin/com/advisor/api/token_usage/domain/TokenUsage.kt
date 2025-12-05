@@ -1,9 +1,9 @@
-package com.advisor.api.subscription.domain.token_usage
+package com.advisor.api.token_usage.domain
 
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.*
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.subscription.domain.token_usage.vo.SourceContext
+import com.advisor.api.token_usage.domain.vo.SourceContext
 import java.time.Instant
 
 class TokenUsage private constructor(
