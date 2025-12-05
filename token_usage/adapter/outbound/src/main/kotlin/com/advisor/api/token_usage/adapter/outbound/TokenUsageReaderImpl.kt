@@ -1,7 +1,7 @@
-package com.advisor.api.subscription.adapter.outbound.token_usage
+package com.advisor.api.token_usage.adapter.outbound
 
-import com.advisor.api.subscription.domain.token_usage.TokenUsageReader
-import com.advisor.api.subscription.domain.token_usage.TokenUsageView
+import com.advisor.api.token_usage.domain.TokenUsageReader
+import com.advisor.api.token_usage.domain.TokenUsageView
 import org.springframework.stereotype.Repository
 import java.time.Instant
 

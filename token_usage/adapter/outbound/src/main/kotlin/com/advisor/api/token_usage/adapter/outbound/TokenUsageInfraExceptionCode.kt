@@ -1,4 +1,4 @@
-package com.advisor.api.subscription.adapter.outbound.token_usage
+package com.advisor.api.token_usage.adapter.outbound
 
 import com.advisor.api.common.exception.CustomExceptionCode
 import com.advisor.api.common.exception.ErrorStatus

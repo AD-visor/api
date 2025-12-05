@@ -1,8 +1,8 @@
-package com.advisor.api.subscription.adapter.outbound.token_usage
+package com.advisor.api.token_usage.adapter.outbound
 
 import com.advisor.api.common.core.domain.vo.identifier.*
-import com.advisor.api.subscription.domain.token_usage.TokenUsage
-import com.advisor.api.subscription.domain.token_usage.TokenUsageProps
+import com.advisor.api.token_usage.domain.TokenUsage
+import com.advisor.api.token_usage.domain.TokenUsageProps
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

@@ -1,9 +1,9 @@
-package com.advisor.api.subscription.adapter.outbound.token_usage
+package com.advisor.api.token_usage.adapter.outbound
 
 import com.advisor.api.common.core.domain.vo.identifier.TokenUsageId
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.subscription.domain.token_usage.TokenUsage
-import com.advisor.api.subscription.domain.token_usage.TokenUsageStore
+import com.advisor.api.token_usage.domain.TokenUsage
+import com.advisor.api.token_usage.domain.TokenUsageStore
 import org.springframework.stereotype.Repository
 
 @Repository
