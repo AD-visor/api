@@ -1,4 +1,4 @@
-package com.advisor.api.subscription.adapter.inbound.token_usage
+package com.advisor.api.token_usage.adapter.inbound
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.subscription.port.inbound.token_usage.GetTokenUsageListUseCase
