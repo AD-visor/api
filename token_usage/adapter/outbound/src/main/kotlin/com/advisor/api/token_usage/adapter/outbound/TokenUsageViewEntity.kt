@@ -19,6 +19,9 @@ class TokenUsageViewEntity(
     val memberId: Long,
 
     @Column(nullable = false)
+    val planId: Long,
+
+    @Column(nullable = false)
     val subscriptionId: Long,
 
     @Column(nullable = false)
@@ -34,6 +37,7 @@ class TokenUsageViewEntity(
         return TokenUsageView(
             id = id,
             memberId = memberId,
+            planId = planId,
             subscriptionId = subscriptionId,
             usedTokens = usedTokens,
             usedAt = usedAt,
