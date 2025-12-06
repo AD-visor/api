@@ -7,6 +7,7 @@ import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.subscription.domain.subscription.event.SubscriptionRegisteredEvent
 import com.advisor.api.subscription.domain.subscription.event.SubscriptionStatusUpdatedEvent
+import com.advisor.api.subscription.domain.subscription.event.SubscriptionUpdatedEvent
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import java.time.Instant
@@ -28,6 +29,30 @@ class Subscription(
         fun of(id: SubscriptionId, props: SubscriptionProps): Subscription {
             return Subscription(id, props)
         }
+    }
+
+    fun update(
+        newSubscriptionStatus: SubscriptionStatus,
+        newMonthlyUsage: MonthlyUsage,
+        newPlanId: PlanId,
+        newMemberId: MemberId,
+        newPaymentId: PaymentId,
+        newStartedAt: Instant,
+        newExpiredAt: Instant
+    ): Subscription {
+        val updatedSubscription = Subscription(id, props.copy(
+            subscriptionStatus =  newSubscriptionStatus,
+            monthlyUsage = newMonthlyUsage,
+            planId = newPlanId,
+            memberId = newMemberId,
+            paymentId = newPaymentId,
+            startedAt = newStartedAt,
+            expiredAt = newExpiredAt
+        ))
+
+        updatedSubscription.addDomainEvent(SubscriptionUpdatedEvent())
+
+        return updatedSubscription
     }
 
     fun cancel(): Subscription =
