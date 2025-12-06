@@ -3,7 +3,7 @@ package com.advisor.api.token_usage.domain
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.*
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.token_usage.domain.vo.SourceContext
+import com.advisor.api.token_usage.domain.event.TokenUsageRecordedEvent
 import java.time.Instant
 
 class TokenUsage private constructor(
@@ -14,7 +14,10 @@ class TokenUsage private constructor(
 
     companion object {
         fun create(id: TokenUsageId, props: TokenUsageProps): TokenUsage {
-            return TokenUsage(id, props)
+            val tokenUsage = TokenUsage(id, props)
+            tokenUsage.addDomainEvent(TokenUsageRecordedEvent())
+
+            return tokenUsage
         }
 
         fun of(id: TokenUsageId, props: TokenUsageProps): TokenUsage {
