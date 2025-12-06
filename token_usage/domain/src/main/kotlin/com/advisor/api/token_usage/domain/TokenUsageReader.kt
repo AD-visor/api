@@ -14,4 +14,6 @@ interface TokenUsageReader {
         startAt: Instant?,
         endAt: Instant?,
     ): List<TokenUsageView>
+
+    fun refreshView()
 }
