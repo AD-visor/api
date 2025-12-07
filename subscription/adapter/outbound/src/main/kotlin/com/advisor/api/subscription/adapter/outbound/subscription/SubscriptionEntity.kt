@@ -18,7 +18,10 @@ import java.time.Instant
 @Entity
 @Table(
     name = "subscription",
-    indexes = [Index(name = "idx_subscription_payment", unique = true, columnList = "payment_id")]
+    indexes = [
+        Index(name = "idx_subscription_payment", unique = true, columnList = "payment_id"),
+        Index(name = "idx_subscription_member", unique = true, columnList = "id, member_id")
+    ]
 )
 class SubscriptionEntity(
     @Id
