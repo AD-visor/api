@@ -8,6 +8,7 @@ import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.subscription.domain.subscription.event.SubscriptionRegisteredEvent
 import com.advisor.api.subscription.domain.subscription.event.SubscriptionStatusUpdatedEvent
 import com.advisor.api.subscription.domain.subscription.event.SubscriptionUpdatedEvent
+import com.advisor.api.subscription.domain.subscription.event.TokensUsedEvent
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import java.time.Instant
@@ -29,6 +30,21 @@ class Subscription(
         fun of(id: SubscriptionId, props: SubscriptionProps): Subscription {
             return Subscription(id, props)
         }
+    }
+
+    fun useTokens(tokensToUse: Long, planLimit: Long): Subscription {
+        val newMonthlyUsage = monthlyUsage.add(
+            tokens = tokensToUse,
+            planLimit = planLimit
+        )
+
+        val updatedSubscription = Subscription(
+            id, props.copy(monthlyUsage = newMonthlyUsage)
+        )
+
+        updatedSubscription.addDomainEvent(TokensUsedEvent())
+
+        return updatedSubscription
     }
 
     fun update(

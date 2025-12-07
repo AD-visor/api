@@ -5,6 +5,7 @@ import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.subscription.adapter.inbound.subscription.dto.request.RegisterSubscriptionReqDto
 import com.advisor.api.subscription.port.inbound.subscription.*
 import com.advisor.api.subscription.port.inbound.subscription.command.UpdateSubscriptionStatusCommand
+import com.advisor.api.subscription.port.inbound.subscription.command.UseTokensCommand
 import com.advisor.api.subscription.port.inbound.subscription.query.GetMemberSubscriptionQuery
 import com.advisor.api.subscription.port.inbound.subscription.result.GetSubscriptionResult
 import org.springframework.http.HttpStatus
@@ -27,6 +28,8 @@ class SubscriptionController(
     private val expireSubscriptionUseCase: ExpireSubscriptionUseCase,
     private val resumeSubscriptionUseCase: ResumeSubscriptionUseCase,
     private val getMemberSubscriptionUseCase: GetMemberSubscriptionUseCase,
+    //임시
+    private val useTokensUseCase: UseTokensUseCase,
 ) {
     @PostMapping
     fun registerSubscription(
@@ -140,6 +143,26 @@ class SubscriptionController(
             data = result
         )
 
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
+    }
+
+    @PostMapping("/use-tokens")
+    fun useTokens(
+        @AuthenticationPrincipal member: CustomUserDetails,
+    ): ResponseEntity<BaseApiResponse<Unit>> {
+        val command = UseTokensCommand(
+            id = 354863985906065408L,
+            memberId = member.id,
+            tokensToUse = 10L,
+            planLimit = 10000L,
+        )
+        useTokensUseCase.execute(command)
+
+        val apiResponse = BaseApiResponse<Unit>(
+            success = true,
+            message = "토큰 사용 성공",
+            httpStatus = HttpStatus.OK,
+        )
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
     }
 }
