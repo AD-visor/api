@@ -4,6 +4,10 @@ import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.exception.CustomException
+import com.advisor.api.subscription.domain.plan.event.PlanCreatedEvent
+import com.advisor.api.subscription.domain.plan.event.PlanDeletedEvent
+import com.advisor.api.subscription.domain.plan.event.PlanUndeletedEvent
+import com.advisor.api.subscription.domain.plan.event.PlanUpdatedEvent
 import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
 import java.time.Instant
 
@@ -15,12 +19,56 @@ class Plan private constructor(
 
     companion object {
         fun create(id: PlanId, props: PlanProps): Plan {
-            return Plan(id, props)
+            val plan =  Plan(id, props)
+            plan.addDomainEvent(PlanCreatedEvent())
+
+            return plan
         }
 
         fun of(id: PlanId, props: PlanProps): Plan {
             return Plan(id, props)
         }
+    }
+
+    fun undelete(): Plan {
+        val plan = Plan(id, props.copy(
+            isDeleted = false,
+            deletedAt = null
+        ))
+
+        plan.addDomainEvent(PlanUndeletedEvent())
+
+        return plan
+    }
+
+    fun update(
+        newName: String,
+        newMonthlyLimit: MonthlyLimit,
+        newPrice: Money,
+        newDescription: String?
+    ): Plan {
+        val updatedPlan = Plan(id, props.copy(
+            name = newName,
+            monthlyLimit = newMonthlyLimit,
+            price = newPrice,
+            description = newDescription,
+            updatedAt = Instant.now()
+        ))
+
+        updatedPlan.addDomainEvent(PlanUpdatedEvent())
+
+        return updatedPlan
+    }
+
+    fun delete(): Plan {
+        val updatedPlan = Plan(id, props.copy(
+            isDeleted = true,
+            deletedAt = Instant.now()
+        ))
+
+        updatedPlan.addDomainEvent(PlanDeletedEvent())
+
+        return updatedPlan
     }
 
     private fun validate() {

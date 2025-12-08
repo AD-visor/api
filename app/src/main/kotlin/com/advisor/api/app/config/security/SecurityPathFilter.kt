@@ -6,6 +6,7 @@ object SecurityPathFilter {
     private val pathMatcher = AntPathMatcher()
 
     val PUBLIC_PATHS = arrayOf(
+        "/plan/**",
         "/member",
         "/swagger-ui/**",
         "/swagger-resources/**",

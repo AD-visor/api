@@ -1,0 +1,33 @@
+package com.advisor.api.subscription.application.plan
+
+import com.advisor.api.common.core.domain.DomainEventPublisher
+import com.advisor.api.common.core.domain.vo.Money
+import com.advisor.api.common.core.domain.vo.identifier.PlanId
+import com.advisor.api.subscription.domain.plan.PlanStore
+import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
+import com.advisor.api.subscription.port.inbound.plan.UpdatePlanUseCase
+import com.advisor.api.subscription.port.inbound.plan.command.UpdatePlanCommand
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+class UpdatePlanService(
+    private val planStore: PlanStore,
+    private val domainEventPublisher: DomainEventPublisher
+): UpdatePlanUseCase {
+    @Transactional
+    override fun execute(command: UpdatePlanCommand) {
+        val plan = planStore.loadById(PlanId(command.planId))
+
+        val updatedPlan = plan.update(
+            newName = command.name ?: plan.name,
+            newMonthlyLimit = command.monthlyLimit?.let { MonthlyLimit.create(it) } ?: plan.monthlyLimit,
+            newPrice = command.price?.let { Money.create(it) } ?: plan.price,
+            newDescription = command.description ?: plan.description
+        )
+
+        planStore.save(updatedPlan)
+
+        domainEventPublisher.publish(updatedPlan)
+    }
+}

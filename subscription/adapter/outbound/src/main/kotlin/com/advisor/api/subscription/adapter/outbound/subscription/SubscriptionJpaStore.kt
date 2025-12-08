@@ -5,4 +5,5 @@ import java.util.Optional
 
 interface SubscriptionJpaStore: JpaRepository<SubscriptionEntity, Long> {
     fun findByMemberId(memberId: Long): Optional<SubscriptionEntity>
+    fun findByIdAndMemberId(id: Long, memberId: Long): Optional<SubscriptionEntity>
 }

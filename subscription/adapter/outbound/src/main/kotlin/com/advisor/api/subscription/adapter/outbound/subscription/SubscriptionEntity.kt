@@ -1,6 +1,7 @@
 package com.advisor.api.subscription.adapter.outbound.subscription
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.subscription.domain.subscription.Subscription
@@ -10,11 +11,19 @@ import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import java.time.Instant
 
 @Entity
-@Table(name = "subscription")
+@Table(
+    name = "subscription",
+    indexes = [
+        Index(name = "idx_subscription_payment", unique = true, columnList = "payment_id"),
+        Index(name = "idx_subscription_member", columnList = "member_id"),
+        Index(name = "idx_subscription_subscription_member", columnList = "id, member_id")
+    ]
+)
 class SubscriptionEntity(
     @Id
     val id: Long,
@@ -30,6 +39,9 @@ class SubscriptionEntity(
 
     @Column(nullable = false)
     val memberId: Long,
+
+    @Column(nullable = false)
+    val paymentId: Long,
 
     @Column(nullable = false)
     val startedAt: Instant,
@@ -51,6 +63,7 @@ class SubscriptionEntity(
                 monthlyUsage = domain.monthlyUsage.value,
                 planId = domain.planId.value,
                 memberId = domain.memberId.value,
+                paymentId = domain.paymentId.value,
                 startedAt = domain.startedAt,
                 expiredAt = domain.expiredAt,
                 isDeleted = domain.isDeleted,
@@ -65,6 +78,7 @@ class SubscriptionEntity(
             monthlyUsage = MonthlyUsage.create(monthlyUsage),
             planId = PlanId(planId),
             memberId = MemberId(memberId),
+            paymentId = PaymentId(paymentId),
             startedAt = startedAt,
             expiredAt = expiredAt,
             isDeleted = isDeleted,

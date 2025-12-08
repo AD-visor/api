@@ -7,4 +7,5 @@ interface SubscriptionStore {
     fun save(subscription: Subscription)
     fun loadById(id: SubscriptionId): Subscription
     fun loadByMemberId(memberId: MemberId): Subscription
+    fun loadByIdAndMemberId(id: SubscriptionId, memberId: MemberId): Subscription
 }

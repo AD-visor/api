@@ -1,13 +1,15 @@
 package com.advisor.api.subscription.adapter.outbound.plan
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.subscription.domain.plan.PlanReader
 import com.advisor.api.subscription.domain.plan.PlanView
+import com.advisor.api.subscription.domain.plan.PlanReader
+import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 
 @Repository
 class PlanReaderImpl(
-    private val jpaReader: PlanJpaReader
+    private val jpaReader: PlanJpaReader,
+    private val em: EntityManager
 ): PlanReader {
     override fun findAll(): List<PlanView> {
         val entities = jpaReader.findAll()
@@ -22,5 +24,10 @@ class PlanReaderImpl(
         ) }
 
         return entity.toModel()
+    }
+
+    override fun refreshView() {
+        em.createNativeQuery("REFRESH MATERIALIZED VIEW CONCURRENTLY vw_plan")
+            .executeUpdate()
     }
 }

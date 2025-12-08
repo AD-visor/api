@@ -33,4 +33,13 @@ class SubscriptionStoreImpl(
 
         return jpaEntity.toDomain()
     }
+
+    override fun loadByIdAndMemberId(id: SubscriptionId, memberId: MemberId): Subscription {
+        val jpaEntity = jpaStore.findByIdAndMemberId(id.value, memberId.value).orElseThrow { CustomException(
+            SubscriptionInfraExceptionCode.SUBSCRIPTION_NOT_FOUND,
+            "[Subscription] id: ${id}, memberId: ${memberId}에 해당하는 Subscription를 찾을 수 없습니다."
+        ) }
+
+        return jpaEntity.toDomain()
+    }
 }

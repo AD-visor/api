@@ -23,6 +23,11 @@ dependencies {
     implementation(project(":conversation:port:outbound"))
     implementation(project(":conversation:application"))
 
+    implementation(project(":token_usage:adapter:inbound"))
+    implementation(project(":token_usage:adapter:outbound"))
+    implementation(project(":token_usage:port:outbound"))
+    implementation(project(":token_usage:application"))
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

@@ -37,3 +37,12 @@ include(":payment:port:inbound")
 include(":payment:port:outbound")
 include(":payment:adapter:inbound")
 include(":payment:adapter:outbound")
+
+// Token Usage
+include(":token_usage:application")
+include(":token_usage:domain")
+include(":token_usage:port:inbound")
+include(":token_usage:port:outbound")
+include(":token_usage:adapter:inbound")
+include(":token_usage:adapter:outbound")
+
