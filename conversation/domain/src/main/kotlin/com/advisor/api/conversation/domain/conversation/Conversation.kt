@@ -6,6 +6,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.event.ConversationArchivedEvent
+import com.advisor.api.conversation.domain.conversation.event.ConversationCreatedEvent
 import com.advisor.api.conversation.domain.conversation.event.ConversationDeletedEvent
 import com.advisor.api.conversation.domain.conversation.event.ConversationUpdatedEvent
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
@@ -21,7 +22,10 @@ class Conversation private constructor (
 
     companion object {
         fun create(id: ConversationId, props: ConversationProps): Conversation {
-            return Conversation(id, props)
+            val conversation = Conversation(id, props)
+            conversation.addDomainEvent(ConversationCreatedEvent())
+
+            return conversation
         }
 
         fun of(id: ConversationId, props: ConversationProps): Conversation {
