@@ -122,7 +122,7 @@ class SubscriptionController(
 
         val apiResponse = BaseApiResponse<Unit>(
             success = true,
-            message = "구독 만료 성공",
+            message = "구독 재활성화 성공",
             httpStatus = HttpStatus.OK,
         )
 

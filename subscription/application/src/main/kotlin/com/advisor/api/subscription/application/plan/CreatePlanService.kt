@@ -10,6 +10,7 @@ import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
 import com.advisor.api.subscription.port.inbound.plan.CreatePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.command.CreatePlanCommand
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
@@ -17,6 +18,7 @@ class CreatePlanService(
     private val planStore: PlanStore,
     private val snowFlakeIdUtil: SnowFlakeIdUtil
 ): CreatePlanUseCase {
+    @Transactional
     override fun execute(command: CreatePlanCommand) {
         val planProps = PlanProps(
             name = command.name,

@@ -47,7 +47,7 @@ class PlanController(
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
-    @PatchMapping("{planId}/undelete")
+    @PatchMapping("/{planId}/undelete")
     fun undeletePlan(@PathVariable planId: String): ResponseEntity<BaseApiResponse<Unit>> {
         val command = UndeletePlanCommand(planId.toLong())
         undeletePlanUseCase.execute(command)

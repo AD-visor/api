@@ -58,12 +58,10 @@ class RegisterSubscriptionService(
     private fun calculateExpiredAt(startedAt: Instant, term: String): Instant {
         val zoneId = ZoneId.systemDefault()
 
-        val expiredAt = startedAt
-            .atZone(zoneId)
-
-        when (term) {
-            "MONTHLY" -> expiredAt.plusMonths(1)
-            "YEARLY" -> expiredAt.plusYears(1)
+        val expiredAt = when (term) {
+            "MONTHLY" -> startedAt.atZone(zoneId).plusMonths(1)
+            "YEARLY" -> startedAt.atZone(zoneId).plusYears(1)
+            else -> startedAt.atZone(zoneId)
         }
 
         return expiredAt.toInstant()

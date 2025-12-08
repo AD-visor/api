@@ -22,6 +22,7 @@ class RecordTokenUsageService(
         createTokenUsage(
             memberId = MemberId(command.memberId),
             subscriptionId = SubscriptionId(command.subscriptionId),
+            planId = PlanId(command.planId),
             usedTokens = command.usedTokens,
             conversationMessageId = ConversationMessageId(command.conversationMessageId)
         )
@@ -30,12 +31,13 @@ class RecordTokenUsageService(
     private fun createTokenUsage(
         memberId: MemberId,
         subscriptionId: SubscriptionId,
+        planId: PlanId,
         usedTokens: Long,
         conversationMessageId: ConversationMessageId
     ) {
         val tokenUsageProps = TokenUsageProps(
             memberId = memberId,
-            planId = PlanId(1L),
+            planId = planId,
             subscriptionId = subscriptionId,
             usedTokens = usedTokens,
             usedAt = java.time.Instant.now(),

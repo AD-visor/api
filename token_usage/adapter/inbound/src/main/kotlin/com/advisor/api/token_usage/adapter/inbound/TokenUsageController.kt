@@ -52,6 +52,7 @@ class TokenUsageController(
         val command = RecordTokenUsageCommand(
             memberId = member.id,
             subscriptionId = 1L,
+            planId = 1L,
             usedTokens = 10,
             conversationMessageId = 1L,
         )

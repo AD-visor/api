@@ -5,11 +5,13 @@ import com.advisor.api.subscription.domain.plan.PlanStore
 import com.advisor.api.subscription.port.inbound.plan.UndeletePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.command.UndeletePlanCommand
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UndeletePlanService(
     val planStore: PlanStore
 ): UndeletePlanUseCase {
+    @Transactional
     override fun execute(command: UndeletePlanCommand) {
         val plan = planStore.loadById(PlanId(command.planId))
 
