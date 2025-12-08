@@ -20,7 +20,8 @@ import java.time.Instant
     name = "subscription",
     indexes = [
         Index(name = "idx_subscription_payment", unique = true, columnList = "payment_id"),
-        Index(name = "idx_subscription_member", unique = true, columnList = "id, member_id")
+        Index(name = "idx_subscription_member", columnList = "member_id"),
+        Index(name = "idx_subscription_subscription_member", columnList = "id, member_id")
     ]
 )
 class SubscriptionEntity(
