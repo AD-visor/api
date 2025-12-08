@@ -33,6 +33,32 @@ class Conversation private constructor (
         }
     }
 
+    fun update(
+        newBusinessType: String,
+        newProductName: String,
+        newDescription: String,
+        newTargetAudience: String,
+        newToneStyle: ToneStyle,
+        newSpeechStyle: SpeechStyle,
+        newContentLength: String,
+        newPlatform: ContentPlatform
+    ): Conversation {
+        val updatedSubscription = Conversation(id, props.copy(
+            businessType = newBusinessType,
+            productName = newProductName,
+            description = newDescription,
+            targetAudience = newTargetAudience,
+            toneStyle = newToneStyle,
+            speechStyle = newSpeechStyle,
+            contentLength = newContentLength,
+            platform = newPlatform
+        ))
+
+        updatedSubscription.addDomainEvent(ConversationUpdatedEvent())
+
+        return updatedSubscription
+    }
+
     private fun validate() {
         require(props.businessType.isNotBlank()) { CustomException(
             ConversationDomainExceptionCode.CONVERSATION_BUSINESS_TYPE_BLANK,
