@@ -1,5 +1,6 @@
 package com.advisor.api.subscription.application.plan
 
+import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.subscription.domain.plan.PlanStore
 import com.advisor.api.subscription.port.inbound.plan.UndeletePlanUseCase
@@ -9,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UndeletePlanService(
-    val planStore: PlanStore
+    private val planStore: PlanStore,
+    private val domainEventPublisher: DomainEventPublisher
 ): UndeletePlanUseCase {
     @Transactional
     override fun execute(command: UndeletePlanCommand) {
@@ -19,5 +21,7 @@ class UndeletePlanService(
             val updatedPlan = plan.undelete()
             planStore.save(updatedPlan)
         }
+
+        domainEventPublisher.publish(plan)
     }
 }

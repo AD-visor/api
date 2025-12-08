@@ -1,5 +1,6 @@
 package com.advisor.api.subscription.application.plan
 
+import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.subscription.domain.plan.PlanStore
@@ -11,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UpdatePlanService(
-    private val planStore: PlanStore
+    private val planStore: PlanStore,
+    private val domainEventPublisher: DomainEventPublisher
 ): UpdatePlanUseCase {
     @Transactional
     override fun execute(command: UpdatePlanCommand) {
@@ -25,5 +27,7 @@ class UpdatePlanService(
         )
 
         planStore.save(updatedPlan)
+
+        domainEventPublisher.publish(updatedPlan)
     }
 }

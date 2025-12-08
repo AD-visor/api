@@ -4,6 +4,10 @@ import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.exception.CustomException
+import com.advisor.api.subscription.domain.plan.event.PlanCreatedEvent
+import com.advisor.api.subscription.domain.plan.event.PlanDeletedEvent
+import com.advisor.api.subscription.domain.plan.event.PlanUndeletedEvent
+import com.advisor.api.subscription.domain.plan.event.PlanUpdatedEvent
 import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
 import java.time.Instant
 
@@ -15,7 +19,10 @@ class Plan private constructor(
 
     companion object {
         fun create(id: PlanId, props: PlanProps): Plan {
-            return Plan(id, props)
+            val plan =  Plan(id, props)
+            plan.addDomainEvent(PlanCreatedEvent())
+
+            return plan
         }
 
         fun of(id: PlanId, props: PlanProps): Plan {
@@ -28,6 +35,8 @@ class Plan private constructor(
             isDeleted = false,
             deletedAt = null
         ))
+
+        plan.addDomainEvent(PlanUndeletedEvent())
 
         return plan
     }
@@ -46,6 +55,8 @@ class Plan private constructor(
             updatedAt = Instant.now()
         ))
 
+        updatedPlan.addDomainEvent(PlanUpdatedEvent())
+
         return updatedPlan
     }
 
@@ -54,6 +65,8 @@ class Plan private constructor(
             isDeleted = true,
             deletedAt = Instant.now()
         ))
+
+        updatedPlan.addDomainEvent(PlanDeletedEvent())
 
         return updatedPlan
     }
