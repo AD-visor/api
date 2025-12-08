@@ -19,4 +19,6 @@ data class ConversationProps(
     val platform: ContentPlatform,
     val messages: List<ConversationMessage>,
     val createdAt: Instant,
+    val isArchived: Boolean = false,
+    val archivedAt: Instant? = null,
 )

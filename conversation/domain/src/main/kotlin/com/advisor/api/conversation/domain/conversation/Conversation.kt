@@ -5,6 +5,9 @@ import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
+import com.advisor.api.conversation.domain.conversation.event.ConversationArchivedEvent
+import com.advisor.api.conversation.domain.conversation.event.ConversationDeletedEvent
+import com.advisor.api.conversation.domain.conversation.event.ConversationUpdatedEvent
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
 import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
@@ -67,4 +70,6 @@ class Conversation private constructor (
     val platform: ContentPlatform get() = props.platform
     val messages: List<ConversationMessage> get() = props.messages
     val createdAt: Instant get() = props.createdAt
+    val isArchived: Boolean get() = props.isArchived
+    val archivedAt: Instant? get() = props.archivedAt
 }
