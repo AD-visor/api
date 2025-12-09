@@ -59,6 +59,17 @@ class Conversation private constructor (
         return updatedSubscription
     }
 
+    fun archive(): Conversation {
+        val archivedConversation = Conversation(id, props.copy(
+            isArchived = true,
+            archivedAt = Instant.now()
+        ))
+
+        archivedConversation.addDomainEvent(ConversationArchivedEvent())
+
+        return archivedConversation
+    }
+
     fun delete(): Conversation {
         addDomainEvent(ConversationDeletedEvent())
 
