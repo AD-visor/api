@@ -59,6 +59,12 @@ class Conversation private constructor (
         return updatedSubscription
     }
 
+    fun delete(): Conversation {
+        addDomainEvent(ConversationDeletedEvent())
+
+        return this
+    }
+
     private fun validate() {
         require(props.businessType.isNotBlank()) { CustomException(
             ConversationDomainExceptionCode.CONVERSATION_BUSINESS_TYPE_BLANK,

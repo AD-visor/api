@@ -6,7 +6,9 @@ import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.Cre
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.UpdateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.CreateConversationResDto
 import com.advisor.api.conversation.port.inbound.CreateConversationUseCase
+import com.advisor.api.conversation.port.inbound.DeleteConversationUseCase
 import com.advisor.api.conversation.port.inbound.UpdateConversationUseCase
+import com.advisor.api.conversation.port.inbound.command.DeleteConversationCommand
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/conversation")
 class ConversationController(
     private val createConversationUseCase: CreateConversationUseCase,
-    private val updateConversationUseCase: UpdateConversationUseCase
+    private val updateConversationUseCase: UpdateConversationUseCase,
+    private val deleteConversationUseCase: DeleteConversationUseCase
 ) {
     @PostMapping
     fun createConversation(
@@ -58,5 +61,27 @@ class ConversationController(
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
+    }
+
+    @DeleteMapping("/{conversationId}")
+    fun deleteConversation(
+        @AuthenticationPrincipal member: CustomUserDetails,
+        @PathVariable("conversationId") conversationId: String
+    ): ResponseEntity<BaseApiResponse<Unit>> {
+        val command = DeleteConversationCommand(
+            id = conversationId.toLong(),
+            memberId = member.id
+        )
+
+        deleteConversationUseCase.execute(command)
+
+        val response = BaseApiResponse<Unit>(
+            success = true,
+            message = "대화 삭제 성공",
+            data = null,
+            httpStatus = HttpStatus.NO_CONTENT
+        )
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response)
     }
 }
