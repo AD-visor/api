@@ -52,6 +52,7 @@ class ConversationMessageEntity(
 
     fun toDomain(): ConversationMessage {
         val props = ConversationMessageProps(
+            conversationId = ConversationId(conversationId),
             role = MessageRole.create(role),
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },
