@@ -5,12 +5,11 @@ import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.CreateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.UpdateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.CreateConversationResDto
-import com.advisor.api.conversation.port.inbound.ArchiveConversationUseCase
-import com.advisor.api.conversation.port.inbound.CreateConversationUseCase
-import com.advisor.api.conversation.port.inbound.DeleteConversationUseCase
-import com.advisor.api.conversation.port.inbound.UpdateConversationUseCase
+import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.GetConversationResDto
+import com.advisor.api.conversation.port.inbound.*
 import com.advisor.api.conversation.port.inbound.command.ArchiveConversationCommand
 import com.advisor.api.conversation.port.inbound.command.DeleteConversationCommand
+import com.advisor.api.conversation.port.inbound.query.GetConversationQuery
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -23,6 +22,7 @@ class ConversationController(
     private val updateConversationUseCase: UpdateConversationUseCase,
     private val deleteConversationUseCase: DeleteConversationUseCase,
     private val archiveConversationUseCase: ArchiveConversationUseCase,
+    private val getConversationUseCase: GetConversationUseCase
 ) {
     @PostMapping
     fun createConversation(
@@ -104,6 +104,28 @@ class ConversationController(
             success = true,
             message = "대화 아카이브 성공",
             data = null,
+            httpStatus = HttpStatus.OK
+        )
+
+        return ResponseEntity.status(HttpStatus.OK).body(response)
+    }
+
+    @GetMapping("/{conversationId}")
+    fun getConversation(
+        @AuthenticationPrincipal member: CustomUserDetails,
+        @PathVariable("conversationId") conversationId: String
+    ): ResponseEntity<BaseApiResponse<GetConversationResDto>> {
+        val query = GetConversationQuery(
+            id = conversationId.toLong(),
+            memberId = member.id
+        )
+
+        val result = getConversationUseCase.execute(query)
+
+        val response = BaseApiResponse<GetConversationResDto>(
+            success = true,
+            message = "대화 조회 성공",
+            data = GetConversationResDto.fromResult(result),
             httpStatus = HttpStatus.OK
         )
 
