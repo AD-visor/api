@@ -41,7 +41,10 @@ class ConversationViewEntity(
     val platform: String,
 
     @Column(nullable = false)
-    val createdAt: Instant
+    val createdAt: Instant,
+
+    @Column(nullable = false)
+    val updatedAt: Instant,
 ) {
     fun toModel(messages: List<ConversationMessageView>): ConversationView {
         return ConversationView(
@@ -56,7 +59,8 @@ class ConversationViewEntity(
             contentLength = contentLength,
             platform = platform,
             messages = messages,
-            createdAt = createdAt
+            createdAt = createdAt,
+            updatedAt = updatedAt
         )
     }
 }

@@ -56,6 +56,9 @@ class ConversationEntity(
     val createdAt: Instant,
 
     @Column(nullable = false)
+    val updatedAt: Instant,
+
+    @Column(nullable = false)
     val isArchived: Boolean = false,
 
     @Column
@@ -75,6 +78,7 @@ class ConversationEntity(
                 contentLength = domain.contentLength,
                 platform = domain.platform.value,
                 createdAt = domain.createdAt,
+                updatedAt = domain.updatedAt,
                 isArchived = domain.isArchived,
                 archivedAt = domain.archivedAt,
             )
@@ -94,6 +98,7 @@ class ConversationEntity(
             platform = ContentPlatform.create(platform),
             messages = emptyList(),
             createdAt = createdAt,
+            updatedAt = updatedAt,
             isArchived = isArchived,
             archivedAt = archivedAt,
         )

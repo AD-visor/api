@@ -51,7 +51,8 @@ class Conversation private constructor (
             toneStyle = newToneStyle,
             speechStyle = newSpeechStyle,
             contentLength = newContentLength,
-            platform = newPlatform
+            platform = newPlatform,
+            updatedAt = Instant.now()
         ))
 
         updatedSubscription.addDomainEvent(ConversationUpdatedEvent())
@@ -62,7 +63,8 @@ class Conversation private constructor (
     fun archive(): Conversation {
         val archivedConversation = Conversation(id, props.copy(
             isArchived = true,
-            archivedAt = Instant.now()
+            archivedAt = Instant.now(),
+            updatedAt = Instant.now()
         ))
 
         archivedConversation.addDomainEvent(ConversationArchivedEvent())
@@ -116,6 +118,7 @@ class Conversation private constructor (
     val contentLength: String get() = props.contentLength
     val platform: ContentPlatform get() = props.platform
     val messages: List<ConversationMessage> get() = props.messages
+    val updatedAt: Instant get() = props.updatedAt
     val createdAt: Instant get() = props.createdAt
     val isArchived: Boolean get() = props.isArchived
     val archivedAt: Instant? get() = props.archivedAt

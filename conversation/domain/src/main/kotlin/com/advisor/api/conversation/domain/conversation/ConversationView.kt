@@ -15,5 +15,6 @@ data class ConversationView(
     val contentLength: String,
     val platform: String,
     val messages: List<ConversationMessageView>,
-    val createdAt: Instant
+    val createdAt: Instant,
+    val updatedAt: Instant
 )

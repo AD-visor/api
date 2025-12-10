@@ -37,6 +37,7 @@ class CreateConversationService(
             platform = ContentPlatform.create(command.platform),
             messages = emptyList(),
             createdAt = Instant.now(),
+            updatedAt = Instant.now()
         )
 
         val conversation = Conversation.create(
