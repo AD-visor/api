@@ -30,16 +30,14 @@ class ConversationMessageViewEntity(
     @Column(nullable = false)
     val createdAt: Instant
 ) {
-    companion object {
-        fun toModel(entity: ConversationMessageViewEntity): ConversationMessageView {
-            return ConversationMessageView(
-                id = entity.id,
-                conversationId = entity.conversationId,
-                role = entity.role,
-                body = entity.body,
-                revisionOf = entity.revisionOf,
-                createdAt = entity.createdAt,
-            )
-        }
+    fun toModel(): ConversationMessageView {
+        return ConversationMessageView(
+            id = id,
+            conversationId = conversationId,
+            role = role,
+            body = body,
+            revisionOf = revisionOf,
+            createdAt = createdAt,
+        )
     }
 }
