@@ -5,6 +5,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationStore
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -15,11 +16,11 @@ class ConversationStoreImpl(
     override fun save(conversation: Conversation) {
         val entity = ConversationEntity.fromDomain(conversation)
         jpaStore.save(entity)
+    }
 
-        conversation.messages.forEach {
-            val messageEntity = ConversationMessageEntity.fromDomain(it, conversation.id)
-            messageJpaStore.save(messageEntity)
-        }
+    override fun saveNewMessage(message: ConversationMessage) {
+        val entity = ConversationMessageEntity.fromDomain(message)
+        messageJpaStore.save(entity)
     }
 
     override fun loadById(id: ConversationId): Conversation {

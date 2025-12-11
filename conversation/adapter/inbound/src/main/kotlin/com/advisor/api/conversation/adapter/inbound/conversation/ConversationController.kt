@@ -2,6 +2,7 @@ package com.advisor.api.conversation.adapter.inbound.conversation
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.common.core.presentation.CustomUserDetails
+import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.AddMemberMessageReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.CreateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.UpdateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.CreateConversationResDto
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/conversation")
 class ConversationController(
     private val createConversationUseCase: CreateConversationUseCase,
+    private val addMemberMessageUseCase: AddMemberMessageUseCase,
     private val updateConversationUseCase: UpdateConversationUseCase,
     private val deleteConversationUseCase: DeleteConversationUseCase,
     private val archiveConversationUseCase: ArchiveConversationUseCase,
@@ -37,6 +39,29 @@ class ConversationController(
             success = true,
             message = "대화 생성 성공",
             data = CreateConversationResDto.fromResult(result.id),
+            httpStatus = HttpStatus.CREATED
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
+    }
+
+    @PostMapping("/{conversationId}/member-message")
+    fun addMemberMessage(
+        @AuthenticationPrincipal member: CustomUserDetails,
+        @PathVariable("conversationId") conversationId: String,
+        @RequestBody dto: AddMemberMessageReqDto
+    ): ResponseEntity<BaseApiResponse<Unit>> {
+        val command = dto.toCommand(
+            conversationId = conversationId.toLong(),
+            memberId = member.id
+        )
+
+        addMemberMessageUseCase.execute(command)
+
+        val apiResponse = BaseApiResponse<Unit>(
+            success = true,
+            message = "사용자 메시지 추가 성공",
+            data = null,
             httpStatus = HttpStatus.CREATED
         )
 

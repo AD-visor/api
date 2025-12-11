@@ -2,10 +2,14 @@ package com.advisor.api.conversation.domain.conversation
 
 import com.advisor.api.common.core.domain.AggregateRoot
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
+import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageProps
 import com.advisor.api.conversation.domain.conversation.event.*
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
+import com.advisor.api.conversation.domain.conversation.vo.MessageRole
 import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
 import java.time.Instant
@@ -27,6 +31,25 @@ class Conversation private constructor (
         fun of(id: ConversationId, props: ConversationProps): Conversation {
             return Conversation(id, props)
         }
+    }
+
+    fun addMemberMessage(
+        messageId: ConversationMessageId,
+        body: String
+    ): ConversationMessage {
+        val message = ConversationMessage.create(
+            id = messageId,
+            props = ConversationMessageProps(
+                conversationId = this.id,
+                body = body,
+                role = MessageRole.MEMBER,
+                createdAt = Instant.now()
+            )
+        )
+
+        addDomainEvent(MemberMessageAddedEvent())
+
+        return message
     }
 
     fun update(
