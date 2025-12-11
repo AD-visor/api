@@ -20,13 +20,14 @@ class AddMemberMessageService(
     @Transactional
     override fun execute(command: AddMemberMessageCommand) {
         val conversation = conversationStore.loadById(ConversationId(command.conversationId))
-        val message = conversation.addMemberMessage(
+        val (updatedConversation, message)= conversation.addMemberMessage(
             messageId = ConversationMessageId(snowFlakeIdUtil.generateId()),
             body = command.body
         )
 
+        conversationStore.save(updatedConversation)
         conversationStore.saveNewMessage(message)
 
-        domainEventPublisher.publish(conversation)
+        domainEventPublisher.publish(updatedConversation)
     }
 }

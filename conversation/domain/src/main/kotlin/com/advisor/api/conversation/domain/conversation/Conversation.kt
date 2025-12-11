@@ -36,7 +36,7 @@ class Conversation private constructor (
     fun addMemberMessage(
         messageId: ConversationMessageId,
         body: String
-    ): ConversationMessage {
+    ): Pair<Conversation, ConversationMessage> {
         val message = ConversationMessage.create(
             id = messageId,
             props = ConversationMessageProps(
@@ -47,9 +47,16 @@ class Conversation private constructor (
             )
         )
 
-        addDomainEvent(MemberMessageAddedEvent())
+        val updatedConversation = of(
+            id = this.id,
+            props = this.props.copy(
+                updatedAt = Instant.now()
+            )
+        )
 
-        return message
+        updatedConversation.addDomainEvent(MemberMessageAddedEvent())
+
+        return Pair(updatedConversation, message)
     }
 
     fun update(
