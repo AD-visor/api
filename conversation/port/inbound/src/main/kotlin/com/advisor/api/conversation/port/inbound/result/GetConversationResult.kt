@@ -15,7 +15,8 @@ data class GetConversationResult(
     val contentLength: String,
     val platform: String,
     val messages: List<ConversationMessageResult>,
-    val createdAt: Instant
+    val createdAt: Instant,
+    val updatedAt: Instant
 ) {
     companion object {
         fun fromModel(model: ConversationView): GetConversationResult {
@@ -31,7 +32,8 @@ data class GetConversationResult(
                 contentLength = model.contentLength,
                 platform = model.platform,
                 messages = model.messages.map { ConversationMessageResult.fromModel(it) },
-                createdAt = model.createdAt
+                createdAt = model.createdAt,
+                updatedAt = model.updatedAt
             )
         }
     }

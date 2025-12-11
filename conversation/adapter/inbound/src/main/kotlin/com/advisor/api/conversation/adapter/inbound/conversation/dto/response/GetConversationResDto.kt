@@ -15,7 +15,8 @@ data class GetConversationResDto(
     val contentLength: String,
     val platform: String,
     val messages: List<ConversationMessageDto>,
-    val createdAt: Instant
+    val createdAt: Instant,
+    val updatedAt: Instant
 ) {
     companion object {
         fun fromResult(result: GetConversationResult): GetConversationResDto {
@@ -31,7 +32,8 @@ data class GetConversationResDto(
                 contentLength = result.contentLength,
                 platform = result.platform,
                 messages = result.messages.map { ConversationMessageDto.fromResult(it) },
-                createdAt = result.createdAt
+                createdAt = result.createdAt,
+                updatedAt = result.updatedAt
             )
         }
     }
