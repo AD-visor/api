@@ -8,11 +8,17 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class ConversationReaderImpl(
-    private val jpaReader: ConversationJpaReader,
+    private val conversationJpaReader: ConversationJpaReader,
+    private val conversationMessageJpaReader: ConversationMessageJpaReader,
     private val em: EntityManager
 ): ConversationReader {
     override fun refreshView() {
         em.createNativeQuery("REFRESH MATERIALIZED VIEW CONCURRENTLY vw_conversation")
+            .executeUpdate()
+    }
+
+    override fun refreshMessageView() {
+        em.createNativeQuery("REFRESH MATERIALIZED VIEW CONCURRENTLY vw_conversation_message")
             .executeUpdate()
     }
 }
