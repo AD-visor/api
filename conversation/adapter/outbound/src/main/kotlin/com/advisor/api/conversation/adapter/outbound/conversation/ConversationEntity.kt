@@ -7,10 +7,13 @@ import com.advisor.api.conversation.domain.conversation.ConversationProps
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
 import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.Index
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
 
@@ -96,7 +99,6 @@ class ConversationEntity(
             speechStyle = SpeechStyle.create(speechStyle),
             contentLength = contentLength,
             platform = ContentPlatform.create(platform),
-            messages = emptyList(),
             createdAt = createdAt,
             updatedAt = updatedAt,
             isArchived = isArchived,

@@ -35,7 +35,6 @@ class CreateConversationService(
             speechStyle = SpeechStyle.create(command.speechStyle),
             contentLength = command.contentLength,
             platform = ContentPlatform.create(command.platform),
-            messages = emptyList(),
             createdAt = Instant.now(),
             updatedAt = Instant.now()
         )
