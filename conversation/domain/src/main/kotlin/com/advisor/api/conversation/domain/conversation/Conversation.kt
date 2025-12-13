@@ -37,26 +37,36 @@ class Conversation private constructor (
         messageId: ConversationMessageId,
         body: String
     ): Pair<Conversation, ConversationMessage> {
-        val message = ConversationMessage.create(
-            id = messageId,
-            props = ConversationMessageProps(
-                conversationId = this.id,
-                body = body,
-                role = MessageRole.MEMBER,
-                createdAt = Instant.now()
-            )
+        val (conversation, message) = addMessage(
+            messageId = messageId,
+            body = body,
+            role = MessageRole.MEMBER
         )
 
-        val updatedConversation = of(
-            id = this.id,
-            props = this.props.copy(
-                updatedAt = Instant.now()
-            )
+        conversation.addDomainEvent(MemberMessageAddedEvent(
+            conversationId = this.id.value,
+            memberId = this.memberId.value,
+            messageId = message.id.value
+        ))
+
+        return Pair(conversation, message)
+    }
+
+    fun addAiMessage(
+        messageId: ConversationMessageId,
+        body: String,
+        revisionOf: ConversationMessageId
+    ): Pair<Conversation, ConversationMessage> {
+        val (conversation, message) = addMessage(
+            messageId = messageId,
+            body = body,
+            role = MessageRole.ASSISTANT,
+            revisionOf = revisionOf
         )
 
-        updatedConversation.addDomainEvent(MemberMessageAddedEvent())
+        conversation.addDomainEvent(AiResponseGeneratedEvent())
 
-        return Pair(updatedConversation, message)
+        return Pair(conversation, message)
     }
 
     fun update(
@@ -102,6 +112,33 @@ class Conversation private constructor (
         addDomainEvent(ConversationDeletedEvent())
 
         return this
+    }
+
+    private fun addMessage(
+        messageId: ConversationMessageId,
+        body: String,
+        role: MessageRole,
+        revisionOf: ConversationMessageId? = null
+    ): Pair<Conversation, ConversationMessage> {
+        val message = ConversationMessage.create(
+            id = messageId,
+            props = ConversationMessageProps(
+                conversationId = this.id,
+                body = body,
+                role = role,
+                revisionOf = revisionOf,
+                createdAt = Instant.now()
+            )
+        )
+
+        val updatedConversation = of(
+            id = this.id,
+            props = this.props.copy(
+                updatedAt = Instant.now()
+            )
+        )
+
+        return Pair(updatedConversation, message)
     }
 
     private fun validate() {
