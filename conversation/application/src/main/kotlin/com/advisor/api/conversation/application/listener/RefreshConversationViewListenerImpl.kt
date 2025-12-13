@@ -21,6 +21,7 @@ class RefreshConversationViewListenerImpl(
             ConversationDeletedEvent::class,
             ConversationArchivedEvent::class,
             MemberMessageAddedEvent::class,
+            AiResponseGeneratedEvent::class,
         ],
         phase = TransactionPhase.AFTER_COMMIT
     )

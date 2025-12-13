@@ -17,6 +17,7 @@ class RefreshConversationMessageViewListenerImpl(
     @TransactionalEventListener(
         classes = [
             MemberMessageAddedEvent::class,
+            AiResponseGeneratedEvent::class,
         ],
         phase = TransactionPhase.AFTER_COMMIT
     )
