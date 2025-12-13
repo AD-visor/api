@@ -15,6 +15,20 @@ class ConversationReaderImpl(
     private val conversationMapper: ConversationMapper,
     private val em: EntityManager
 ): ConversationReader {
+    override fun findByIdAndMemberId(id: Long, memberId: Long): ConversationView {
+        val conversationEntity = conversationJpaReader.findByIdAndMemberId(id, memberId).orElseThrow {
+            CustomException(
+                code = ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
+                data = "[Conversation] ${id}에 해당하는 대화를 찾을 수 없습니다."
+            )
+        }
+
+        val conversationMessageEntities = conversationMessageJpaReader.findAllByConversationId(id)
+        val conversationMessages = conversationMessageEntities.map { it.toModel() }
+
+        return conversationEntity.toModel(conversationMessages)
+    }
+
     override fun findAllMetadataByMemberId(memberId: Long): List<ConversationMetadataView> {
         val projections = conversationJpaReader.findAllMetadataByMemberId(memberId)
         println(projections.toString())

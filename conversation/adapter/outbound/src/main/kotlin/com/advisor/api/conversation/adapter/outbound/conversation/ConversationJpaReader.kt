@@ -9,6 +9,20 @@ import java.util.Optional
 interface ConversationJpaReader: JpaRepository<ConversationViewEntity, Long> {
     @Query(
         """
+            SELECT c AS conversation
+            FROM ConversationViewEntity c
+            WHERE c.id = :id
+            AND c.memberId = :memberId
+            ORDER BY c.createdAt ASC
+        """
+    )
+    fun findByIdAndMemberId(
+        @Param("id") id: Long,
+        @Param("memberId") memberId: Long
+    ): Optional<ConversationViewEntity>
+
+    @Query(
+        """
             SELECT 
                 c.id as id,
                 c.productName as productName,
