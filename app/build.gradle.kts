@@ -33,6 +33,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    // Spring AI
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+
     // OAuth2
     implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 

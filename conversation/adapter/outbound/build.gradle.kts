@@ -8,6 +8,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    // Spring AI
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")
     compileOnly("org.springframework.data:spring-data-jpa")

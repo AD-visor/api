@@ -38,8 +38,14 @@ subprojects {
 		// Spring
 		implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
 		annotationProcessor(platform(("org.springframework.boot:spring-boot-dependencies:3.5.7")))
+
+		// Kotlin
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
+		implementation("io.github.microutils:kotlin-logging:3.0.5")
+
+		// Spring AI
+		implementation(platform("org.springframework.ai:spring-ai-bom:1.1.2"))
 
 		// Test
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
