@@ -1,4 +1,4 @@
-package com.advisor.api.iam.application.member.service
+package com.advisor.api.iam.application.member
 
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId

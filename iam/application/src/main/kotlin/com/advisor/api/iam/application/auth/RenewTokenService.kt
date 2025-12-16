@@ -1,4 +1,4 @@
-package com.advisor.api.iam.application.auth.service
+package com.advisor.api.iam.application.auth
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException

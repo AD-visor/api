@@ -1,6 +1,5 @@
-package com.advisor.api.iam.application.member.service
+package com.advisor.api.iam.application.member
 
-import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.iam.port.inbound.auth.DeleteAuthUseCase
 import com.advisor.api.iam.port.inbound.auth.command.DeleteAuthCommand
 import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand

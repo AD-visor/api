@@ -4,6 +4,7 @@ import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.AddMemberMessageReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.CreateConversationReqDto
+import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.ProcessConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.UpdateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.CreateConversationResDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.GetConversationMetadataResDto
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/conversation")
 class ConversationController(
     private val createConversationUseCase: CreateConversationUseCase,
-    private val addMemberMessageUseCase: AddMemberMessageUseCase,
+    private val processConversationUseCase: ProcessConversationUseCase,
     private val updateConversationUseCase: UpdateConversationUseCase,
     private val deleteConversationUseCase: DeleteConversationUseCase,
     private val archiveConversationUseCase: ArchiveConversationUseCase,
@@ -55,18 +56,18 @@ class ConversationController(
     fun addMemberMessage(
         @AuthenticationPrincipal member: CustomUserDetails,
         @PathVariable("conversationId") conversationId: String,
-        @RequestBody dto: AddMemberMessageReqDto
+        @RequestBody dto: ProcessConversationReqDto
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = dto.toCommand(
             conversationId = conversationId.toLong(),
             memberId = member.id
         )
 
-        addMemberMessageUseCase.execute(command)
+        processConversationUseCase.execute(command)
 
         val apiResponse = BaseApiResponse<Unit>(
             success = true,
-            message = "사용자 메시지 추가 성공",
+            message = "사용자 메시지 전송 성공",
             data = null,
             httpStatus = HttpStatus.CREATED
         )
