@@ -46,3 +46,5 @@ include(":token_usage:port:outbound")
 include(":token_usage:adapter:inbound")
 include(":token_usage:adapter:outbound")
 
+// AI Prompt Core
+include(":ai_prompt_core")
