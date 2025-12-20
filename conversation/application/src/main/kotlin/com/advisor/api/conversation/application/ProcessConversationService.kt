@@ -26,7 +26,7 @@ class ProcessConversationService(
             memberId = MemberId(command.memberId)
         )
 
-        val (updatedConversation, userMessage) = addMemberMessage(
+        val (updatedConversation, memberMessage) = addMemberMessage(
             conversation = conversation,
             body = command.body
         )
@@ -36,7 +36,7 @@ class ProcessConversationService(
         val (finalConversation, aiMessage) = addAiMessage(
             conversation = updatedConversation,
             aiResponse = aiResponse,
-            revisionOf = userMessage.id
+            revisionOf = memberMessage.id
         )
 
         domainEventPublisher.publish(finalConversation)

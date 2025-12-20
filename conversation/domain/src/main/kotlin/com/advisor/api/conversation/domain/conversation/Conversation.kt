@@ -79,7 +79,7 @@ class Conversation private constructor (
         newContentLength: String,
         newPlatform: ContentPlatform
     ): Conversation {
-        val updatedSubscription = Conversation(id, props.copy(
+        val updatedConversation = Conversation(id, props.copy(
             businessType = newBusinessType,
             productName = newProductName,
             description = newDescription,
@@ -91,9 +91,9 @@ class Conversation private constructor (
             updatedAt = Instant.now()
         ))
 
-        updatedSubscription.addDomainEvent(ConversationUpdatedEvent())
+        updatedConversation.addDomainEvent(ConversationUpdatedEvent())
 
-        return updatedSubscription
+        return updatedConversation
     }
 
     fun archive(): Conversation {

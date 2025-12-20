@@ -1,6 +1,6 @@
 package com.advisor.api.conversation.port.inbound.command
 
-class ArchiveConversationCommand(
+data class ArchiveConversationCommand(
     val id: Long,
     val memberId: Long
 )

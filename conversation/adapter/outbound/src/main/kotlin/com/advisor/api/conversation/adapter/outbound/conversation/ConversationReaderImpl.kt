@@ -19,7 +19,7 @@ class ConversationReaderImpl(
         val conversationEntity = conversationJpaReader.findByIdAndMemberId(id, memberId).orElseThrow {
             CustomException(
                 code = ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
-                data = "[Conversation] ${id}에 해당하는 대화를 찾을 수 없습니다."
+                data = "[Conversation] id=${id}, memberId=${memberId}에 해당하는 대화를 찾을 수 없습니다."
             )
         }
 
@@ -31,7 +31,6 @@ class ConversationReaderImpl(
 
     override fun findAllMetadataByMemberId(memberId: Long): List<ConversationMetadataView> {
         val projections = conversationJpaReader.findAllMetadataByMemberId(memberId)
-        println(projections.toString())
 
         return projections.map { conversationMapper.toMetadataView(it) }
     }

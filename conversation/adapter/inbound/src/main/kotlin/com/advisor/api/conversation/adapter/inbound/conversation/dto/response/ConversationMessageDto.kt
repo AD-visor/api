@@ -18,7 +18,7 @@ data class ConversationMessageDto(
                 conversationId = result.conversationId,
                 role = result.role,
                 body = result.body,
-                revisionOf = result.revisionOf.toString(),
+                revisionOf = result.revisionOf?.toString(),
                 createdAt = result.createdAt
             )
         }
