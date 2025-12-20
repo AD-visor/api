@@ -1,4 +1,7 @@
-apply(plugin = "org.springframework.boot")
+plugins {
+    id("org.springframework.boot")
+    kotlin("kapt")
+}
 
 dependencies {
     implementation(project(":common"))
@@ -31,7 +34,11 @@ dependencies {
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
+    // Spring AI
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
 
     // OAuth2
     implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -41,6 +48,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5")
+
+    // Test
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.springframework.security:spring-security-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.getByName("bootJar") {

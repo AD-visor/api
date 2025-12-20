@@ -7,14 +7,23 @@ import com.advisor.api.conversation.domain.conversation.ConversationProps
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
 import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
 
 @Entity
-@Table(name = "conversation")
+@Table(
+    name = "conversation",
+    indexes = [
+        Index(name = "idx_conversation_conversation_member", columnList = "id, member_id"),
+    ]
+)
 class ConversationEntity(
     @Id
     val id: Long,
@@ -47,7 +56,16 @@ class ConversationEntity(
     val platform: String,
 
     @Column(nullable = false)
-    val createdAt: Instant
+    val createdAt: Instant,
+
+    @Column(nullable = false)
+    val updatedAt: Instant,
+
+    @Column(nullable = false)
+    val isArchived: Boolean = false,
+
+    @Column
+    val archivedAt: Instant? = null,
 ) {
     companion object {
         fun fromDomain(domain: Conversation): ConversationEntity {
@@ -62,7 +80,10 @@ class ConversationEntity(
                 speechStyle = domain.speechStyle.value,
                 contentLength = domain.contentLength,
                 platform = domain.platform.value,
-                createdAt = domain.createdAt
+                createdAt = domain.createdAt,
+                updatedAt = domain.updatedAt,
+                isArchived = domain.isArchived,
+                archivedAt = domain.archivedAt,
             )
         }
     }
@@ -78,8 +99,10 @@ class ConversationEntity(
             speechStyle = SpeechStyle.create(speechStyle),
             contentLength = contentLength,
             platform = ContentPlatform.create(platform),
-            messages = emptyList(),
-            createdAt = createdAt
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            isArchived = isArchived,
+            archivedAt = archivedAt,
         )
 
         return Conversation.of(ConversationId(id), props)

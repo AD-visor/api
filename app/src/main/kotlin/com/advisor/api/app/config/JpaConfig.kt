@@ -1,6 +1,6 @@
 package com.advisor.api.app.config
 
-import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.persistence.autoconfigure.EntityScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
@@ -19,4 +19,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "com.advisor.api.payment.adapter.outbound",
     "com.advisor.api.token_usage.adapter.outbound"
 ])
-class JpaConfig
+open class JpaConfig

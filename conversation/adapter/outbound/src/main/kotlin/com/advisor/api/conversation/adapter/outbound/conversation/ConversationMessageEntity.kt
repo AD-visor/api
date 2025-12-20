@@ -5,11 +5,7 @@ import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageProps
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Index
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.Instant
 
 @Entity
@@ -38,10 +34,10 @@ class ConversationMessageEntity(
     val createdAt: Instant
 ) {
     companion object {
-        fun fromDomain(domain: ConversationMessage, conversationId: ConversationId): ConversationMessageEntity {
+        fun fromDomain(domain: ConversationMessage): ConversationMessageEntity {
             return ConversationMessageEntity(
                 id = domain.id.value,
-                conversationId = conversationId.value,
+                conversationId = domain.conversationId.value,
                 role = domain.role.value,
                 body = domain.body,
                 revisionOf = domain.revisionOf?.value,
@@ -52,6 +48,7 @@ class ConversationMessageEntity(
 
     fun toDomain(): ConversationMessage {
         val props = ConversationMessageProps(
+            conversationId = ConversationId(conversationId),
             role = MessageRole.create(role),
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },

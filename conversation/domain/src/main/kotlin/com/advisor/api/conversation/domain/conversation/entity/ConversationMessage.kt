@@ -1,6 +1,7 @@
 package com.advisor.api.conversation.domain.conversation.entity
 
 import com.advisor.api.common.core.domain.BaseDomainEntity
+import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.ConversationDomainExceptionCode
@@ -30,6 +31,7 @@ class ConversationMessage private constructor(
         ) }
     }
 
+    val conversationId: ConversationId get() = props.conversationId
     val role: MessageRole get() = props.role
     val body: String get() = props.body
     val revisionOf: ConversationMessageId? get() = props.revisionOf

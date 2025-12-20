@@ -1,5 +1,6 @@
 package com.advisor.api.conversation.domain.conversation
 
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import java.time.Instant
 
 data class ConversationView(
@@ -13,5 +14,7 @@ data class ConversationView(
     val speechStyle: String,
     val contentLength: String,
     val platform: String,
-    val createdAt: Instant
+    val messages: List<ConversationMessageView>,
+    val createdAt: Instant,
+    val updatedAt: Instant
 )

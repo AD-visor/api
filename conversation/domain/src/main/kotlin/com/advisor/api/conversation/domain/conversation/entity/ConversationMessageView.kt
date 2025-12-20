@@ -4,6 +4,7 @@ import java.time.Instant
 
 data class ConversationMessageView(
     val id: Long,
+    val conversationId: Long,
     val role: String,
     val body: String,
     val revisionOf: Long?,

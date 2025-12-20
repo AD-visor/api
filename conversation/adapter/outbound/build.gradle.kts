@@ -1,3 +1,7 @@
+plugins {
+    kotlin("kapt")
+}
+
 dependencies {
     implementation(project(":conversation:domain"))
     implementation(project(":conversation:port:outbound"))
@@ -6,7 +10,11 @@ dependencies {
     // Spring
     implementation("org.springframework:spring-context")
     implementation("org.springframework.boot:spring-boot")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+
+    // Spring AI
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
 
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")

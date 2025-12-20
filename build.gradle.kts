@@ -1,9 +1,10 @@
 plugins {
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
-	id("org.springframework.boot") version "3.5.6" apply false
-	id("io.spring.dependency-management") version "1.1.7" apply false
-	kotlin("plugin.jpa") version "1.9.25" apply false
+	kotlin("jvm") version "2.2.21"
+	kotlin("plugin.spring") version "2.2.21"
+	id("org.springframework.boot") version "4.0.0" apply false
+	id("io.spring.dependency-management") version "1.1.7"
+	kotlin("plugin.jpa") version "2.2.21" apply false
+	kotlin("kapt") version "2.2.21" apply false
 }
 
 group = "com.advisor"
@@ -28,29 +29,24 @@ subprojects {
 		}
 	}
 
-	configurations {
-		compileOnly {
-			extendsFrom(configurations.annotationProcessor.get())
+	dependencyManagement {
+		imports {
+			mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.0")
+			mavenBom("org.springframework.ai:spring-ai-bom:1.1.2")
 		}
 	}
 
 	dependencies {
-		// Spring
-		implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
-		annotationProcessor(platform(("org.springframework.boot:spring-boot-dependencies:3.5.7")))
-		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+		// Kotlin
+		implementation("tools.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-		// Test
-		testImplementation("org.springframework.boot:spring-boot-starter-test")
-		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-		testImplementation("org.springframework.security:spring-security-test")
-		testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+		implementation("io.github.microutils:kotlin-logging:3.0.5")
 	}
 
 	kotlin {
 		compilerOptions {
-			freeCompilerArgs.addAll("-Xjsr305=strict")
+			jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+			freeCompilerArgs.add("-Xjsr305=strict")
 		}
 	}
 

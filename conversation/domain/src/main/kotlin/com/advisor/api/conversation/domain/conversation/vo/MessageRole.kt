@@ -7,12 +7,12 @@ class MessageRole private constructor(val value: String) {
     init { validate() }
 
     companion object {
-        private val USER = MessageRole("USER")
-        private val ASSISTANT = MessageRole("ASSISTANT")
+        val MEMBER = MessageRole("MEMBER")
+        val ASSISTANT = MessageRole("ASSISTANT")
 
         fun create(value: String): MessageRole {
             return when (value) {
-                "USER" -> USER
+                "MEMBER" -> MEMBER
                 "ASSISTANT" -> ASSISTANT
                 else -> throw CustomException(
                     ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_ROLE,

@@ -17,6 +17,8 @@ data class ConversationProps(
     val speechStyle: SpeechStyle,
     val contentLength: String,
     val platform: ContentPlatform,
-    val messages: List<ConversationMessage>,
     val createdAt: Instant,
+    val updatedAt: Instant,
+    val isArchived: Boolean = false,
+    val archivedAt: Instant? = null,
 )
