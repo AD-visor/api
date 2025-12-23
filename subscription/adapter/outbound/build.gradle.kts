@@ -1,5 +1,4 @@
 plugins {
-    id("org.springframework.boot")
     kotlin("kapt")
 }
 

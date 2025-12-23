@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
 	kotlin("jvm") version "2.2.21"
 	kotlin("plugin.spring") version "2.2.21"
-	id("org.springframework.boot") version "4.0.0" apply false
+	id("org.springframework.boot") version "4.0.1" apply false
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "2.2.21" apply false
 	kotlin("kapt") version "2.2.21" apply false
@@ -23,15 +25,9 @@ subprojects {
 	apply(plugin = "io.spring.dependency-management")
 	apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 
-	java {
-		toolchain {
-			languageVersion = JavaLanguageVersion.of(21)
-		}
-	}
-
 	dependencyManagement {
 		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.0")
+			mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.1")
 			mavenBom("org.springframework.ai:spring-ai-bom:1.1.2")
 		}
 	}
@@ -41,11 +37,20 @@ subprojects {
 		implementation("tools.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("io.github.microutils:kotlin-logging:3.0.5")
+		implementation(kotlin("stdlib"))
+		implementation("org.jetbrains.kotlin:kotlin-reflect")
+	}
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
 	}
 
 	kotlin {
+		jvmToolchain(21)
 		compilerOptions {
-			jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+			jvmTarget.set(JvmTarget.JVM_21)
 			freeCompilerArgs.add("-Xjsr305=strict")
 		}
 	}
@@ -58,6 +63,7 @@ subprojects {
 
 	tasks.withType<Test> {
 		useJUnitPlatform()
+		failOnNoDiscoveredTests = false
 	}
 
 	tasks.withType<Jar> {
