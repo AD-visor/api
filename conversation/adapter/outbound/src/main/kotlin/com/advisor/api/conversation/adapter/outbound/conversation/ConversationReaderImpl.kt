@@ -6,6 +6,8 @@ import com.advisor.api.conversation.domain.conversation.ConversationMetadataView
 import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationView
 import jakarta.persistence.EntityManager
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -15,7 +17,7 @@ class ConversationReaderImpl(
     private val conversationMapper: ConversationMapper,
     private val em: EntityManager
 ): ConversationReader {
-    override fun findByIdAndMemberId(id: Long, memberId: Long): ConversationView {
+    override fun findByIdAndMemberId(id: Long, memberId: Long, limit: Int?): ConversationView {
         val conversationEntity = conversationJpaReader.findByIdAndMemberId(id, memberId).orElseThrow {
             CustomException(
                 code = ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
@@ -23,7 +25,14 @@ class ConversationReaderImpl(
             )
         }
 
-        val conversationMessageEntities = conversationMessageJpaReader.findAllByConversationId(id)
+        val conversationMessageEntities = if (limit != null && limit > 0) {
+            val pageable = PageRequest.of(0, limit, Sort.by("createdAt").descending())
+            conversationMessageJpaReader.findAllByConversationId(id, pageable)
+                .reversed()
+        } else {
+            conversationMessageJpaReader.findAllByConversationId(id)
+        }
+
         val conversationMessages = conversationMessageEntities.map { it.toModel() }
 
         return conversationEntity.toModel(conversationMessages)
