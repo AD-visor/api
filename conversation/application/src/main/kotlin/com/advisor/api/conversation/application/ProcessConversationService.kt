@@ -1,24 +1,36 @@
 package com.advisor.api.conversation.application
 
+import com.advisor.api.ai_prompt_core.model.Prompt
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.conversation.domain.conversation.Conversation
+import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationStore
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import com.advisor.api.conversation.port.inbound.ProcessConversationUseCase
+import com.advisor.api.conversation.port.inbound.command.GeneratePromptCommand
 import com.advisor.api.conversation.port.inbound.command.ProcessConversationCommand
+import com.advisor.api.conversation.port.inbound.prompt.GeneratePromptUseCase
+import com.advisor.api.conversation.port.outbound.AiClientPort
+import com.advisor.api.conversation.port.outbound.request.AiClientRequest
+import com.advisor.api.conversation.port.outbound.response.AiClientResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProcessConversationService(
     private val conversationStore: ConversationStore,
+    private val conversationReader: ConversationReader,
+    private val aiClientPort: AiClientPort,
+    private val generatePromptUseCase: GeneratePromptUseCase,
     private val snowFlakeIdUtil: SnowFlakeIdUtil,
     private val domainEventPublisher: DomainEventPublisher
 ) : ProcessConversationUseCase {
+
     @Transactional
     override fun execute(command: ProcessConversationCommand) {
         val conversation = conversationStore.loadByIdAndMemberId(
@@ -26,16 +38,27 @@ class ProcessConversationService(
             memberId = MemberId(command.memberId)
         )
 
+        val messages = conversationReader.findByIdAndMemberId(
+            id = command.conversationId,
+            memberId = command.memberId,
+            limit = 10
+        ).messages
+
         val (updatedConversation, memberMessage) = addMemberMessage(
             conversation = conversation,
             body = command.body
         )
 
-        val aiResponse = generateAiResponse()
+        val aiPrompt = generateAiPrompt(
+            conversation = updatedConversation,
+            messages = messages,
+            userRequest = memberMessage.body
+        )
+        val aiResponse = generateAiResponse(aiPrompt)
 
         val (finalConversation, aiMessage) = addAiMessage(
             conversation = updatedConversation,
-            aiResponse = aiResponse,
+            aiResponse = aiResponse.message.extractTextContent(),
             revisionOf = memberMessage.id
         )
 
@@ -57,8 +80,32 @@ class ProcessConversationService(
         return Pair(updatedConversation, message)
     }
 
-    private fun generateAiResponse(): String {
-        return "실제 AI 응답 생성 로직 구현 예정"
+    private fun generateAiResponse(prompt: Prompt): AiClientResponse {
+        val prompt = Prompt(prompt.messages)
+
+        val request = AiClientRequest(
+            prompt = prompt,
+            maxTokens = 1000,
+            temperature = 0.7f
+        )
+
+        return aiClientPort.generatePrompt(request)
+    }
+
+    private fun generateAiPrompt(
+        conversation: Conversation,
+        messages: List<ConversationMessageView>,
+        userRequest: String
+    ): Prompt {
+        val generatePromptCommand = GeneratePromptCommand(
+            conversation = conversation,
+            messages = messages,
+            userRequest = userRequest
+        )
+
+        val result = generatePromptUseCase.execute(generatePromptCommand)
+
+        return result.prompt
     }
 
     private fun addAiMessage(
