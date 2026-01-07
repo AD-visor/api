@@ -1,0 +1,8 @@
+package com.advisor.api.conversation.port.outbound
+
+import com.advisor.api.conversation.port.outbound.request.AiClientRequest
+import com.advisor.api.conversation.port.outbound.response.AiClientResponse
+
+interface AiClientPort {
+    fun generatePrompt(request: AiClientRequest): AiClientResponse
+}

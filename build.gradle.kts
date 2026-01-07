@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-	kotlin("jvm") version "2.2.21"
-	kotlin("plugin.spring") version "2.2.21"
+	kotlin("jvm") version "2.3.0"
+	kotlin("plugin.spring") version "2.3.0"
 	id("org.springframework.boot") version "4.0.1" apply false
 	id("io.spring.dependency-management") version "1.1.7"
-	kotlin("plugin.jpa") version "2.2.21" apply false
-	kotlin("kapt") version "2.2.21" apply false
+	kotlin("plugin.jpa") version "2.3.0" apply false
+	kotlin("kapt") version "2.3.0" apply false
 }
 
 group = "com.advisor"
@@ -43,14 +43,14 @@ subprojects {
 
 	java {
 		toolchain {
-			languageVersion = JavaLanguageVersion.of(21)
+			languageVersion = JavaLanguageVersion.of(25)
 		}
 	}
 
 	kotlin {
-		jvmToolchain(21)
+		jvmToolchain(25)
 		compilerOptions {
-			jvmTarget.set(JvmTarget.JVM_21)
+			jvmTarget.set(JvmTarget.JVM_25)
 			freeCompilerArgs.add("-Xjsr305=strict")
 		}
 	}

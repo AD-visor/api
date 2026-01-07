@@ -7,6 +7,8 @@ dependencies {
     implementation(project(":conversation:port:outbound"))
     implementation(project(":common"))
 
+    implementation(project(":ai_prompt_core"))
+
     // Spring
     implementation("org.springframework:spring-context")
     implementation("org.springframework.boot:spring-boot")
