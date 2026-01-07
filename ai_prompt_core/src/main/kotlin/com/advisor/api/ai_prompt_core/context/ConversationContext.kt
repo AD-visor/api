@@ -4,5 +4,5 @@ import com.advisor.api.ai_prompt_core.model.PromptMessage
 
 data class ConversationContext(
     val messages: List<PromptMessage>,
-    val maxTokens: Int? = null,
+    val maxTokens: Int? = null
 )

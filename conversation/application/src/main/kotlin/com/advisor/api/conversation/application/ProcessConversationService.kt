@@ -38,10 +38,13 @@ class ProcessConversationService(
             memberId = MemberId(command.memberId)
         )
 
+        val conversationContextPairLimit = 5
+        val messageLimit = conversationContextPairLimit * 2
+
         val messages = conversationReader.findByIdAndMemberId(
             id = command.conversationId,
             memberId = command.memberId,
-            limit = 10
+            limit = messageLimit
         ).messages
 
         val (updatedConversation, memberMessage) = addMemberMessage(
@@ -81,8 +84,6 @@ class ProcessConversationService(
     }
 
     private fun generateAiResponse(prompt: Prompt): AiClientResponse {
-        val prompt = Prompt(prompt.messages)
-
         val request = AiClientRequest(
             prompt = prompt,
             maxTokens = 1000,

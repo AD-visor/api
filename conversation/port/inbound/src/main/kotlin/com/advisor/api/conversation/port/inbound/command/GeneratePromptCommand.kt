@@ -6,5 +6,5 @@ import com.advisor.api.conversation.domain.conversation.entity.ConversationMessa
 data class GeneratePromptCommand(
     val conversation: Conversation,
     val messages: List<ConversationMessageView>,
-    val userRequest: String,
+    val userRequest: String
 )

@@ -26,7 +26,14 @@ class ConversationReaderImpl(
         }
 
         val conversationMessageEntities = if (limit != null && limit > 0) {
-            val pageable = PageRequest.of(0, limit, Sort.by("createdAt").descending())
+            val pageable = PageRequest.of(
+                0,
+                limit,
+                Sort.by(
+                    Sort.Order.desc("createdAt"),
+                    Sort.Order.desc("id")
+                )
+            )
             conversationMessageJpaReader.findAllByConversationId(id, pageable)
                 .reversed()
         } else {
