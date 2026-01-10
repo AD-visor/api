@@ -5,6 +5,6 @@ data class OutputConstraintContext(
     val toneStyle: String = "PERSUASIVE",
     val speechStyle: String = "FRIENDLY",
     val format: OutputFormat = OutputFormat.FREE_TEXT,
-    val schemaDescription: String? = null,
+    val outputSchema: String? = null,
     val strict: Boolean = false
 )
