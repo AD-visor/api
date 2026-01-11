@@ -1,6 +1,5 @@
 package com.advisor.api.conversation.application.prompt
 
-import com.advisor.api.ai_prompt_core.context.ChainOfThoughtPolicy
 import com.advisor.api.ai_prompt_core.context.IdentityContext
 import com.advisor.api.ai_prompt_core.context.OutputConstraintContext
 import com.advisor.api.ai_prompt_core.context.OutputFormat
@@ -53,18 +52,8 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
 
     private fun buildReasoningMessage(reasoning: ReasoningContext): String {
         return buildString {
-            // 1. Chain of Thought 지시
-            when (reasoning.chainOfThought) {
-                ChainOfThoughtPolicy.INTERNAL -> {
-                    appendLine("## Reasoning Guideline")
-                    appendLine(ReasoningScripts.COT_INTERNAL)
-                }
-                ChainOfThoughtPolicy.SELF_CHECK -> {
-                    appendLine("## Self-Correction Guideline")
-                    appendLine(ReasoningScripts.COT_SELF_CHECK)
-                }
-                ChainOfThoughtPolicy.NONE -> {  }
-            }
+            appendLine("## GUIDELINES")
+            reasoning.guidelines.forEach { appendLine("- $it") }
         }.trim()
     }
 
@@ -77,11 +66,7 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
 
             if (constraint.format != OutputFormat.FREE_TEXT) {
                 appendLine("- Format: ${constraint.format}")
-            }
-
-            constraint.schemaDescription?.let {
-                appendLine("## Target Schema")
-                appendLine("```json\n$it\n```")
+                appendLine(ReasoningScripts.STRICT_JSON_FORMAT)
             }
         }.trim()
     }

@@ -6,7 +6,6 @@ import com.advisor.api.ai_prompt_core.context.TaskContext
 import com.advisor.api.ai_prompt_core.model.Prompt
 import com.advisor.api.ai_prompt_core.model.PromptMessage
 import com.advisor.api.ai_prompt_core.context.ReasoningContext
-import com.advisor.api.ai_prompt_core.context.ChainOfThoughtPolicy
 import com.advisor.api.ai_prompt_core.context.ConversationContext
 import com.advisor.api.ai_prompt_core.context.DomainContext
 import com.advisor.api.ai_prompt_core.context.IdentityContext
@@ -14,7 +13,10 @@ import com.advisor.api.ai_prompt_core.context.OutputFormat
 import com.advisor.api.ai_prompt_core.context.UserContext
 import com.advisor.api.ai_prompt_core.model.MultimodalContent
 import com.advisor.api.ai_prompt_core.model.PromptRole
+import com.advisor.api.ai_prompt_core.model.PromptType
 import com.advisor.api.conversation.application.prompt.scripts.IdentityScripts
+import com.advisor.api.conversation.application.prompt.scripts.OutputConstraintScripts
+import com.advisor.api.conversation.application.prompt.scripts.ReasoningScripts
 import com.advisor.api.conversation.application.prompt.scripts.TaskScripts
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import com.advisor.api.conversation.port.inbound.command.GeneratePromptCommand
@@ -32,10 +34,10 @@ class GeneratePromptService(
         val messages = command.messages
 
         val systemContext = buildSystemContext(
+            promptType = command.promptType,
             language = "KOREAN",
             toneStyle = conversation.toneStyle.value,
-            speechStyle = conversation.speechStyle.value,
-            format = OutputFormat.FREE_TEXT
+            speechStyle = conversation.speechStyle.value
         )
 
         val userContext = buildUserContext(
@@ -56,26 +58,27 @@ class GeneratePromptService(
     }
 
     private fun buildSystemContext(
+        promptType: PromptType,
         language: String,
         toneStyle: String,
-        speechStyle: String,
-        format: OutputFormat
+        speechStyle: String
     ): SystemContext {
         val identity = IdentityContext(
-            instruction = IdentityScripts.INSTRUCTION,
-            principles = IdentityScripts.PRINCIPLES,
-            constraints = IdentityScripts.CONSTRAINTS
+            instruction = IdentityScripts.instruction(promptType),
+            principles = IdentityScripts.principles(promptType),
+            constraints = IdentityScripts.constraints(promptType)
         )
 
         val reasoning = ReasoningContext(
-            chainOfThought = ChainOfThoughtPolicy.SELF_CHECK
+            guidelines = ReasoningScripts.guidelines(promptType)
         )
 
         val outputConstraint = OutputConstraintContext(
             language = language,
             toneStyle = toneStyle,
             speechStyle = speechStyle,
-            format = format
+            format = OutputConstraintScripts.format(promptType),
+            outputSchema = OutputConstraintScripts.schema(promptType)
         )
 
         return SystemContext(
