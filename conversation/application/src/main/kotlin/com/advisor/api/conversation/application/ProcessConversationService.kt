@@ -1,6 +1,7 @@
 package com.advisor.api.conversation.application
 
 import com.advisor.api.ai_prompt_core.model.Prompt
+import com.advisor.api.ai_prompt_core.model.PromptType
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
@@ -52,13 +53,19 @@ class ProcessConversationService(
             body = command.body
         )
 
-        val aiPrompt = generateAiPrompt(
-            conversation = updatedConversation,
-            messages = messages,
-            userRequest = memberMessage.body
-        )
-        val aiResponse = generateAiResponse(aiPrompt)
+        val copyWrite = executeAiTextStep(conversation, messages, command.body, PromptType.COPY_WRITING)
 
+        val imageStepInput = "Based on this copy: '${copyWrite}', generate a background image prompt."
+        val imageGeneration = executeAiTextStep(conversation, messages, imageStepInput, PromptType.IMAGE_GENERATION)
+
+        val layoutStepInput = """
+            Copy: $copyWrite
+            Image Concept: $imageGeneration
+            Analyze the visual hierarchy and provide JSON coordinates.
+        """.trimIndent()
+        val layoutAnalysis = executeAiTextStep(conversation, messages, layoutStepInput, PromptType.LAYOUT_ANALYSIS)
+
+        /*
         val (finalConversation, aiMessage) = addAiMessage(
             conversation = updatedConversation,
             aiResponse = aiResponse.message.extractTextContent(),
@@ -66,6 +73,7 @@ class ProcessConversationService(
         )
 
         domainEventPublisher.publish(finalConversation)
+        */
     }
 
     private fun addMemberMessage(
@@ -83,30 +91,23 @@ class ProcessConversationService(
         return Pair(updatedConversation, message)
     }
 
-    private fun generateAiResponse(prompt: Prompt): AiClientResponse {
-        val request = AiClientRequest(
-            prompt = prompt,
-            maxTokens = 1000,
-            temperature = 0.7f
-        )
-
-        return aiClientPort.generatePrompt(request)
-    }
-
-    private fun generateAiPrompt(
+    private fun executeAiTextStep(
         conversation: Conversation,
         messages: List<ConversationMessageView>,
-        userRequest: String
-    ): Prompt {
-        val generatePromptCommand = GeneratePromptCommand(
+        requestBody: String,
+        type: PromptType
+    ): String {
+        val promptCommand = GeneratePromptCommand(
             conversation = conversation,
             messages = messages,
-            userRequest = userRequest
+            userRequest = requestBody,
+            promptType = type
         )
 
-        val result = generatePromptUseCase.execute(generatePromptCommand)
+        val promptResult = generatePromptUseCase.execute(promptCommand)
+        val response = aiClientPort.generatePrompt(AiClientRequest(promptResult.prompt))
 
-        return result.prompt
+        return response.message.extractTextContent()
     }
 
     private fun addAiMessage(
