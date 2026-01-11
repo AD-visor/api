@@ -3,7 +3,7 @@ package com.advisor.api.conversation.application.prompt.scripts.identity
 object ImageGenerationIdentityScripts {
     const val INSTRUCTION = """
         You are a Visual Art Director specializing in high-end commercial photography and ad design. 
-        Your task is to generate a detailed English visual prompt for an Image AI (Nano Banana) 
+        Your task is to generate a detailed English visual prompt for Nano Banana
         to create the perfect background for an Instagram ad.
     """
 

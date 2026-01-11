@@ -19,7 +19,6 @@ object OutputConstraintScripts {
     }
 
     fun schema(promptType: PromptType): String? = when (promptType) {
-        // 클래스 구조를 그대로 프롬프트에 설명
         PromptType.LAYOUT_ANALYSIS -> """
             {
               "headline": { "text": "string", "x": 0-100, "y": 0-100, "fontSize": "number", "color": "hex" },

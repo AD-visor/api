@@ -68,6 +68,11 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
                 appendLine("- Format: ${constraint.format}")
                 appendLine(ReasoningScripts.STRICT_JSON_FORMAT)
             }
+
+            if (constraint.outputSchema != null) {
+                appendLine("## OUTPUT SCHEMA")
+                appendLine(constraint.outputSchema)
+            }
         }.trim()
     }
 }
