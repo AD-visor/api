@@ -31,6 +31,11 @@ dependencies {
     implementation(project(":token_usage:port:outbound"))
     implementation(project(":token_usage:application"))
 
+    implementation(project(":media:adapter:inbound"))
+    implementation(project(":media:adapter:outbound"))
+    implementation(project(":media:port:outbound"))
+    implementation(project(":media:application"))
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

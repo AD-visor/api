@@ -46,5 +46,13 @@ include(":token_usage:port:outbound")
 include(":token_usage:adapter:inbound")
 include(":token_usage:adapter:outbound")
 
+// Media
+include(":media:application")
+include(":media:domain")
+include(":media:port:inbound")
+include(":media:port:outbound")
+include(":media:adapter:inbound")
+include(":media:adapter:outbound")
+
 // AI Prompt Core
 include(":ai_prompt_core")
