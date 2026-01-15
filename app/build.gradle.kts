@@ -44,6 +44,7 @@ dependencies {
 
     // Spring AI
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+    implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
     // OAuth2
     implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")

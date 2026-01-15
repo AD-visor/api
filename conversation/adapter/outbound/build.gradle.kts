@@ -17,6 +17,7 @@ dependencies {
 
     // Spring AI
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+    implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")
