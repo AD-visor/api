@@ -1,7 +1,10 @@
 package com.advisor.api.media.domain
 
 import com.advisor.api.common.core.domain.AggregateRoot
+import com.advisor.api.common.core.domain.vo.identifier.ConversationId
+import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MediaId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.media.domain.vo.MediaPath
 import com.advisor.api.media.domain.vo.MediaType
@@ -31,11 +34,14 @@ class Media private constructor(
         ) }
     }
 
+    fun delete() {}
+
     val path: MediaPath get() = props.path
     val mediaType: MediaType get() = props.mediaType
     val mimeType: MimeType get() = props.mimeType
-    val conversationId get() = props.conversationId
-    val conversationMessageId get() = props.conversationMessageId
+    val conversationId: ConversationId get() = props.conversationId
+    val conversationMessageId: ConversationMessageId get() = props.conversationMessageId
+    val memberId: MemberId get() = props.memberId
     val width: Int get() = props.width
     val height: Int get() = props.height
     val fileSize: Long get() = props.fileSize

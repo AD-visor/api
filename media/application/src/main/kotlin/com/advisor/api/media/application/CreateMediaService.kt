@@ -3,6 +3,7 @@ package com.advisor.api.media.application
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MediaId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.media.domain.Media
 import com.advisor.api.media.domain.MediaProps
@@ -41,6 +42,7 @@ class CreateMediaService(
             mimeType = MimeType.create(command.mimeType),
             conversationId = ConversationId(command.conversationId),
             conversationMessageId = ConversationMessageId(command.conversationMessageId),
+            memberId = MemberId(command.memberId),
             width = command.width,
             height = command.height,
             fileSize = command.fileSize

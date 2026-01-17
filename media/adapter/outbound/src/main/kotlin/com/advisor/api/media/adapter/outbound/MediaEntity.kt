@@ -3,6 +3,7 @@ package com.advisor.api.media.adapter.outbound
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MediaId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.media.domain.Media
 import com.advisor.api.media.domain.MediaProps
 import com.advisor.api.media.domain.vo.MediaPath
@@ -28,6 +29,9 @@ class MediaEntity(
 
     @Column(nullable = false)
     val conversationMessageId: Long,
+
+    @Column(nullable = false)
+    val memberId: Long,
 
     @Column(nullable = false)
     val mediaType: String,
@@ -60,6 +64,7 @@ class MediaEntity(
                 path = domain.path.value,
                 conversationId = domain.conversationId.value,
                 conversationMessageId = domain.conversationMessageId.value,
+                memberId = domain.memberId.value,
                 mediaType = domain.mediaType.value,
                 mimeType = domain.mimeType.value,
                 width = domain.width,
@@ -79,6 +84,7 @@ class MediaEntity(
             mimeType = MimeType.create(mimeType),
             conversationId = ConversationId(conversationId),
             conversationMessageId = ConversationMessageId(conversationMessageId),
+            memberId = MemberId(memberId),
             width = width,
             height = height,
             fileSize = fileSize,
