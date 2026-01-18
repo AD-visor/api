@@ -13,4 +13,9 @@ enum class MediaInfrastructureExceptionCode(
         code = "MEDIA_NOT_FOUND",
         message = "[Media] 미디어를 찾을 수 없습니다."
     ),
+    MEDIA_FILE_DELETE_FAILURE(
+        status = ErrorStatus.INTERNAL_ERROR,
+        code = "MEDIA_FILE_DELETE_FAILURE",
+        message = "[Media] 미디어 파일 삭제에 실패했습니다."
+    ),
 }
