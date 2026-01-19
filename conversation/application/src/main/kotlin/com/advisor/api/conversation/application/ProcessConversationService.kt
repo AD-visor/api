@@ -1,6 +1,5 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.ai_prompt_core.model.Prompt
 import com.advisor.api.ai_prompt_core.model.PromptType
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
@@ -18,9 +17,15 @@ import com.advisor.api.conversation.port.inbound.command.ProcessConversationComm
 import com.advisor.api.conversation.port.inbound.prompt.GeneratePromptUseCase
 import com.advisor.api.conversation.port.outbound.AiClientPort
 import com.advisor.api.conversation.port.outbound.request.AiClientRequest
-import com.advisor.api.conversation.port.outbound.response.AiClientResponse
+import com.advisor.api.conversation.port.outbound.response.AiImageResponse
+import com.advisor.api.media.port.inbound.CreateMediaUseCase
+import com.advisor.api.media.port.inbound.command.CreateMediaCommand
+import com.advisor.api.media.port.outbound.ImageEditPort
+import com.advisor.api.media.port.outbound.command.ImageEditCommand
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 
 @Service
 class ProcessConversationService(
@@ -29,6 +34,9 @@ class ProcessConversationService(
     private val aiClientPort: AiClientPort,
     private val generatePromptUseCase: GeneratePromptUseCase,
     private val snowFlakeIdUtil: SnowFlakeIdUtil,
+    private val objectMapper: ObjectMapper,
+    private val createMediaUseCase: CreateMediaUseCase,
+    private val imageEditPort: ImageEditPort,
     private val domainEventPublisher: DomainEventPublisher
 ) : ProcessConversationUseCase {
 
@@ -56,24 +64,46 @@ class ProcessConversationService(
         val copyWrite = executeAiTextStep(conversation, messages, command.body, PromptType.COPY_WRITING)
 
         val imageStepInput = "Based on this copy: '${copyWrite}', generate a background image prompt."
-        val imageGeneration = executeAiTextStep(conversation, messages, imageStepInput, PromptType.IMAGE_GENERATION)
+        val imageGeneration = executeAiImageStep(conversation, messages, imageStepInput, PromptType.IMAGE_GENERATION)
 
         val layoutStepInput = """
             Copy: $copyWrite
             Image Concept: $imageGeneration
-            Analyze the visual hierarchy and provide JSON coordinates.
+            Analyze the visual hierarchy.
+            Provide a JSON ARRAY of coordinates for each text element (Main copy, Sub copy, etc).
         """.trimIndent()
         val layoutAnalysis = executeAiTextStep(conversation, messages, layoutStepInput, PromptType.LAYOUT_ANALYSIS)
+        val textElements: List<ImageEditCommand.TextElement> = objectMapper.readValue(
+            layoutAnalysis,
+            object : TypeReference<List<ImageEditCommand.TextElement>>() {}
+        )
 
-        /*
+        val compositeCommand = ImageEditCommand.Composite(
+            baseImage = imageGeneration.bytes,
+            textElements = textElements
+        )
+
+        // 3. 최종 이미지 파일 저장
+        val finalImageBytes = imageEditPort.composite(compositeCommand).image
+
+        val createMediaCommand = CreateMediaCommand(
+            conversationId = command.conversationId,
+            conversationMessageId = memberMessage.id.value,
+            memberId = command.memberId,
+            file = finalImageBytes,
+            mimeType = "image/png",
+            width = 1024,
+            height = 1024
+        )
+        createMediaUseCase.execute(listOf(createMediaCommand))
+
         val (finalConversation, aiMessage) = addAiMessage(
             conversation = updatedConversation,
-            aiResponse = aiResponse.message.extractTextContent(),
+            aiResponse = copyWrite,
             revisionOf = memberMessage.id
         )
 
         domainEventPublisher.publish(finalConversation)
-        */
     }
 
     private fun addMemberMessage(
@@ -108,6 +138,25 @@ class ProcessConversationService(
         val response = aiClientPort.generatePrompt(AiClientRequest(promptResult.prompt))
 
         return response.message.extractTextContent()
+    }
+
+    private fun executeAiImageStep(
+        conversation: Conversation,
+        messages: List<ConversationMessageView>,
+        requestBody: String,
+        type: PromptType
+    ): AiImageResponse {
+        val promptCommand = GeneratePromptCommand(
+            conversation = conversation,
+            messages = messages,
+            userRequest = requestBody,
+            promptType = type
+        )
+
+        val promptResult = generatePromptUseCase.execute(promptCommand)
+        val response = aiClientPort.generateImage(AiClientRequest(promptResult.prompt))
+
+        return response
     }
 
     private fun addAiMessage(

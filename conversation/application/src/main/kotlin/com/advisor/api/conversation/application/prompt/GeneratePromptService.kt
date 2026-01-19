@@ -9,7 +9,6 @@ import com.advisor.api.ai_prompt_core.context.ReasoningContext
 import com.advisor.api.ai_prompt_core.context.ConversationContext
 import com.advisor.api.ai_prompt_core.context.DomainContext
 import com.advisor.api.ai_prompt_core.context.IdentityContext
-import com.advisor.api.ai_prompt_core.context.OutputFormat
 import com.advisor.api.ai_prompt_core.context.UserContext
 import com.advisor.api.ai_prompt_core.model.MultimodalContent
 import com.advisor.api.ai_prompt_core.model.PromptRole
@@ -123,7 +122,7 @@ class GeneratePromptService(
         return UserContext(
             task = task,
             domain = domain,
-            conversation = conversation,
+            conversation = null,
         )
     }
 
