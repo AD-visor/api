@@ -8,8 +8,7 @@ dependencies {
     implementation(project(":common"))
 
     // Spring
-    implementation("org.springframework:spring-context")
-    implementation("org.springframework.boot:spring-boot")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
