@@ -79,6 +79,9 @@ class ImageEditAdapter(
     private fun renderElement(element: ImageEditCommand.TextElement): String {
         val s = element.style
 
+        /*
+        Font Family 처리도 필요함. 타입 지정.
+        */
         val cssFont = when(s.fontFamily?.lowercase()) {
             "bold" -> "'Black Han Sans', sans-serif"
             "serif" -> "'Nanum Myeongjo', serif"
@@ -91,7 +94,7 @@ class ImageEditAdapter(
             s.top?.let { "top: $it" },
             s.left?.let { "left: $it" },
             "width: ${s.width}",
-            "font-family: $cssFont",
+            "font-family: 'Pretendard', sans-serif",
             "font-size: ${s.fontSize}",
             "color: ${s.fontColor}",
             "font-weight: ${s.fontWeight}",

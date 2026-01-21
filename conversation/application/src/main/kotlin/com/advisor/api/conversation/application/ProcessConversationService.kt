@@ -6,6 +6,7 @@ import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
+import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationStore
@@ -61,6 +62,12 @@ class ProcessConversationService(
             body = command.body
         )
 
+        /*
+        saga 패턴을 활용하여 단계별로 끊기.
+        트랜잭션이 너무 길어져 DB를 너무 오래 점유해 성능 저하 가능성.
+        중간 단계에서 실패 시, 이전 작업을 취소 시켜야 함.
+        */
+
         val copyWrite = executeAiTextStep(conversation, messages, command.body, PromptType.COPY_WRITING)
 
         val imageStepInput = "Based on this copy: '${copyWrite}', generate a background image prompt."
@@ -73,10 +80,25 @@ class ProcessConversationService(
             Provide a JSON ARRAY of coordinates for each text element (Main copy, Sub copy, etc).
         """.trimIndent()
         val layoutAnalysis = executeAiTextStep(conversation, messages, layoutStepInput, PromptType.LAYOUT_ANALYSIS)
-        val textElements: List<ImageEditCommand.TextElement> = objectMapper.readValue(
-            layoutAnalysis,
-            object : TypeReference<List<ImageEditCommand.TextElement>>() {}
-        )
+        val textElements: List<ImageEditCommand.TextElement> =
+            try {
+                objectMapper.readValue(
+                    layoutAnalysis,
+                    object : TypeReference<List<ImageEditCommand.TextElement>>() {}
+                ).also {
+                    if (it.isEmpty()) {
+                        throw CustomException(
+                            ConversationApplicationExceptionCode.CONVERSATION_EMPTY_LAYOUT_ANALYSIS_RESPONSE,
+                            "[Conversation] 레이아웃 분석 응답이 비어 있습니다."
+                        )
+                    }
+                }
+            } catch (ex: Exception) {
+                throw CustomException(
+                    ConversationApplicationExceptionCode.CONVERSATION_LAYOUT_ANALYSIS_FAILURE,
+                    "[Conversation] 레이아웃 분석에 실패했습니다. 오류: ${ex.message}"
+                )
+            }
 
         val compositeCommand = ImageEditCommand.Composite(
             baseImage = imageGeneration.bytes,
@@ -92,8 +114,8 @@ class ProcessConversationService(
             memberId = command.memberId,
             file = finalImageBytes,
             mimeType = "image/png",
-            width = 1024,
-            height = 1024
+            width = compositeCommand.canvasWidth,
+            height = compositeCommand.canvasHeight
         )
         createMediaUseCase.execute(listOf(createMediaCommand))
 
