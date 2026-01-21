@@ -8,6 +8,8 @@ import com.advisor.api.conversation.port.outbound.AiClientPort
 import com.advisor.api.conversation.port.outbound.request.AiClientRequest
 import com.advisor.api.conversation.port.outbound.response.AiClientResponse
 import com.advisor.api.conversation.port.outbound.response.AiImageResponse
+import com.advisor.api.media.port.outbound.ImageFetchPort
+import com.advisor.api.media.port.outbound.command.ImageFetchCommand
 import org.springframework.ai.chat.messages.AssistantMessage
 import org.springframework.ai.chat.messages.Message
 import org.springframework.ai.chat.messages.SystemMessage
@@ -23,11 +25,11 @@ import org.springframework.web.client.RestClient
 
 @Component
 class GeminiAiClientAdapter(
+    private val imageFetchPot: ImageFetchPort,
     @Qualifier("googleGenAiChatModel") private val chatModel: ChatModel,
     private val imageModel: ImageModel,
+    private val restClient: RestClient
 ): AiClientPort {
-    private val restClient = RestClient.create()
-
     override fun generatePrompt(request: AiClientRequest): AiClientResponse {
         val messages = request.prompt.messages.map { it.toSpringAiMessage() }
         val prompt = Prompt(messages)
@@ -79,26 +81,10 @@ class GeminiAiClientAdapter(
             )
 
         // 4. URL로부터 바이너리 데이터(ByteArray) 다운로드
-        val imageData = downloadImage(imageUrl)
+        val imageData = imageFetchPot.fetch(ImageFetchCommand.Fetch(imageUrl)).image
         val count = imageResponse.results.size
 
         return AiImageResponse(imageData, count)
-    }
-
-    private fun downloadImage(url: String): ByteArray {
-        return try {
-            restClient.get()
-                .uri(url)
-                .retrieve()
-                .body(ByteArray::class.java)
-                ?: throw CustomException(
-                    PromptAdapterExceptionCode.PROMPT_EMPTY_RESPONSE,
-                    "[Prompt] 이미지 다운로드 응답이 비어 있습니다."
-                )
-        } catch (e: Exception) { throw CustomException(
-            PromptAdapterExceptionCode.PROMPT_IMAGE_DOWNLOAD_FAILURE,
-            "[Prompt] 이미지 다운로드에 실패했습니다. ${e.message}"
-        ) }
     }
 
     private fun PromptMessage.toSpringAiMessage(): Message {
