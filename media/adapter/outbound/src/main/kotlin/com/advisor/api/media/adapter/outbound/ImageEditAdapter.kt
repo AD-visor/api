@@ -16,6 +16,11 @@ class ImageEditAdapter(
     private val playwright: Playwright,
     private val browser: Browser
 ): ImageEditPort {
+    /*
+    병목 현상에 대한 처리 고려 필요
+    - Generic Object Pool 패턴 적용
+    - Semaphore 등을 사용해 동시 접속 수 제한
+    */
     override fun composite(command: ImageEditCommand.Composite): ImageEditResult {
         val base64Image = Base64.encode(command.baseImage)
 
@@ -53,20 +58,21 @@ class ImageEditAdapter(
         """.trimIndent()
 
         // Page만 생성해서 사용
-        val context = browser.newContext(Browser.NewContextOptions().setViewportSize(command.canvasWidth, command.canvasHeight))
-        val page = context.newPage()
-        try {
-            page.setContent(htmlContent)
-            page.waitForLoadState(LoadState.NETWORKIDLE)
+        return browser.newContext(
+            Browser
+                .NewContextOptions()
+                .setViewportSize(command.canvasWidth, command.canvasHeight))
+            .use { context ->
+                context.newPage().use { page ->
+                    page.setContent(htmlContent)
+                    page.waitForLoadState(LoadState.NETWORKIDLE)
 
-            val screenshot = page.screenshot(Page.ScreenshotOptions().apply {
-                setType(ScreenshotType.PNG)
-                setFullPage(false)
-            })
-            return ImageEditResult(screenshot)
-        } finally {
-            page.close()
-            context.close()
+                    val screenshot = page.screenshot(Page.ScreenshotOptions().apply {
+                        setType(ScreenshotType.PNG)
+                        setFullPage(false)
+                    })
+                    ImageEditResult(screenshot)
+                }
         }
     }
 
