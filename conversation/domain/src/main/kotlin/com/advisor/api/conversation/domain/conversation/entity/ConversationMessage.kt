@@ -35,5 +35,6 @@ class ConversationMessage private constructor(
     val role: MessageRole get() = props.role
     val body: String get() = props.body
     val revisionOf: ConversationMessageId? get() = props.revisionOf
+    val parentMessageId: ConversationMessageId? get() = props.parentMessageId
     val createdAt: Instant get() = props.createdAt
 }

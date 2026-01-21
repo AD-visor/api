@@ -27,6 +27,9 @@ class ConversationMessageViewEntity(
     @Column
     val revisionOf: Long?,
 
+    @Column
+    val parentMessageId: Long?,
+
     @Column(nullable = false)
     val createdAt: Instant
 ) {
@@ -37,6 +40,7 @@ class ConversationMessageViewEntity(
             role = role,
             body = body,
             revisionOf = revisionOf,
+            parentMessageId = parentMessageId,
             createdAt = createdAt,
         )
     }

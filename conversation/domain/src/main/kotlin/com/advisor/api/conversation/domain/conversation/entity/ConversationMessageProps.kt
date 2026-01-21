@@ -10,5 +10,6 @@ data class ConversationMessageProps(
     val role: MessageRole,
     val body: String,
     val revisionOf: ConversationMessageId? = null,
+    val parentMessageId: ConversationMessageId? = null,
     val createdAt: Instant
 )

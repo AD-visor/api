@@ -8,5 +8,6 @@ data class ConversationMessageView(
     val role: String,
     val body: String,
     val revisionOf: Long?,
+    val parentMessageId: Long?,
     val createdAt: Instant
 )

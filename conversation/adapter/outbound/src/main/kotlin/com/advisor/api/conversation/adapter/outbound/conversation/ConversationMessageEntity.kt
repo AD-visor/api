@@ -30,6 +30,9 @@ class ConversationMessageEntity(
     @Column(nullable = true)
     val revisionOf: Long? = null,
 
+    @Column(nullable = true)
+    val parentMessageId: Long? = null,
+
     @Column(nullable = false)
     val createdAt: Instant
 ) {
@@ -41,6 +44,7 @@ class ConversationMessageEntity(
                 role = domain.role.value,
                 body = domain.body,
                 revisionOf = domain.revisionOf?.value,
+                parentMessageId = domain.parentMessageId?.value,
                 createdAt = domain.createdAt
             )
         }
@@ -52,6 +56,7 @@ class ConversationMessageEntity(
             role = MessageRole.create(role),
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },
+            parentMessageId = parentMessageId?.let { ConversationMessageId(it) },
             createdAt = createdAt
         )
 
