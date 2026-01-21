@@ -9,6 +9,8 @@ dependencies {
 
     implementation(project(":ai_prompt_core"))
 
+    implementation(project(":media:port:outbound"))
+
     // Spring
     implementation("org.springframework:spring-context")
     implementation("org.springframework.boot:spring-boot")
@@ -17,6 +19,7 @@ dependencies {
 
     // Spring AI
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+    implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")

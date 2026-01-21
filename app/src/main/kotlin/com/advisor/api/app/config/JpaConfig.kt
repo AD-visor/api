@@ -10,13 +10,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "com.advisor.api.subscription.adapter.outbound",
     "com.advisor.api.conversation.adapter.outbound",
     "com.advisor.api.payment.adapter.outbound",
-    "com.advisor.api.token_usage.adapter.outbound"
+    "com.advisor.api.token_usage.adapter.outbound",
+    "com.advisor.api.media.adapter.outbound"
 ])
 @EnableJpaRepositories(basePackages = [
     "com.advisor.api.iam.adapter.outbound",
     "com.advisor.api.subscription.adapter.outbound",
     "com.advisor.api.conversation.adapter.outbound",
     "com.advisor.api.payment.adapter.outbound",
-    "com.advisor.api.token_usage.adapter.outbound"
+    "com.advisor.api.token_usage.adapter.outbound",
+    "com.advisor.api.media.adapter.outbound"
 ])
 open class JpaConfig

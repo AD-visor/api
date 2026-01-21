@@ -1,12 +1,12 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.ai_prompt_core.model.Prompt
 import com.advisor.api.ai_prompt_core.model.PromptType
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
+import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationStore
@@ -18,9 +18,15 @@ import com.advisor.api.conversation.port.inbound.command.ProcessConversationComm
 import com.advisor.api.conversation.port.inbound.prompt.GeneratePromptUseCase
 import com.advisor.api.conversation.port.outbound.AiClientPort
 import com.advisor.api.conversation.port.outbound.request.AiClientRequest
-import com.advisor.api.conversation.port.outbound.response.AiClientResponse
+import com.advisor.api.conversation.port.outbound.response.AiImageResponse
+import com.advisor.api.media.port.inbound.CreateMediaUseCase
+import com.advisor.api.media.port.inbound.command.CreateMediaCommand
+import com.advisor.api.media.port.outbound.ImageEditPort
+import com.advisor.api.media.port.outbound.command.ImageEditCommand
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 
 @Service
 class ProcessConversationService(
@@ -29,6 +35,9 @@ class ProcessConversationService(
     private val aiClientPort: AiClientPort,
     private val generatePromptUseCase: GeneratePromptUseCase,
     private val snowFlakeIdUtil: SnowFlakeIdUtil,
+    private val objectMapper: ObjectMapper,
+    private val createMediaUseCase: CreateMediaUseCase,
+    private val imageEditPort: ImageEditPort,
     private val domainEventPublisher: DomainEventPublisher
 ) : ProcessConversationUseCase {
 
@@ -53,27 +62,70 @@ class ProcessConversationService(
             body = command.body
         )
 
+        /*
+        saga 패턴을 활용하여 단계별로 끊기.
+        트랜잭션이 너무 길어져 DB를 너무 오래 점유해 성능 저하 가능성.
+        중간 단계에서 실패 시, 이전 작업을 취소 시켜야 함.
+        */
+
         val copyWrite = executeAiTextStep(conversation, messages, command.body, PromptType.COPY_WRITING)
 
         val imageStepInput = "Based on this copy: '${copyWrite}', generate a background image prompt."
-        val imageGeneration = executeAiTextStep(conversation, messages, imageStepInput, PromptType.IMAGE_GENERATION)
+        val imageGeneration = executeAiImageStep(conversation, messages, imageStepInput, PromptType.IMAGE_GENERATION)
 
         val layoutStepInput = """
             Copy: $copyWrite
             Image Concept: $imageGeneration
-            Analyze the visual hierarchy and provide JSON coordinates.
+            Analyze the visual hierarchy.
+            Provide a JSON ARRAY of coordinates for each text element (Main copy, Sub copy, etc).
         """.trimIndent()
         val layoutAnalysis = executeAiTextStep(conversation, messages, layoutStepInput, PromptType.LAYOUT_ANALYSIS)
+        val textElements: List<ImageEditCommand.TextElement> =
+            try {
+                objectMapper.readValue(
+                    layoutAnalysis,
+                    object : TypeReference<List<ImageEditCommand.TextElement>>() {}
+                ).also {
+                    if (it.isEmpty()) {
+                        throw CustomException(
+                            ConversationApplicationExceptionCode.CONVERSATION_EMPTY_LAYOUT_ANALYSIS_RESPONSE,
+                            "[Conversation] 레이아웃 분석 응답이 비어 있습니다."
+                        )
+                    }
+                }
+            } catch (ex: Exception) {
+                throw CustomException(
+                    ConversationApplicationExceptionCode.CONVERSATION_LAYOUT_ANALYSIS_FAILURE,
+                    "[Conversation] 레이아웃 분석에 실패했습니다. 오류: ${ex.message}"
+                )
+            }
 
-        /*
+        val compositeCommand = ImageEditCommand.Composite(
+            baseImage = imageGeneration.bytes,
+            textElements = textElements
+        )
+
+        // 3. 최종 이미지 파일 저장
+        val finalImageBytes = imageEditPort.composite(compositeCommand).image
+
+        val createMediaCommand = CreateMediaCommand(
+            conversationId = command.conversationId,
+            conversationMessageId = memberMessage.id.value,
+            memberId = command.memberId,
+            file = finalImageBytes,
+            mimeType = "image/png",
+            width = compositeCommand.canvasWidth,
+            height = compositeCommand.canvasHeight
+        )
+        createMediaUseCase.execute(listOf(createMediaCommand))
+
         val (finalConversation, aiMessage) = addAiMessage(
             conversation = updatedConversation,
-            aiResponse = aiResponse.message.extractTextContent(),
+            aiResponse = copyWrite,
             revisionOf = memberMessage.id
         )
 
         domainEventPublisher.publish(finalConversation)
-        */
     }
 
     private fun addMemberMessage(
@@ -108,6 +160,25 @@ class ProcessConversationService(
         val response = aiClientPort.generatePrompt(AiClientRequest(promptResult.prompt))
 
         return response.message.extractTextContent()
+    }
+
+    private fun executeAiImageStep(
+        conversation: Conversation,
+        messages: List<ConversationMessageView>,
+        requestBody: String,
+        type: PromptType
+    ): AiImageResponse {
+        val promptCommand = GeneratePromptCommand(
+            conversation = conversation,
+            messages = messages,
+            userRequest = requestBody,
+            promptType = type
+        )
+
+        val promptResult = generatePromptUseCase.execute(promptCommand)
+        val response = aiClientPort.generateImage(AiClientRequest(promptResult.prompt))
+
+        return response
     }
 
     private fun addAiMessage(

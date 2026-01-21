@@ -45,6 +45,19 @@ spring:
             temperature: ${GEMINI_CHAT_TEMPERATURE}
             max-output-tokens: ${GEMINI_CHAT_MAX_OUTPUT_TOKENS}
 
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL}
+          max-tokens: ${OPENAI_CHAT_MAX_TOKENS}
+          temperature: ${OPENAI_CHAT_TEMPERATURE}
+      image:
+        options:
+          model: ${OPENAI_IMAGE_MODEL}
+          quality: ${OPENAI_IMAGE_QUALITY}
+          response-format: ${OPENAI_IMAGE_RESPONSE_FORMAT}
+
 logging:
   level:
     org.hibernate.sql: debug

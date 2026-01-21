@@ -31,6 +31,11 @@ dependencies {
     implementation(project(":token_usage:port:outbound"))
     implementation(project(":token_usage:application"))
 
+    implementation(project(":media:adapter:inbound"))
+    implementation(project(":media:adapter:outbound"))
+    implementation(project(":media:port:outbound"))
+    implementation(project(":media:application"))
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -39,6 +44,7 @@ dependencies {
 
     // Spring AI
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+    implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
     // OAuth2
     implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
