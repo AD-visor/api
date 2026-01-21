@@ -8,8 +8,10 @@ import java.io.File
 @Component
 class LocalFileStorageAdapter: FileStoragePort {
     override fun save(name: String, bytes: ByteArray): String {
-        val path = "uploads/$name"
-        File(path).writeBytes(bytes)
+        val safeName = File(name).name
+        val path = "uploads/$safeName"
+        val file = File(path)
+        file.parentFile?.mkdirs()
         return path
     }
 

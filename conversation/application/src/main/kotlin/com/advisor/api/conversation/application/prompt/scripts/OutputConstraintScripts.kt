@@ -24,15 +24,18 @@ object OutputConstraintScripts {
             
             data class TextElement(val text: String, val style: TextStyle)
             data class TextStyle(
-                val top: String,          // e.g., "10%" or "100px"
-                val left: String,         // e.g., "20%"
-                val width: String,        // e.g., "100%"
-                val fontSize: String,     // e.g., "40px"
-                val fontColor: String,    // Hex color e.g., "#FFFFFF"
-                val fontWeight: String,   // "bold" or "normal"
-                val textAlign: String,    // "left", "center", "right"
-                val textShadow: String?,  // Optional CSS text-shadow
-                val backgroundColor: String? // Optional CSS background-color
+                val top: String,               // e.g., "10%" or "100px"
+                val left: String,              // e.g., "20%"
+                val width: String,             // e.g., "100%"
+                val fontSize: String,          // e.g., "40px"
+                val fontColor: String,         // Hex color e.g., "#FFFFFF"
+                val fontWeight: String,        // "bold" or "normal"
+                val textAlign: String,         // "left", "center", "right"
+                val textShadow: String,        // CSS text-shadow (use "none" if not needed)
+                val backgroundColor: String,   // CSS background-color (use "transparent" if not needed)
+                val fontFamily: String,        // CSS font-family, e.g., "Noto Sans", "Arial"
+                val padding: String,           // CSS padding, e.g., "0px", "8px 12px"
+                val borderRadius: String       // CSS border-radius, e.g., "0px", "4px"
             )
             
             Constraints:
@@ -42,5 +45,5 @@ object OutputConstraintScripts {
         else -> null
     }
 
-    fun imageSizeConstraint() = "Image Resolution: Strictly 10240x1024 pixels (1:1 Aspect Ratio)."
+    fun imageSizeConstraint() = "Image Resolution: Strictly 1024x1024 pixels (1:1 Aspect Ratio)."
 }

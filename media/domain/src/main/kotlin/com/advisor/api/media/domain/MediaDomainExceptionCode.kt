@@ -15,7 +15,7 @@ enum class MediaDomainExceptionCode(
     ),
     MEDIA_INVALID_MIME_TYPE(
         status = ErrorStatus.BAD_REQUEST,
-        code = "MEDIA_INVALID_MEDIA_MIME_TYPE",
+        code = "MEDIA_INVALID_MIME_TYPE",
         message = "[Media] 유효하지 않은 미디어 MIME 타입입니다."
     ),
     MEDIA_FILE_SIZE_EXCEEDED(

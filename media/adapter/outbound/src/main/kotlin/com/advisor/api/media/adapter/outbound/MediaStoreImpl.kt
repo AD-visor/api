@@ -18,7 +18,7 @@ class MediaStoreImpl(
 
     override fun saveAll(medias: List<Media>) {
         val entities = medias.map { MediaEntity.fromDomain(it) }
-        mediaJpaStore.saveAll<MediaEntity>(entities)
+        mediaJpaStore.saveAll(entities)
     }
 
     override fun deleteByIdAndMemberId(

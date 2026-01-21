@@ -32,9 +32,9 @@ class MediaController(
         val apiResponse = BaseApiResponse<Unit>(
             success = true,
             message = "Media deleted successfully",
-            httpStatus = HttpStatus.NO_CONTENT
+            httpStatus = HttpStatus.OK
         )
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(apiResponse)
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
     }
 }
