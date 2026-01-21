@@ -1,12 +1,34 @@
 package com.advisor.api.media.port.outbound.command
 
 class ImageEditCommand {
-    class Composite(
+    data class Composite(
         val baseImage: ByteArray,
         val textElements: List<TextElement>,
         val canvasWidth: Int = 1024,
         val canvasHeight: Int = 1024
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Composite
+
+            if (canvasWidth != other.canvasWidth) return false
+            if (canvasHeight != other.canvasHeight) return false
+            if (!baseImage.contentEquals(other.baseImage)) return false
+            if (textElements != other.textElements) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = canvasWidth
+            result = 31 * result + canvasHeight
+            result = 31 * result + baseImage.contentHashCode()
+            result = 31 * result + textElements.hashCode()
+            return result
+        }
+    }
 
     data class TextElement(
         val text: String,
