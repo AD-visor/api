@@ -30,7 +30,7 @@ class GeminiAiClientAdapter(
     private val imageModel: ImageModel,
     private val restClient: RestClient
 ): AiClientPort {
-    override fun generatePrompt(request: AiClientRequest): AiClientResponse {
+    override fun generateText(request: AiClientRequest): AiClientResponse {
         val messages = request.prompt.messages.map { it.toSpringAiMessage() }
         val prompt = Prompt(messages)
         val chatResponse = chatModel.call(prompt)
