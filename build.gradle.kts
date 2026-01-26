@@ -27,8 +27,8 @@ subprojects {
 
 	dependencyManagement {
 		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.1")
-			mavenBom("org.springframework.ai:spring-ai-bom:2.0.0-M1")
+			mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.2")
+			mavenBom("org.springframework.ai:spring-ai-bom:2.0.0-M2")
 		}
 	}
 
