@@ -2,6 +2,7 @@ package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageProps
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
@@ -20,6 +21,9 @@ class ConversationMessageEntity(
 
     @Column(nullable = false)
     val conversationId: Long,
+
+    @Column(nullable = false)
+    val memberId: Long = 352568200891899904L,
 
     @Column(nullable = false)
     val role: String,
@@ -41,6 +45,7 @@ class ConversationMessageEntity(
             return ConversationMessageEntity(
                 id = domain.id.value,
                 conversationId = domain.conversationId.value,
+                memberId = domain.memberId.value,
                 role = domain.role.value,
                 body = domain.body,
                 revisionOf = domain.revisionOf?.value,
@@ -53,6 +58,7 @@ class ConversationMessageEntity(
     fun toDomain(): ConversationMessage {
         val props = ConversationMessageProps(
             conversationId = ConversationId(conversationId),
+            memberId = MemberId(memberId),
             role = MessageRole.create(role),
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },
