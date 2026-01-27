@@ -7,9 +7,11 @@ data class ProcessConversationReqDto(
 ) {
     fun toCommand(
         conversationId: Long,
+        aiMessageId: Long,
         memberId: Long
     ) = ProcessConversationCommand(
         conversationId = conversationId,
+        aiMessageId = aiMessageId,
         memberId = memberId,
         body = body
     )

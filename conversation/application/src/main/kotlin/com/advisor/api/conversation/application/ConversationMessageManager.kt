@@ -30,12 +30,14 @@ class ConversationMessageManager(
     fun addAiMessage(
         conversation: Conversation,
         aiResponse: String,
-        revisionOf: ConversationMessageId
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId? = null
     ): Pair<Conversation, ConversationMessage> {
         val (updatedConversation, message) = conversation.addAiMessage(
             messageId = ConversationMessageId(snowFlakeIdUtil.generateId()),
             body = aiResponse,
-            revisionOf = revisionOf
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
         )
 
         conversationStore.save(updatedConversation)
