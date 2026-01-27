@@ -13,4 +13,9 @@ enum class ConversationInfraExceptionCode(
         code = "CONVERSATION_NOT_FOUND",
         message = "[Conversation] 해당 대화를 찾을 수 없습니다."
     ),
+    CONVERSATION_MESSAGE_NOT_FOUND(
+        status = ErrorStatus.NOT_FOUND,
+        code = "CONVERSATION_MESSAGE_NOT_FOUND",
+        message = "[ConversationMessage] 해당 대화 메시지를 찾을 수 없습니다."
+    )
 }
