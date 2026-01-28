@@ -48,8 +48,8 @@ class ConversationController(
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
 
-    @PostMapping("/{conversationId}/{aiMessageId}/member-message")
-    fun addMemberMessage(
+    @PostMapping("/{conversationId}/message/{aiMessageId}/respond")
+    fun processConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
         @PathVariable("conversationId") conversationId: String,
         @PathVariable("aiMessageId") aiMessageId: String,
