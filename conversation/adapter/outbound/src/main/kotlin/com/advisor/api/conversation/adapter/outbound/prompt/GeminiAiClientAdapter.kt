@@ -16,30 +16,33 @@ import org.springframework.ai.chat.messages.SystemMessage
 import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.prompt.Prompt
+import org.springframework.ai.content.Media
 import org.springframework.ai.image.ImageModel
 import org.springframework.ai.image.ImageOptionsBuilder
 import org.springframework.ai.image.ImagePrompt
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestClient
+import org.springframework.util.MimeTypeUtils
 
 @Component
 class GeminiAiClientAdapter(
     private val imageFetchPot: ImageFetchPort,
     @Qualifier("googleGenAiChatModel") private val chatModel: ChatModel,
-    private val imageModel: ImageModel,
-    private val restClient: RestClient
-): AiClientPort {
+    private val imageModel: ImageModel
+) : AiClientPort {
     override fun generateText(request: AiClientRequest): AiClientResponse {
-        val messages = request.prompt.messages.map { it.toSpringAiMessage() }
+        val messages = createSpringAiMessages(request)
         val prompt = Prompt(messages)
         val chatResponse = chatModel.call(prompt)
-        val chatText = chatResponse.result.output.text
+        val chatText = chatResponse.result?.output?.text
 
-        if (chatText.isNullOrEmpty()) { throw CustomException(
-            PromptAdapterExceptionCode.PROMPT_EMPTY_RESPONSE,
-            "[Prompt] 채팅 모델 응답이 비어 있습니다."
-        ) }
+        if (chatText.isNullOrEmpty()) {
+            throw CustomException(
+                PromptAdapterExceptionCode.PROMPT_EMPTY_RESPONSE,
+                "[Prompt] 채팅 모델 응답이 비어 있습니다."
+            )
+        }
 
         val totalUsage = chatResponse.metadata.usage.totalTokens
 
@@ -74,7 +77,7 @@ class GeminiAiClientAdapter(
         val imageResponse = imageModel.call(imagePrompt)
 
         // 3. 결과 URL 추출
-        val imageUrl = imageResponse.result.output.url
+        val imageUrl = imageResponse.result?.output?.url
             ?: throw CustomException(
                 PromptAdapterExceptionCode.PROMPT_EMPTY_RESPONSE,
                 "[Prompt] 이미지 생성 모델 응답이 비어 있습니다."
@@ -96,5 +99,35 @@ class GeminiAiClientAdapter(
             PromptRole.SYSTEM -> SystemMessage(text)
             PromptRole.ASSISTANT -> AssistantMessage(text)
         }
+    }
+
+    private fun createSpringAiMessages(request: AiClientRequest): List<Message> {
+        val messages = request.prompt.messages
+            .map { it.toSpringAiMessage() }
+            .toMutableList()
+
+        val imageData = request.imageData ?: return messages
+
+        val imageResource = ByteArrayResource(imageData)
+        val imageMedia = Media(MimeTypeUtils.IMAGE_PNG, imageResource)
+
+        val lastUserMessageIndex = messages.indexOfLast { it is UserMessage }
+
+        if (lastUserMessageIndex != -1) {
+            val existingMsg = messages[lastUserMessageIndex] as UserMessage
+            messages[lastUserMessageIndex] = UserMessage.builder()
+                .text(existingMsg.text.toString())
+                .media(imageMedia)
+                .build()
+        } else {
+            messages.add(
+                UserMessage.builder()
+                    .text("Please analyze the attached image.")
+                    .media(imageMedia)
+                    .build()
+            )
+        }
+
+        return messages
     }
 }
