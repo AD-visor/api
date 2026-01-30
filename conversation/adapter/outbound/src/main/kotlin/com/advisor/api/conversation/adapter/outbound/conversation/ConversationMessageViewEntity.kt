@@ -19,6 +19,9 @@ class ConversationMessageViewEntity(
     val conversationId: Long,
 
     @Column(nullable = false)
+    val memberId: Long,
+
+    @Column(nullable = false)
     val role: String,
 
     @Column(nullable = false)
@@ -27,6 +30,9 @@ class ConversationMessageViewEntity(
     @Column
     val revisionOf: Long?,
 
+    @Column
+    val parentMessageId: Long?,
+
     @Column(nullable = false)
     val createdAt: Instant
 ) {
@@ -34,9 +40,11 @@ class ConversationMessageViewEntity(
         return ConversationMessageView(
             id = id,
             conversationId = conversationId,
+            memberId = memberId,
             role = role,
             body = body,
             revisionOf = revisionOf,
+            parentMessageId = parentMessageId,
             createdAt = createdAt,
         )
     }

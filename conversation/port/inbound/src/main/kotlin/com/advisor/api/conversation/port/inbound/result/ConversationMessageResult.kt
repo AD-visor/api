@@ -9,6 +9,7 @@ data class ConversationMessageResult(
     val role: String,
     val body: String,
     val revisionOf: Long?,
+    val parentMessageId: Long? = null,
     val createdAt: Instant
 ) {
     companion object {
@@ -19,6 +20,7 @@ data class ConversationMessageResult(
                 role = model.role,
                 body = model.body,
                 revisionOf = model.revisionOf,
+                parentMessageId = model.parentMessageId,
                 createdAt = model.createdAt
             )
         }

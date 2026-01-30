@@ -122,7 +122,7 @@ class GeneratePromptService(
         return UserContext(
             task = task,
             domain = domain,
-            conversation = null,
+            conversation = conversation,
         )
     }
 

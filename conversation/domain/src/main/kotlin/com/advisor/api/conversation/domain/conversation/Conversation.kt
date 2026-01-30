@@ -55,13 +55,15 @@ class Conversation private constructor (
     fun addAiMessage(
         messageId: ConversationMessageId,
         body: String,
-        revisionOf: ConversationMessageId
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId? = null
     ): Pair<Conversation, ConversationMessage> {
         val (conversation, message) = addMessage(
             messageId = messageId,
             body = body,
             role = MessageRole.ASSISTANT,
-            revisionOf = revisionOf
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
         )
 
         conversation.addDomainEvent(AiResponseGeneratedEvent())
@@ -118,15 +120,18 @@ class Conversation private constructor (
         messageId: ConversationMessageId,
         body: String,
         role: MessageRole,
-        revisionOf: ConversationMessageId? = null
+        revisionOf: ConversationMessageId? = null,
+        parentMessageId: ConversationMessageId? = null
     ): Pair<Conversation, ConversationMessage> {
         val message = ConversationMessage.create(
             id = messageId,
             props = ConversationMessageProps(
                 conversationId = this.id,
+                memberId = this.memberId,
                 body = body,
                 role = role,
                 revisionOf = revisionOf,
+                parentMessageId = parentMessageId,
                 createdAt = Instant.now()
             )
         )

@@ -2,7 +2,6 @@ package com.advisor.api.conversation.adapter.inbound.conversation
 
 import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.common.core.presentation.CustomUserDetails
-import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.AddMemberMessageReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.CreateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.ProcessConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.UpdateConversationReqDto
@@ -12,7 +11,6 @@ import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.Ge
 import com.advisor.api.conversation.port.inbound.*
 import com.advisor.api.conversation.port.inbound.command.ArchiveConversationCommand
 import com.advisor.api.conversation.port.inbound.command.DeleteConversationCommand
-import com.advisor.api.conversation.port.inbound.command.GenerateAiResponseCommand
 import com.advisor.api.conversation.port.inbound.query.GetConversationMetadataListQuery
 import com.advisor.api.conversation.port.inbound.query.GetConversationQuery
 import org.springframework.http.HttpStatus
@@ -30,8 +28,6 @@ class ConversationController(
     private val archiveConversationUseCase: ArchiveConversationUseCase,
     private val getConversationUseCase: GetConversationUseCase,
     private val getConversationListUseCase: GetConversationListUseCase,
-    //임시
-    private val generateAiResponseUseCase: GenerateAiResponseUseCase
 ) {
     @PostMapping
     fun createConversation(
@@ -52,14 +48,16 @@ class ConversationController(
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
 
-    @PostMapping("/{conversationId}/member-message")
-    fun addMemberMessage(
+    @PostMapping("/{conversationId}/message/{aiMessageId}/respond")
+    fun processConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
         @PathVariable("conversationId") conversationId: String,
+        @PathVariable("aiMessageId") aiMessageId: String,
         @RequestBody dto: ProcessConversationReqDto
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = dto.toCommand(
             conversationId = conversationId.toLong(),
+            aiMessageId = aiMessageId.toLong(),
             memberId = member.id
         )
 
@@ -180,29 +178,5 @@ class ConversationController(
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(response)
-    }
-
-    @PostMapping("/{conversationId}/ai-response")
-    fun generateAiResponse(
-        @AuthenticationPrincipal member: CustomUserDetails,
-        @PathVariable("conversationId") conversationId: String,
-        @RequestParam("revisionOf") revisionOf: String
-    ): ResponseEntity<BaseApiResponse<Unit>> {
-        val command = GenerateAiResponseCommand(
-            conversationId = conversationId.toLong(),
-            memberId = member.id,
-            revisionOf = revisionOf.toLong()
-        )
-
-        generateAiResponseUseCase.execute(command)
-
-        val response = BaseApiResponse<Unit>(
-            success = true,
-            message = "AI 응답 생성 성공",
-            data = null,
-            httpStatus = HttpStatus.CREATED
-        )
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 }

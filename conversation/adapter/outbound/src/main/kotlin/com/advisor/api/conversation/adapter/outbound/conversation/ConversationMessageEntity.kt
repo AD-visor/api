@@ -2,6 +2,7 @@ package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
+import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageProps
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
@@ -22,6 +23,9 @@ class ConversationMessageEntity(
     val conversationId: Long,
 
     @Column(nullable = false)
+    val memberId: Long,
+
+    @Column(nullable = false)
     val role: String,
 
     @Column(nullable = false, length = 5000)
@@ -29,6 +33,9 @@ class ConversationMessageEntity(
 
     @Column(nullable = true)
     val revisionOf: Long? = null,
+
+    @Column(nullable = true)
+    val parentMessageId: Long? = null,
 
     @Column(nullable = false)
     val createdAt: Instant
@@ -38,9 +45,11 @@ class ConversationMessageEntity(
             return ConversationMessageEntity(
                 id = domain.id.value,
                 conversationId = domain.conversationId.value,
+                memberId = domain.memberId.value,
                 role = domain.role.value,
                 body = domain.body,
                 revisionOf = domain.revisionOf?.value,
+                parentMessageId = domain.parentMessageId?.value,
                 createdAt = domain.createdAt
             )
         }
@@ -49,9 +58,11 @@ class ConversationMessageEntity(
     fun toDomain(): ConversationMessage {
         val props = ConversationMessageProps(
             conversationId = ConversationId(conversationId),
+            memberId = MemberId(memberId),
             role = MessageRole.create(role),
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },
+            parentMessageId = parentMessageId?.let { ConversationMessageId(it) },
             createdAt = createdAt
         )
 

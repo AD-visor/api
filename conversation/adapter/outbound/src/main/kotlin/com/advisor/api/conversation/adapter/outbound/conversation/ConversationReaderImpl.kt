@@ -5,6 +5,7 @@ import com.advisor.api.conversation.adapter.outbound.conversation.mapper.Convers
 import com.advisor.api.conversation.domain.conversation.ConversationMetadataView
 import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationView
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import jakarta.persistence.EntityManager
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -49,6 +50,41 @@ class ConversationReaderImpl(
         val projections = conversationJpaReader.findAllMetadataByMemberId(memberId)
 
         return projections.map { conversationMapper.toMetadataView(it) }
+    }
+
+    override fun findPairByAiMessageIdAndConversationIdAndMemberId(
+        aiMessageId: Long,
+        conversationId: Long,
+        memberId: Long
+    ): List<ConversationMessageView> {
+        val aiMessage = conversationMessageJpaReader.findByIdAndConversationIdAndMemberId(
+            aiMessageId,
+            conversationId,
+            memberId
+        ).orElseThrow {
+            CustomException(
+                code = ConversationInfraExceptionCode.CONVERSATION_MESSAGE_NOT_FOUND,
+                data = "[ConversationMessage] id=${aiMessageId}에 해당하는 대화 메시지를 찾을 수 없습니다."
+            )
+        }
+
+        val parentId = aiMessage.parentMessageId
+
+        return if (parentId != null) {
+            val memberMessage = conversationMessageJpaReader.findByIdAndConversationIdAndMemberId(
+                parentId,
+                conversationId,
+                memberId
+            ).orElseThrow {
+                CustomException(
+                    code = ConversationInfraExceptionCode.CONVERSATION_MESSAGE_NOT_FOUND,
+                    data = "[ConversationMessage] 부모 메시지 id=$parentId 를 찾을 수 없습니다."
+                )
+            }
+            listOf(memberMessage.toModel(), aiMessage.toModel())
+        } else {
+            listOf(aiMessage.toModel())
+        }
     }
 
     override fun refreshView() {
