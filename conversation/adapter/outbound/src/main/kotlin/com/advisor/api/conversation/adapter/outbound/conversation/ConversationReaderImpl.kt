@@ -52,11 +52,16 @@ class ConversationReaderImpl(
         return projections.map { conversationMapper.toMetadataView(it) }
     }
 
-    override fun findPairByAiMessageIdAndMemberId(
+    override fun findPairByAiMessageIdAndConversationIdAndMemberId(
         aiMessageId: Long,
+        conversationId: Long,
         memberId: Long
     ): List<ConversationMessageView> {
-        val aiMessage = conversationMessageJpaReader.findByIdAndMemberId(aiMessageId, memberId).orElseThrow {
+        val aiMessage = conversationMessageJpaReader.findByIdAndConversationIdAndMemberId(
+            aiMessageId,
+            conversationId,
+            memberId
+        ).orElseThrow {
             CustomException(
                 code = ConversationInfraExceptionCode.CONVERSATION_MESSAGE_NOT_FOUND,
                 data = "[ConversationMessage] id=${aiMessageId}에 해당하는 대화 메시지를 찾을 수 없습니다."
@@ -66,7 +71,11 @@ class ConversationReaderImpl(
         val parentId = aiMessage.parentMessageId
 
         return if (parentId != null) {
-            val memberMessage = conversationMessageJpaReader.findByIdAndMemberId(parentId, memberId).orElseThrow {
+            val memberMessage = conversationMessageJpaReader.findByIdAndConversationIdAndMemberId(
+                parentId,
+                conversationId,
+                memberId
+            ).orElseThrow {
                 CustomException(
                     code = ConversationInfraExceptionCode.CONVERSATION_MESSAGE_NOT_FOUND,
                     data = "[ConversationMessage] 부모 메시지 id=$parentId 를 찾을 수 없습니다."

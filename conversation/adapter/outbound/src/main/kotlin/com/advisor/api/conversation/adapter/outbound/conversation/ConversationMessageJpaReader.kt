@@ -7,5 +7,5 @@ import java.util.Optional
 interface ConversationMessageJpaReader: JpaRepository<ConversationMessageViewEntity, Long> {
     fun findAllByConversationId(conversationId: Long): List<ConversationMessageViewEntity>
     fun findAllByConversationId(conversationId: Long, pageable: Pageable): List<ConversationMessageViewEntity>
-    fun findByIdAndMemberId(id: Long, memberId: Long): Optional<ConversationMessageViewEntity>
+    fun findByIdAndConversationIdAndMemberId(id: Long, conversationId: Long, memberId: Long): Optional<ConversationMessageViewEntity>
 }

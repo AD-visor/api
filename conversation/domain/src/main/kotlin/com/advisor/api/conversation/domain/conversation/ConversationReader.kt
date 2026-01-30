@@ -9,8 +9,9 @@ interface ConversationReader {
         limit: Int? = null
     ): ConversationView
     fun findAllMetadataByMemberId(memberId: Long): List<ConversationMetadataView>
-    fun findPairByAiMessageIdAndMemberId(
+    fun findPairByAiMessageIdAndConversationIdAndMemberId(
         aiMessageId: Long,
+        conversationId: Long,
         memberId: Long
     ): List<ConversationMessageView>
     fun refreshView()

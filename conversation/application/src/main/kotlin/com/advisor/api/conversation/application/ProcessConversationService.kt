@@ -97,7 +97,11 @@ class ProcessConversationService(
             memberId = MemberId(memberId)
         )
 
-        val messages = conversationReader.findPairByAiMessageIdAndMemberId(aiMessageId, memberId)
+        val messages = conversationReader.findPairByAiMessageIdAndConversationIdAndMemberId(
+            aiMessageId = aiMessageId,
+            conversationId = conversationId,
+            memberId = memberId
+        )
 
         return Pair(conversation, messages)
     }
