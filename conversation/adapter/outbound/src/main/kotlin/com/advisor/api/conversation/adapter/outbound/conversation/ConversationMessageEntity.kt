@@ -23,7 +23,7 @@ class ConversationMessageEntity(
     val conversationId: Long,
 
     @Column(nullable = false)
-    val memberId: Long = 352568200891899904L,
+    val memberId: Long,
 
     @Column(nullable = false)
     val role: String,
