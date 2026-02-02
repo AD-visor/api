@@ -7,6 +7,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.ConversationDomainExceptionCode
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
 import java.time.Instant
 
 class ConversationMessage private constructor(
@@ -25,6 +26,22 @@ class ConversationMessage private constructor(
         }
     }
 
+    fun updateStatus(nextStatus: MessageStatus): ConversationMessage {
+        this.status?.canTransitionTo(nextStatus) ?: throw CustomException(
+            ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
+            "[Conversation] 메시지 상태가 존재하지 않습니다."
+        )
+
+        return ConversationMessage(id, props.copy(status = nextStatus))
+    }
+
+    fun complete(finalBody: String): ConversationMessage {
+        return ConversationMessage(id, props.copy(
+            body = finalBody,
+            status = MessageStatus.COMPLETED
+        ))
+    }
+
     private fun validate() {
         require(props.body.length <= 5000) { CustomException(
             ConversationDomainExceptionCode.CONVERSATION_MESSAGE_BODY_LENGTH_EXCEEDED,
@@ -38,5 +55,6 @@ class ConversationMessage private constructor(
     val body: String get() = props.body
     val revisionOf: ConversationMessageId? get() = props.revisionOf
     val parentMessageId: ConversationMessageId? get() = props.parentMessageId
+    val status: MessageStatus? get() = props.status
     val createdAt: Instant get() = props.createdAt
 }
