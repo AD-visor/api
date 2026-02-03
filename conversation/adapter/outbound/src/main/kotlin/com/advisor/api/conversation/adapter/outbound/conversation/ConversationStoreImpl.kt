@@ -1,6 +1,7 @@
 package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
+import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository
 class ConversationStoreImpl(
     private val jpaStore: ConversationJpaStore,
     private val messageJpaStore: ConversationMessageJpaStore
-): ConversationStore {
+) : ConversationStore {
     override fun save(conversation: Conversation) {
         val entity = ConversationEntity.fromDomain(conversation)
         jpaStore.save(entity)
@@ -24,10 +25,12 @@ class ConversationStoreImpl(
     }
 
     override fun loadById(id: ConversationId): Conversation {
-        val entity = jpaStore.findById(id.value).orElseThrow { CustomException(
-            ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
-            "[Conversation] id=${id.value}에 해당하는 대화를 찾을 수 없습니다."
-        ) }
+        val entity = jpaStore.findById(id.value).orElseThrow {
+            CustomException(
+                ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
+                "[Conversation] id=${id.value}에 해당하는 대화를 찾을 수 없습니다."
+            )
+        }
 
         return entity.toDomain()
     }
@@ -45,6 +48,20 @@ class ConversationStoreImpl(
             CustomException(
                 ConversationInfraExceptionCode.CONVERSATION_NOT_FOUND,
                 "[Conversation] id=${id.value}, memberId=${memberId.value}에 해당하는 대화를 찾을 수 없습니다."
+            )
+        }
+
+        return entity.toDomain()
+    }
+
+    override fun loadMessageByIdAndMemberId(
+        id: ConversationMessageId,
+        memberId: MemberId
+    ): ConversationMessage {
+        val entity = messageJpaStore.findByIdAndMemberId(id.value, memberId.value).orElseThrow {
+            CustomException(
+                ConversationInfraExceptionCode.CONVERSATION_MESSAGE_NOT_FOUND,
+                "[ConversationMessage] id=${id.value}에 해당하는 대화 메시지를 찾을 수 없습니다."
             )
         }
 
