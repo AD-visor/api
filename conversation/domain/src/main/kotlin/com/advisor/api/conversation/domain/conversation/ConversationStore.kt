@@ -1,6 +1,7 @@
 package com.advisor.api.conversation.domain.conversation
 
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
+import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 
@@ -13,5 +14,9 @@ interface ConversationStore {
         memberId: MemberId,
         archived: Boolean? = null
     ): Conversation
+    fun loadMessageByIdAndMemberId(
+        id: ConversationMessageId,
+        memberId: MemberId
+    ): ConversationMessage
     fun delete(id: ConversationId)
 }
