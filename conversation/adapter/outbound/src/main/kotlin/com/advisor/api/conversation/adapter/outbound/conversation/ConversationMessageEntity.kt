@@ -6,6 +6,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageProps
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
 import jakarta.persistence.*
 import java.time.Instant
 
@@ -37,6 +38,9 @@ class ConversationMessageEntity(
     @Column(nullable = true)
     val parentMessageId: Long? = null,
 
+    @Column(nullable = true)
+    val status: String? = null,
+
     @Column(nullable = false)
     val createdAt: Instant
 ) {
@@ -50,6 +54,7 @@ class ConversationMessageEntity(
                 body = domain.body,
                 revisionOf = domain.revisionOf?.value,
                 parentMessageId = domain.parentMessageId?.value,
+                status = domain.status?.value,
                 createdAt = domain.createdAt
             )
         }
@@ -63,6 +68,7 @@ class ConversationMessageEntity(
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },
             parentMessageId = parentMessageId?.let { ConversationMessageId(it) },
+            status = status?.let { MessageStatus.create(it) },
             createdAt = createdAt
         )
 

@@ -33,6 +33,9 @@ class ConversationMessageViewEntity(
     @Column
     val parentMessageId: Long?,
 
+    @Column
+    val status: String?,
+
     @Column(nullable = false)
     val createdAt: Instant
 ) {
@@ -45,6 +48,7 @@ class ConversationMessageViewEntity(
             body = body,
             revisionOf = revisionOf,
             parentMessageId = parentMessageId,
+            status = status,
             createdAt = createdAt,
         )
     }

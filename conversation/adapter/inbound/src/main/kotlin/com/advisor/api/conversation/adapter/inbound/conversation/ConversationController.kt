@@ -48,16 +48,14 @@ class ConversationController(
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
 
-    @PostMapping("/{conversationId}/message/{aiMessageId}/respond")
+    @PostMapping("/{conversationId}/respond")
     fun processConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
         @PathVariable("conversationId") conversationId: String,
-        @PathVariable("aiMessageId") aiMessageId: String,
         @RequestBody dto: ProcessConversationReqDto
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = dto.toCommand(
             conversationId = conversationId.toLong(),
-            aiMessageId = aiMessageId.toLong(),
             memberId = member.id
         )
 

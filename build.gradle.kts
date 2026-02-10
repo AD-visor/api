@@ -38,7 +38,6 @@ subprojects {
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("io.github.microutils:kotlin-logging:3.0.5")
 		implementation(kotlin("stdlib"))
-		implementation("org.jetbrains.kotlin:kotlin-reflect")
 	}
 
 	java {

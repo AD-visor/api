@@ -50,7 +50,10 @@ data class MessageStatus(val value: String) {
         if (next == FAILED) return true
 
         // 3. 이미 종료된 상태(COMPLETED, FAILED)에서는 전이 불가
-        if (this == COMPLETED || this == FAILED) return false
+        if (this == COMPLETED || this == FAILED) throw CustomException(
+            ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS_TRANSITION,
+            "[Conversation] 종료된 메시지 상태에서는 상태 전이가 불가능합니다."
+        )
 
         // 4. 순차 진행 보장 (현재 단계보다 뒤에 있는 단계로만 전이 가능)
         val currentOrder = STATE_ORDER[this.value] ?: throw CustomException(

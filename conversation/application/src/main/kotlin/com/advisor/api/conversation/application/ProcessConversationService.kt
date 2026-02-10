@@ -1,21 +1,30 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationStore
+import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus.Companion.COMPLETED
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus.Companion.COMPOSITING
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus.Companion.FAILED
 import com.advisor.api.conversation.port.inbound.ProcessConversationUseCase
 import com.advisor.api.conversation.port.inbound.command.ProcessConversationCommand
 import com.advisor.api.media.port.inbound.CreateMediaUseCase
 import com.advisor.api.media.port.inbound.command.CreateMediaCommand
 import com.advisor.api.media.port.outbound.ImageEditPort
 import com.advisor.api.media.port.outbound.command.ImageEditCommand
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import kotlin.coroutines.cancellation.CancellationException
 
 @Service
 class ProcessConversationService(
@@ -24,13 +33,14 @@ class ProcessConversationService(
     private val conversationMessageManager: ConversationMessageManager,
     private val aiCreativeOrchestrator: AiCreativeOrchestrator,
     private val createMediaUseCase: CreateMediaUseCase,
-    private val imageEditPort: ImageEditPort,
-    private val domainEventPublisher: DomainEventPublisher
+    private val imageEditPort: ImageEditPort
 ) : ProcessConversationUseCase {
 
-    @Transactional
+    private val serviceScope = CoroutineScope(
+        SupervisorJob() + Dispatchers.IO + CoroutineName("AiProcessingScope")
+    )
+
     override fun execute(command: ProcessConversationCommand) {
-        // 대화 및 메시지 조회
         val (conversation, messages) = loadConversationContext(
             conversationId = command.conversationId,
             aiMessageId = command.aiMessageId,
@@ -43,53 +53,25 @@ class ProcessConversationService(
             body = command.body
         )
 
-        /*
-        saga 패턴을 활용하여 단계별로 끊기.
-        트랜잭션이 너무 길어져 DB를 너무 오래 점유해 성능 저하 가능성.
-        중간 단계에서 실패 시, 이전 작업을 취소 시켜야 함.
-        */
-
-        // 2. AI 결과물 생성(광고 문구 - 배경 이미지 - 텍스트 디자인)
-        val aiCreativeResult = aiCreativeOrchestrator.orchestrate(
+        val aiMessage = conversationMessageManager.createInitialAiMessage(
             conversation = updatedConversation,
-            messages = messages,
-            userRequest = command.body
-        )
-
-
-        // 3. 이미지 결합
-        val compositeCommand = ImageEditCommand.Composite(
-            baseImage = aiCreativeResult.imageBytes,
-            textElements = aiCreativeResult.textElements
-        )
-        val finalImageBytes = imageEditPort.composite(compositeCommand).image
-
-        // 4. 미디어 저장
-        val createMediaCommand = CreateMediaCommand(
-            conversationId = command.conversationId,
-            conversationMessageId = memberMessage.id.value,
-            memberId = command.memberId,
-            file = finalImageBytes,
-            mimeType = "image/png",
-            width = compositeCommand.canvasWidth,
-            height = compositeCommand.canvasHeight
-        )
-        createMediaUseCase.execute(listOf(createMediaCommand))
-
-        // 5. AI 메시지 저장
-        val (finalConversation, aiMessage) = conversationMessageManager.addAiMessage(
-            conversation = updatedConversation,
-            aiResponse = "Copywriting: ${aiCreativeResult.copyWrite}\nImage has been generated and saved.",
             revisionOf = memberMessage.id,
-            parentMessageId = ConversationMessageId(command.aiMessageId)
+            parentMessageId = command.aiMessageId?.let { ConversationMessageId(it) }
         )
 
-        domainEventPublisher.publish(finalConversation)
+        serviceScope.launch {
+            processAiPipeline(
+                conversation = updatedConversation,
+                messages = messages,
+                aiMessage = aiMessage,
+                command = command
+            )
+        }
     }
 
     private fun loadConversationContext(
         conversationId: Long,
-        aiMessageId: Long,
+        aiMessageId: Long?,
         memberId: Long
     ): Pair<Conversation, List<ConversationMessageView>> {
         val conversation = conversationStore.loadByIdAndMemberId(
@@ -97,12 +79,143 @@ class ProcessConversationService(
             memberId = MemberId(memberId)
         )
 
-        val messages = conversationReader.findPairByAiMessageIdAndConversationIdAndMemberId(
-            aiMessageId = aiMessageId,
-            conversationId = conversationId,
-            memberId = memberId
-        )
+        val messages = if (aiMessageId == null) {
+            emptyList()
+        } else {
+            conversationReader.findPairByAiMessageIdAndConversationIdAndMemberId(
+                aiMessageId = aiMessageId,
+                conversationId = conversationId,
+                memberId = memberId
+            )
+        }
 
         return Pair(conversation, messages)
     }
+
+    private suspend fun processAiPipeline(
+        conversation: Conversation,
+        messages: List<ConversationMessageView>,
+        aiMessage: ConversationMessage,
+        command: ProcessConversationCommand
+    ) {
+        var currentConversation = conversation
+        var currentMessage = aiMessage
+
+        try {
+            /* -----------------------------
+             * STEP 1: Copywriting → Image → Layout(AiCreativeOrchestrator에서 진행)
+             * ----------------------------- */
+            val creativeResult = aiCreativeOrchestrator.orchestrate(
+                conversation = conversation,
+                message = currentMessage,
+                messages = messages,
+                userRequest = command.body
+            )
+
+            currentMessage = creativeResult.conversationMessage
+
+            /* -----------------------------
+             * STEP 2: Image compositing
+             * ----------------------------- */
+            currentMessage = conversationMessageManager.updateMessageStatus(
+                conversation = currentConversation,
+                message = currentMessage,
+                nextStatus = COMPOSITING
+            )
+
+            val compositeCommand = ImageEditCommand.Composite(
+                baseImage = creativeResult.imageBytes,
+                textElements = creativeResult.textElements
+            )
+
+            val compositeResult = imageEditPort.composite(compositeCommand)
+
+            /* -----------------------------
+             * STEP 3: Media persistence
+             * ----------------------------- */
+            createMediaUseCase.execute(
+                listOf(
+                    CreateMediaCommand(
+                        conversationId = command.conversationId,
+                        conversationMessageId = currentMessage.id.value,
+                        memberId = command.memberId,
+                        file = compositeResult.image,
+                        mimeType = "image/png",
+                        width = compositeCommand.canvasWidth,
+                        height = compositeCommand.canvasHeight
+                    )
+                )
+            )
+
+            /* -----------------------------
+             * STEP 4: Final AI message
+             * ----------------------------- */
+            currentMessage = conversationMessageManager.updateMessageStatus(
+                conversation = currentConversation,
+                message = currentMessage,
+                nextStatus = COMPLETED
+            )
+
+            conversationMessageManager.completeAiMessage(
+                conversation = conversation,
+                messageId = currentMessage.id,
+                aiResponse = buildAiResponse(creativeResult),
+                revisionOf = currentMessage.revisionOf ?: throw CustomException(
+                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
+                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
+                ),
+                parentMessageId = currentMessage.parentMessageId
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            currentMessage = conversationMessageManager.updateMessageStatus(
+                conversation = currentConversation,
+                message = currentMessage,
+                nextStatus = FAILED
+            )
+            handleFailure(
+                conversation = conversation,
+                aiMessageId = currentMessage.id,
+                revisionOf = currentMessage.revisionOf ?: throw CustomException(
+                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
+                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
+                ),
+                parentMessageId = currentMessage.parentMessageId,
+                e = e
+            )
+        }
+    }
+
+    private suspend fun handleFailure(
+        conversation: Conversation,
+        aiMessageId: ConversationMessageId,
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId?,
+        e: Exception
+    ) {
+        conversationMessageManager.completeAiMessage(
+            conversation = conversation,
+            messageId = aiMessageId,
+            aiResponse = "AI processing failed.\nReason: ${e.message}",
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
+        )
+
+        throw RuntimeException("AI processing failed", e)
+    }
+
+    private fun buildAiResponse(
+        result: AiCreativeOrchestrator.AiCreativeResult
+    ): String {
+        return """
+        🎨 AI Creative Completed
+        
+        ✍️ Copywriting:
+        ${result.copyWrite}
+        
+        🖼 Image has been generated and saved.
+    """.trimIndent()
+    }
+
 }

@@ -17,6 +17,8 @@ internal class RefreshConversationMessageViewListenerImpl(
         classes = [
             MemberMessageAddedEvent::class,
             AiResponseGeneratedEvent::class,
+            AiMessageCreatedEvent::class,
+            MessageStatusUpdatedEvent::class
         ],
         phase = TransactionPhase.AFTER_COMMIT
     )

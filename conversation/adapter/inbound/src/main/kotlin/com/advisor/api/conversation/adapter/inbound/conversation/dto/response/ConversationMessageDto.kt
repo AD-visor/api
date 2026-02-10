@@ -10,6 +10,7 @@ data class ConversationMessageDto(
     val body: String,
     val revisionOf: String?,
     val parentMessageId: String? = null,
+    val status: String?,
     val createdAt: Instant
 ) {
     companion object {
@@ -21,6 +22,7 @@ data class ConversationMessageDto(
                 body = result.body,
                 revisionOf = result.revisionOf?.toString(),
                 parentMessageId = result.parentMessageId?.toString(),
+                status = result.status,
                 createdAt = result.createdAt
             )
         }

@@ -7,6 +7,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.ConversationDomainExceptionCode
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
 import java.time.Instant
 
 class ConversationMessage private constructor(
@@ -23,6 +24,35 @@ class ConversationMessage private constructor(
         fun of(id: ConversationMessageId, props: ConversationMessageProps): ConversationMessage {
             return ConversationMessage(id, props)
         }
+
+        fun initiateAiMessage(
+            id: ConversationMessageId,
+            conversationId: ConversationId,
+            memberId: MemberId,
+            revisionOf: ConversationMessageId?,
+            parentMessageId: ConversationMessageId?
+        ): ConversationMessage {
+            val props = ConversationMessageProps(
+                conversationId = conversationId,
+                memberId = memberId,
+                role = MessageRole.ASSISTANT,
+                body = "",
+                revisionOf = revisionOf,
+                parentMessageId = parentMessageId,
+                status = MessageStatus.PENDING,
+                createdAt = Instant.now()
+            )
+            return ConversationMessage(id, props)
+        }
+    }
+
+    fun updateStatus(nextStatus: MessageStatus): ConversationMessage {
+        this.status?.canTransitionTo(nextStatus) ?: throw CustomException(
+            ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
+            "[Conversation] 메시지 상태가 존재하지 않습니다."
+        )
+
+        return ConversationMessage(id, props.copy(status = nextStatus))
     }
 
     private fun validate() {
@@ -38,5 +68,6 @@ class ConversationMessage private constructor(
     val body: String get() = props.body
     val revisionOf: ConversationMessageId? get() = props.revisionOf
     val parentMessageId: ConversationMessageId? get() = props.parentMessageId
+    val status: MessageStatus? get() = props.status
     val createdAt: Instant get() = props.createdAt
 }
