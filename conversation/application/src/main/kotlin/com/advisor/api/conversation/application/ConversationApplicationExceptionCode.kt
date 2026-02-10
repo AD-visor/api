@@ -18,4 +18,9 @@ enum class ConversationApplicationExceptionCode(
         code = "CONVERSATION_LAYOUT_ANALYSIS_FAILURE",
         message = "[Conversation] 레이아웃 분석에 실패했습니다."
     ),
+    CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND(
+        status = ErrorStatus.BAD_REQUEST,
+        code = "CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND",
+        message = "[Conversation] 응답 대상 메시지를 찾을 수 없습니다."
+    )
 }

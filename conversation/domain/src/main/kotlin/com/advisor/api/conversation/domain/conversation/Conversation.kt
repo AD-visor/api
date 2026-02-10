@@ -55,12 +55,16 @@ class Conversation private constructor (
 
     fun completeAiMessage(
         messageId: ConversationMessageId,
-        body: String
+        body: String,
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId?
     ): Pair<Conversation, ConversationMessage> {
         val (conversation, message) = addMessage(
             messageId = messageId,
             body = body,
-            role = MessageRole.ASSISTANT
+            role = MessageRole.ASSISTANT,
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
         )
 
         conversation.addDomainEvent(AiResponseGeneratedEvent())
@@ -159,6 +163,7 @@ class Conversation private constructor (
         messageId: ConversationMessageId,
         body: String,
         role: MessageRole,
+        status: MessageStatus? = null,
         revisionOf: ConversationMessageId? = null,
         parentMessageId: ConversationMessageId? = null
     ): Pair<Conversation, ConversationMessage> {
@@ -169,6 +174,7 @@ class Conversation private constructor (
                 memberId = memberId,
                 body = body,
                 role = role,
+                status = status,
                 revisionOf = revisionOf,
                 parentMessageId = parentMessageId,
                 createdAt = Instant.now()

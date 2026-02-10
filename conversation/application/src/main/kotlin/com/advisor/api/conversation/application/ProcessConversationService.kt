@@ -3,6 +3,7 @@ package com.advisor.api.conversation.application
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationStore
@@ -158,7 +159,12 @@ class ProcessConversationService(
             conversationMessageManager.completeAiMessage(
                 conversation = conversation,
                 messageId = currentMessage.id,
-                aiResponse = buildAiResponse(creativeResult)
+                aiResponse = buildAiResponse(creativeResult),
+                revisionOf = currentMessage.revisionOf ?: throw CustomException(
+                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
+                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
+                ),
+                parentMessageId = currentMessage.parentMessageId
             )
         } catch (e: CancellationException) {
             throw e
@@ -168,19 +174,32 @@ class ProcessConversationService(
                 message = currentMessage,
                 nextStatus = FAILED
             )
-            handleFailure(conversation, currentMessage.id, e)
+            handleFailure(
+                conversation = conversation,
+                aiMessageId = currentMessage.id,
+                revisionOf = currentMessage.revisionOf ?: throw CustomException(
+                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
+                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
+                ),
+                parentMessageId = currentMessage.parentMessageId,
+                e = e
+            )
         }
     }
 
     private suspend fun handleFailure(
         conversation: Conversation,
         aiMessageId: ConversationMessageId,
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId?,
         e: Exception
     ) {
         conversationMessageManager.completeAiMessage(
             conversation = conversation,
             messageId = aiMessageId,
             aiResponse = "AI processing failed.\nReason: ${e.message}",
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
         )
 
         throw RuntimeException("AI processing failed", e)

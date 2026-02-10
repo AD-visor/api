@@ -16,6 +16,7 @@ class ConversationMessageManager(
     private val snowFlakeIdUtil: SnowFlakeIdUtil,
     private val domainEventPublisher: DomainEventPublisher
 ) {
+    @Transactional
     fun addMemberMessage(
         conversation: Conversation,
         body: String
@@ -45,6 +46,7 @@ class ConversationMessageManager(
             parentMessageId = parentMessageId
         )
 
+        conversationStore.save(updatedConversation)
         conversationStore.saveNewMessage(aiMessage)
 
         domainEventPublisher.publish(updatedConversation)
@@ -75,11 +77,15 @@ class ConversationMessageManager(
     fun completeAiMessage(
         conversation: Conversation,
         messageId: ConversationMessageId,
-        aiResponse: String
+        aiResponse: String,
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId?
     ): Pair<Conversation, ConversationMessage> {
         val (updatedConversation, message) = conversation.completeAiMessage(
             messageId = messageId,
-            body = aiResponse
+            body = aiResponse,
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
         )
 
         conversationStore.save(updatedConversation)
