@@ -68,7 +68,7 @@ class ConversationMessageEntity(
             body = body,
             revisionOf = revisionOf?.let { ConversationMessageId(it) },
             parentMessageId = parentMessageId?.let { ConversationMessageId(it) },
-            status = status?.let { MessageStatus(it) },
+            status = status?.let { MessageStatus.create(it) },
             createdAt = createdAt
         )
 
