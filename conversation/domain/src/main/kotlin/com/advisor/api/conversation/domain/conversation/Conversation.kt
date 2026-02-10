@@ -10,6 +10,7 @@ import com.advisor.api.conversation.domain.conversation.entity.ConversationMessa
 import com.advisor.api.conversation.domain.conversation.event.*
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
 import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
 import java.time.Instant
@@ -44,31 +45,69 @@ class Conversation private constructor (
         )
 
         conversation.addDomainEvent(MemberMessageAddedEvent(
-            conversationId = this.id.value,
-            memberId = this.memberId.value,
+            conversationId = id.value,
+            memberId = memberId.value,
             messageId = message.id.value
         ))
 
         return Pair(conversation, message)
     }
 
-    fun addAiMessage(
+    fun completeAiMessage(
         messageId: ConversationMessageId,
-        body: String,
-        revisionOf: ConversationMessageId,
-        parentMessageId: ConversationMessageId? = null
+        body: String
     ): Pair<Conversation, ConversationMessage> {
         val (conversation, message) = addMessage(
             messageId = messageId,
             body = body,
-            role = MessageRole.ASSISTANT,
-            revisionOf = revisionOf,
-            parentMessageId = parentMessageId
+            role = MessageRole.ASSISTANT
         )
 
         conversation.addDomainEvent(AiResponseGeneratedEvent())
 
         return Pair(conversation, message)
+    }
+
+    fun initiateAiMessage(
+        messageId: ConversationMessageId,
+        revisionOf: ConversationMessageId,
+        parentMessageId: ConversationMessageId? = null
+    ): Pair<Conversation, ConversationMessage> {
+        val message = ConversationMessage.initiateAiMessage(
+            id = messageId,
+            conversationId = id,
+            memberId = memberId,
+            revisionOf = revisionOf,
+            parentMessageId = parentMessageId
+        )
+
+        val updatedConversation = Conversation(
+            id = id,
+            props = props.copy(
+                updatedAt = Instant.now()
+            )
+        )
+
+        updatedConversation.addDomainEvent(AiMessageCreatedEvent())
+
+        return Pair(updatedConversation, message)
+    }
+
+    fun updateMessageStatus(
+        message: ConversationMessage,
+        nextStatus: MessageStatus
+    ): Pair<Conversation, ConversationMessage> {
+        val updatedConversation = Conversation(
+            id = id,
+            props = props.copy(
+                updatedAt = Instant.now()
+            )
+        )
+        val updatedMessage = message.updateStatus(nextStatus)
+
+        updatedConversation.addDomainEvent(MessageStatusUpdatedEvent())
+
+        return Pair(updatedConversation, updatedMessage)
     }
 
     fun update(
@@ -126,8 +165,8 @@ class Conversation private constructor (
         val message = ConversationMessage.create(
             id = messageId,
             props = ConversationMessageProps(
-                conversationId = this.id,
-                memberId = this.memberId,
+                conversationId = id,
+                memberId = memberId,
                 body = body,
                 role = role,
                 revisionOf = revisionOf,
@@ -137,8 +176,8 @@ class Conversation private constructor (
         )
 
         val updatedConversation = of(
-            id = this.id,
-            props = this.props.copy(
+            id = id,
+            props = props.copy(
                 updatedAt = Instant.now()
             )
         )

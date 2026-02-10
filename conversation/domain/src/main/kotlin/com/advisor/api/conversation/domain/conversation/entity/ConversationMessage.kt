@@ -24,6 +24,26 @@ class ConversationMessage private constructor(
         fun of(id: ConversationMessageId, props: ConversationMessageProps): ConversationMessage {
             return ConversationMessage(id, props)
         }
+
+        fun initiateAiMessage(
+            id: ConversationMessageId,
+            conversationId: ConversationId,
+            memberId: MemberId,
+            revisionOf: ConversationMessageId?,
+            parentMessageId: ConversationMessageId?
+        ): ConversationMessage {
+            val props = ConversationMessageProps(
+                conversationId = conversationId,
+                memberId = memberId,
+                role = MessageRole.ASSISTANT,
+                body = "",
+                revisionOf = revisionOf,
+                parentMessageId = parentMessageId,
+                status = MessageStatus.PENDING,
+                createdAt = Instant.now()
+            )
+            return ConversationMessage(id, props)
+        }
     }
 
     fun updateStatus(nextStatus: MessageStatus): ConversationMessage {
@@ -33,13 +53,6 @@ class ConversationMessage private constructor(
         )
 
         return ConversationMessage(id, props.copy(status = nextStatus))
-    }
-
-    fun complete(finalBody: String): ConversationMessage {
-        return ConversationMessage(id, props.copy(
-            body = finalBody,
-            status = MessageStatus.COMPLETED
-        ))
     }
 
     private fun validate() {
