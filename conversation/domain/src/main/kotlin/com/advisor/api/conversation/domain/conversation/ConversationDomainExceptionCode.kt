@@ -68,4 +68,9 @@ enum class ConversationDomainExceptionCode(
         code = "CONVERSATION_INVALID_MESSAGE_STATUS",
         message = "[Conversation] 유효하지 않은 메시지 상태입니다."
     ),
+    CONVERSATION_INVALID_MESSAGE_STATUS_TRANSITION(
+        status = ErrorStatus.BAD_REQUEST,
+        code = "CONVERSATION_INVALID_MESSAGE_STATUS_TRANSITION",
+        message = "[Conversation] 메시지 상태 전이가 불가능합니다."
+    ),
 }
