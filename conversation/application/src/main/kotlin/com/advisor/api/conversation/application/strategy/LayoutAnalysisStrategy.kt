@@ -19,7 +19,7 @@ class LayoutAnalysisStrategy(
     private val aiClientPort: AiClientPort,
     private val objectMapper: ObjectMapper
 ) {
-    fun analyze(
+    suspend fun analyze(
         conversation: Conversation,
         copyWrite: String,
         image: ByteArray

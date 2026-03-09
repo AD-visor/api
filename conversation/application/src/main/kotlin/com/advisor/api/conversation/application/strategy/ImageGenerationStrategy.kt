@@ -15,7 +15,7 @@ class ImageGenerationStrategy(
     private val aiClientPort: AiClientPort,
     private val generatePromptUseCase: GeneratePromptUseCase
 ) {
-    fun generate(
+    suspend fun generate(
         conversation: Conversation,
         messages: List<ConversationMessageView>,
         copyWrite: String
