@@ -7,7 +7,7 @@ class ImageFetchResult(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ImageEditResult
+        other as ImageFetchResult
 
         if (!image.contentEquals(other.image)) return false
 
