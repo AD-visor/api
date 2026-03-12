@@ -9,7 +9,7 @@ import com.advisor.api.ai_prompt_core.model.PromptMessage
 import com.advisor.api.ai_prompt_core.phase.PromptPhase
 import com.advisor.api.ai_prompt_core.phase.PromptPhaseProvider
 import com.advisor.api.conversation.application.prompt.scripts.OutputConstraintScripts
-import com.advisor.api.conversation.application.prompt.scripts.ReasoningScripts
+import com.advisor.api.conversation.application.prompt.scripts.identity.IntegratedDesignIdentityScripts
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,7 +19,6 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
     override fun provide(context: SystemContext): List<PromptMessage> {
         val systemMessage = buildString {
             // 1. Identity
-            appendLine("\n---\n")
             appendLine("# IDENTITY CONTEXT")
             appendLine(buildIdentityMessage(context.identity))
 
@@ -28,7 +27,14 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
             appendLine("# REASONING CONTEXT")
             appendLine(buildReasoningMessage(context.reasoning))
 
-            // 3. Output Constraint
+            // 3. Design Style Examples (INTEGRATED_DESIGN일 때만)
+            if (context.includeDesignExamples) {
+                appendLine("\n---\n")
+                appendLine("# DESIGN STYLE REFERENCE")
+                appendLine(IntegratedDesignIdentityScripts.STYLE_EXAMPLES)
+            }
+
+            // 4. Output Constraint
             appendLine("\n---\n")
             appendLine("# OUTPUT CONSTRAINT CONTEXT")
             appendLine(buildOutputConstraintMessage(context.outputConstraint))
@@ -45,15 +51,18 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
             appendLine("\n## CORE PRINCIPLES")
             identity.principles.forEach { appendLine("- $it") }
 
-            appendLine("\n## ADDITIONAL CONSTRAINTS")
+            appendLine("\n## CONSTRAINTS")
             identity.constraints.forEach { appendLine("- $it") }
         }.trim()
     }
 
     private fun buildReasoningMessage(reasoning: ReasoningContext): String {
         return buildString {
-            appendLine("## GUIDELINES")
-            reasoning.guidelines.forEach { appendLine("- $it") }
+            appendLine("## REASONING GUIDELINES")
+            reasoning.guidelines.forEach {
+                appendLine(it)
+                appendLine()
+            }
         }.trim()
     }
 
@@ -64,13 +73,17 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
             appendLine("- ${OutputConstraintScripts.tone(constraint.toneStyle)}")
             appendLine("- ${OutputConstraintScripts.speech(constraint.speechStyle)}")
 
-            if (constraint.format != OutputFormat.FREE_TEXT) {
+            if (constraint.format == OutputFormat.IMAGE) {
+                appendLine("- ${OutputConstraintScripts.imageGenerationFormat()}")
+                appendLine("\n${OutputConstraintScripts.designCompleteness()}")
+            }
+
+            if (constraint.format == OutputFormat.JSON) {
                 appendLine("- Format: ${constraint.format}")
-                appendLine(ReasoningScripts.STRICT_JSON_FORMAT)
             }
 
             if (constraint.outputSchema != null) {
-                appendLine("## OUTPUT SCHEMA")
+                appendLine("\n## OUTPUT SCHEMA")
                 appendLine(constraint.outputSchema)
             }
         }.trim()
