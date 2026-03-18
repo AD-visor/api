@@ -1,6 +1,6 @@
 package com.advisor.api.subscription.application.plan.refresher
 
-import com.advisor.api.subscription.domain.plan.PlanReader
+import com.advisor.api.subscription.port.outbound.plan.PlanReader
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional

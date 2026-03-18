@@ -4,7 +4,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.subscription.domain.subscription.Subscription
-import com.advisor.api.subscription.domain.subscription.SubscriptionStore
+import com.advisor.api.subscription.port.outbound.subscription.SubscriptionStore
 import org.springframework.stereotype.Repository
 
 @Repository

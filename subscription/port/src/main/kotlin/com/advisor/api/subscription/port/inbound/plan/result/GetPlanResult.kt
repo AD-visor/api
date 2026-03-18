@@ -1,6 +1,6 @@
 package com.advisor.api.subscription.port.inbound.plan.result
 
-import com.advisor.api.subscription.domain.plan.PlanView
+import com.advisor.api.subscription.port.inbound.plan.view.PlanView
 import java.time.Instant
 
 data class GetPlanResult(

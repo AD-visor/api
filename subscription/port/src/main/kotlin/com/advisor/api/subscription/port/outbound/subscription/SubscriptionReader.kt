@@ -1,4 +1,6 @@
-package com.advisor.api.subscription.domain.subscription
+package com.advisor.api.subscription.port.outbound.subscription
+
+import com.advisor.api.subscription.port.inbound.subscription.view.SubscriptionView
 
 interface SubscriptionReader {
     fun findById(id: Long): SubscriptionView

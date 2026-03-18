@@ -1,6 +1,6 @@
 package com.advisor.api.subscription.port.inbound.subscription.result
 
-import com.advisor.api.subscription.domain.subscription.SubscriptionView
+import com.advisor.api.subscription.port.inbound.subscription.view.SubscriptionView
 import java.time.Instant
 
 data class GetSubscriptionResult(

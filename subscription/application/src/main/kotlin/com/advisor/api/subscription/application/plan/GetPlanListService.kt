@@ -1,8 +1,8 @@
 package com.advisor.api.subscription.application.plan
 
-import com.advisor.api.subscription.domain.plan.PlanReader
 import com.advisor.api.subscription.port.inbound.plan.GetPlanListUseCase
 import com.advisor.api.subscription.port.inbound.plan.result.GetPlanResult
+import com.advisor.api.subscription.port.outbound.plan.PlanReader
 import org.springframework.stereotype.Service
 
 @Service

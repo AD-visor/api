@@ -2,9 +2,9 @@ package com.advisor.api.subscription.application.plan
 
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
-import com.advisor.api.subscription.domain.plan.PlanStore
 import com.advisor.api.subscription.port.inbound.plan.DeletePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.command.DeletePlanCommand
+import com.advisor.api.subscription.port.outbound.plan.PlanStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

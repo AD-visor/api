@@ -25,8 +25,7 @@ include(":conversation:adapter:outbound")
 // Subscription
 include(":subscription:application")
 include(":subscription:domain")
-include(":subscription:port:inbound")
-include(":subscription:port:outbound")
+include(":subscription:port")
 include(":subscription:adapter:inbound")
 include(":subscription:adapter:outbound")
 

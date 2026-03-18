@@ -1,4 +1,4 @@
-package com.advisor.api.subscription.domain.plan
+package com.advisor.api.subscription.port.inbound.plan.view
 
 import java.time.Instant
 
