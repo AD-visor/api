@@ -1,6 +1,7 @@
-package com.advisor.api.iam.domain.auth
+package com.advisor.api.iam.port.outbound.auth
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.iam.domain.auth.Auth
 
 interface AuthStore {
     fun save(auth: Auth)

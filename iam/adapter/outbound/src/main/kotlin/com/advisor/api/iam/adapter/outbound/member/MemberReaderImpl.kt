@@ -1,8 +1,8 @@
 package com.advisor.api.iam.adapter.outbound.member
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.iam.domain.member.MemberReader
-import com.advisor.api.iam.domain.member.MemberView
+import com.advisor.api.iam.port.outbound.member.MemberReader
+import com.advisor.api.iam.port.inbound.member.view.MemberView
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 

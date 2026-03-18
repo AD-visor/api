@@ -3,7 +3,7 @@ package com.advisor.api.iam.application.auth
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.iam.domain.auth.Auth
-import com.advisor.api.iam.domain.auth.AuthStore
+import com.advisor.api.iam.port.outbound.auth.AuthStore
 import com.advisor.api.iam.domain.auth.vo.RefreshToken
 import com.advisor.api.iam.domain.auth.vo.RefreshTokenProps
 import com.advisor.api.iam.port.inbound.auth.RenewTokenUseCase

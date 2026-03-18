@@ -1,7 +1,7 @@
 package com.advisor.api.iam.application.auth
 
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.api.iam.domain.auth.AuthStore
+import com.advisor.api.iam.port.outbound.auth.AuthStore
 import com.advisor.api.iam.port.inbound.auth.command.OAuth2LogoutCommand
 import com.advisor.api.iam.port.inbound.auth.result.OAuth2LogoutUseCase
 import org.springframework.stereotype.Service

@@ -5,9 +5,9 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.iam.port.inbound.member.command.CreateMemberCommand
 import com.advisor.api.iam.domain.member.Member
 import com.advisor.api.iam.domain.member.MemberProps
-import com.advisor.api.iam.domain.member.MemberStore
+import com.advisor.api.iam.port.outbound.member.MemberStore
 import com.advisor.api.iam.domain.member.vo.Email
-import com.advisor.api.iam.port.inbound.member.usecase.CreateMemberUseCase
+import com.advisor.api.iam.port.inbound.member.CreateMemberUseCase
 import org.springframework.stereotype.Service
 import java.time.Instant
 

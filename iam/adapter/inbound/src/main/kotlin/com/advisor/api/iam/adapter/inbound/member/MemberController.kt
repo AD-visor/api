@@ -4,12 +4,12 @@ import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.common.core.presentation.CookieManager
 import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.iam.adapter.inbound.member.dto.request.CreateMemberReqDto
-import com.advisor.api.iam.adapter.inbound.member.dto.response.MemberResDto
+import com.advisor.api.iam.port.inbound.member.CreateMemberUseCase
 import com.advisor.api.iam.port.inbound.member.command.WithdrawMemberCommand
 import com.advisor.api.iam.port.inbound.member.query.GetMemberQuery
-import com.advisor.api.iam.port.inbound.member.usecase.CreateMemberUseCase
-import com.advisor.api.iam.port.inbound.member.usecase.GetMemberUseCase
-import com.advisor.api.iam.port.inbound.member.usecase.WithdrawMemberUseCase
+import com.advisor.api.iam.port.inbound.member.GetMemberUseCase
+import com.advisor.api.iam.port.inbound.member.WithdrawMemberUseCase
+import com.advisor.api.iam.port.inbound.member.view.MemberView
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -63,17 +63,15 @@ class MemberController(
     }
 
     @GetMapping("/me")
-    fun getMember(@AuthenticationPrincipal member: CustomUserDetails): ResponseEntity<BaseApiResponse<MemberResDto>> {
+    fun getMember(@AuthenticationPrincipal member: CustomUserDetails): ResponseEntity<BaseApiResponse<MemberView>> {
         val query = GetMemberQuery(member.id)
         val result = getMemberUseCase.execute(query)
 
-        val response = BaseApiResponse<MemberResDto>(
+        val response = BaseApiResponse<MemberView>(
             success = true,
             message = "회원 조회 성공",
             httpStatus = HttpStatus.OK,
-            data = MemberResDto.fromResult(result)
-
-            // View model mapping 조금 더 생각해 보기
+            data = result
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(response)

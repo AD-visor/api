@@ -1,4 +1,4 @@
-package com.advisor.api.iam.port.inbound.member.usecase
+package com.advisor.api.iam.port.inbound.member
 
 import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand
 
