@@ -4,39 +4,32 @@ import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.ConversationDomainExceptionCode
 
 data class MessageStatus(val value: String) {
-    init { validate() }
+    init {
+        validate()
+    }
 
     companion object {
-        val PENDING = MessageStatus("PENDING")
-        val COPY_WRITING = MessageStatus("COPY_WRITING")
-        val GENERATING_IMAGE = MessageStatus("GENERATING_IMAGE")
-        val ANALYSING_IMAGE = MessageStatus("ANALYSING_IMAGE")
-        val COMPOSITING = MessageStatus("COMPOSITING")
-        val COMPLETED = MessageStatus("COMPLETED")
-        val FAILED = MessageStatus("FAILED")
-
         private val STATE_ORDER = mapOf(
             "PENDING" to 0,
-            "COPY_WRITING" to 1,
-            "GENERATING_IMAGE" to 2,
-            "ANALYSING_IMAGE" to 3,
-            "COMPOSITING" to 4,
-            "COMPLETED" to 5,
+            "PROCESSING" to 1,
+            "COMPLETED" to 2,
             "FAILED" to -1
         )
+
+        val PENDING = MessageStatus("PENDING")
+        val PROCESSING = MessageStatus("PROCESSING")
+        val COMPLETED = MessageStatus("COMPLETED")
+        val FAILED = MessageStatus("FAILED")
 
         fun create(value: String): MessageStatus {
             return when (value) {
                 "PENDING" -> PENDING
-                "COPY_WRITING" -> COPY_WRITING
-                "GENERATING_IMAGE" -> GENERATING_IMAGE
-                "ANALYSING_IMAGE" -> ANALYSING_IMAGE
-                "COMPOSITING" -> COMPOSITING
+                "PROCESSING" -> PROCESSING
                 "COMPLETED" -> COMPLETED
                 "FAILED" -> FAILED
                 else -> throw CustomException(
                     ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
-                    "[Conversation] 유효하지 않은 메시지 상태입니다."
+                    "[Conversation] 유효하지 않은 메시지 상태입니다: $value"
                 )
             }
         }
@@ -50,26 +43,42 @@ data class MessageStatus(val value: String) {
         if (next == FAILED) return true
 
         // 3. 이미 종료된 상태(COMPLETED, FAILED)에서는 전이 불가
-        if (this == COMPLETED || this == FAILED) throw CustomException(
-            ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS_TRANSITION,
-            "[Conversation] 종료된 메시지 상태에서는 상태 전이가 불가능합니다."
-        )
+        if (this == COMPLETED || this == FAILED) {
+            throw CustomException(
+                ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS_TRANSITION,
+                "[Conversation] 종료된 메시지 상태(${this.value})에서는 상태 전이가 불가능합니다."
+            )
+        }
 
         // 4. 순차 진행 보장 (현재 단계보다 뒤에 있는 단계로만 전이 가능)
-        val currentOrder = STATE_ORDER[this.value] ?: throw CustomException(
-            ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
-            "[Conversation] 유효하지 않은 메시지 상태입니다."
-        )
-        val nextOrder = STATE_ORDER[next.value] ?: throw CustomException(
-            ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
-            "[Conversation] 유효하지 않은 메시지 상태입니다."
-        )
+        val currentOrder = STATE_ORDER[this.value]
+            ?: throw CustomException(
+                ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
+                "[Conversation] 유효하지 않은 현재 상태입니다: ${this.value}"
+            )
+
+        val nextOrder = STATE_ORDER[next.value]
+            ?: throw CustomException(
+                ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
+                "[Conversation] 유효하지 않은 다음 상태입니다: ${next.value}"
+            )
 
         return nextOrder > currentOrder
     }
 
-    private fun validate() {}
+    private fun validate() {
+        if (value !in STATE_ORDER.keys) {
+            throw CustomException(
+                ConversationDomainExceptionCode.CONVERSATION_INVALID_MESSAGE_STATUS,
+                "[Conversation] 유효하지 않은 메시지 상태입니다: $value"
+            )
+        }
+    }
 
-    override fun equals(other: Any?): Boolean = other is MessageStatus && this.value == other.value
+    override fun equals(other: Any?): Boolean =
+        other is MessageStatus && this.value == other.value
+
     override fun hashCode(): Int = value.hashCode()
+
+    override fun toString(): String = value
 }

@@ -6,7 +6,7 @@ object TaskScripts {
         while maximizing strategic impact and clarity.
     """
 
-    val STEPS = listOf(
+    val INTEGRATED_DESIGN_STEPS = listOf(
         "1. Deconstruct the user's request to identify core business goals and target audience needs.",
         "2. Develop a logical structure and draft the content using professional terminology.",
         "3. Refine the draft by cross-checking against all provided constraints and tone guidelines.",

@@ -9,20 +9,14 @@ import com.advisor.api.conversation.domain.conversation.ConversationReader
 import com.advisor.api.conversation.domain.conversation.ConversationStore
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
-import com.advisor.api.conversation.domain.conversation.vo.MessageStatus.Companion.COMPLETED
-import com.advisor.api.conversation.domain.conversation.vo.MessageStatus.Companion.COMPOSITING
-import com.advisor.api.conversation.domain.conversation.vo.MessageStatus.Companion.FAILED
+import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
 import com.advisor.api.conversation.port.inbound.ProcessConversationUseCase
 import com.advisor.api.conversation.port.inbound.command.ProcessConversationCommand
 import com.advisor.api.media.port.inbound.CreateMediaUseCase
 import com.advisor.api.media.port.inbound.command.CreateMediaCommand
-import com.advisor.api.media.port.outbound.ImageEditPort
-import com.advisor.api.media.port.outbound.command.ImageEditCommand
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -32,64 +26,99 @@ class ProcessConversationService(
     private val conversationReader: ConversationReader,
     private val conversationMessageManager: ConversationMessageManager,
     private val aiCreativeOrchestrator: AiCreativeOrchestrator,
-    private val createMediaUseCase: CreateMediaUseCase,
-    private val imageEditPort: ImageEditPort
+    private val createMediaUseCase: CreateMediaUseCase
 ) : ProcessConversationUseCase {
 
-    private val serviceScope = CoroutineScope(
-        SupervisorJob() + Dispatchers.IO + CoroutineName("AiProcessingScope")
-    )
+    private val logger = KotlinLogging.logger {}
 
-    override fun execute(command: ProcessConversationCommand) {
-        val (conversation, messages) = loadConversationContext(
-            conversationId = command.conversationId,
-            aiMessageId = command.aiMessageId,
-            memberId = command.memberId
-        )
+    override suspend fun execute(command: ProcessConversationCommand) {
+        logger.info { "========== ProcessConversation 시작 ==========" }
+        logger.info { "conversationId: ${command.conversationId}" }
+        logger.info { "memberId: ${command.memberId}" }
+        logger.info { "userRequest: ${command.body}" }
 
-        // 1. 회원 메시지 저장
-        val (updatedConversation, memberMessage) = conversationMessageManager.addMemberMessage(
-            conversation = conversation,
-            body = command.body
-        )
+        try {
+            // 1. 컨텍스트 로드
+            logger.info { "[1/4] 컨텍스트 로드" }
+            val (conversation, messages) = loadConversationContext(
+                conversationId = command.conversationId,
+                aiMessageId = command.aiMessageId,
+                memberId = command.memberId
+            )
 
-        val aiMessage = conversationMessageManager.createInitialAiMessage(
-            conversation = updatedConversation,
-            revisionOf = memberMessage.id,
-            parentMessageId = command.aiMessageId?.let { ConversationMessageId(it) }
-        )
+            // 2. 회원 메시지 저장
+            logger.info { "[2/4] 회원 메시지 저장" }
+            val (updatedConversation, memberMessage) = withContext(Dispatchers.IO) {
+                conversationMessageManager.addMemberMessage(
+                    conversation = conversation,
+                    body = command.body
+                )
+            }
+            logger.info { "회원 메시지 저장 완료: messageId=${memberMessage.id}" }
 
-        serviceScope.launch {
+            // 3. AI 메시지 초기화
+            logger.info { "[3/4] AI 메시지 초기화" }
+            val aiMessage = withContext(Dispatchers.IO) {
+                conversationMessageManager.createInitialAiMessage(
+                    conversation = updatedConversation,
+                    revisionOf = memberMessage.id,
+                    parentMessageId = command.aiMessageId?.let { ConversationMessageId(it) }
+                )
+            }
+            logger.info { "AI 메시지 초기화 완료: aiMessageId=${aiMessage.id}" }
+
+            // 4. AI 파이프라인 실행
+            logger.info { "[4/4] AI 파이프라인 실행" }
             processAiPipeline(
                 conversation = updatedConversation,
                 messages = messages,
                 aiMessage = aiMessage,
                 command = command
             )
+
+            logger.info { "========== ProcessConversation 완료 ==========" }
+
+        } catch (e: Exception) {
+            logger.error(e) {
+                """
+                ========== ProcessConversation 실패 ==========
+                conversationId: ${command.conversationId}
+                원인: ${e.cause?.message ?: e.message}
+                """.trimIndent()
+            }
+            throw e
         }
     }
 
-    private fun loadConversationContext(
+    private suspend fun loadConversationContext(
         conversationId: Long,
         aiMessageId: Long?,
         memberId: Long
     ): Pair<Conversation, List<ConversationMessageView>> {
-        val conversation = conversationStore.loadByIdAndMemberId(
-            id = ConversationId(conversationId),
-            memberId = MemberId(memberId)
-        )
+        return withContext(Dispatchers.IO) {
+            try {
+                val conversation = conversationStore.loadByIdAndMemberId(
+                    id = ConversationId(conversationId),
+                    memberId = MemberId(memberId)
+                )
 
-        val messages = if (aiMessageId == null) {
-            emptyList()
-        } else {
-            conversationReader.findPairByAiMessageIdAndConversationIdAndMemberId(
-                aiMessageId = aiMessageId,
-                conversationId = conversationId,
-                memberId = memberId
-            )
+                val messages = if (aiMessageId == null) {
+                    emptyList()
+                } else {
+                    conversationReader.findPairByAiMessageIdAndConversationIdAndMemberId(
+                        aiMessageId = aiMessageId,
+                        conversationId = conversationId,
+                        memberId = memberId
+                    )
+                }
+
+                Pair(conversation, messages)
+
+            } catch (e: Exception) {
+                logger.error(e) { "컨텍스트 로드 실패: conversationId=$conversationId" }
+                throw e
+            }
         }
-
-        return Pair(conversation, messages)
     }
 
     private suspend fun processAiPipeline(
@@ -98,13 +127,20 @@ class ProcessConversationService(
         aiMessage: ConversationMessage,
         command: ProcessConversationCommand
     ) {
-        var currentConversation = conversation
         var currentMessage = aiMessage
 
         try {
-            /* -----------------------------
-             * STEP 1: Copywriting → Image → Layout(AiCreativeOrchestrator에서 진행)
-             * ----------------------------- */
+            /* STEP 1: 통합 디자인 생성 */
+            logger.info { ">>> 통합 디자인 생성 시작" }
+
+            currentMessage = withContext(Dispatchers.IO) {
+                conversationMessageManager.updateMessageStatus(
+                    conversation = conversation,
+                    message = currentMessage,
+                    nextStatus = MessageStatus.PROCESSING
+                )
+            }
+
             val creativeResult = aiCreativeOrchestrator.orchestrate(
                 conversation = conversation,
                 message = currentMessage,
@@ -113,109 +149,117 @@ class ProcessConversationService(
             )
 
             currentMessage = creativeResult.conversationMessage
+            logger.info { ">>> 통합 디자인 생성 완료: ${creativeResult.imageBytes.size} bytes" }
 
-            /* -----------------------------
-             * STEP 2: Image compositing
-             * ----------------------------- */
-            currentMessage = conversationMessageManager.updateMessageStatus(
-                conversation = currentConversation,
-                message = currentMessage,
-                nextStatus = COMPOSITING
-            )
-
-            val compositeCommand = ImageEditCommand.Composite(
-                baseImage = creativeResult.imageBytes,
-                textElements = creativeResult.textElements
-            )
-
-            val compositeResult = imageEditPort.composite(compositeCommand)
-
-            /* -----------------------------
-             * STEP 3: Media persistence
-             * ----------------------------- */
-            createMediaUseCase.execute(
-                listOf(
-                    CreateMediaCommand(
-                        conversationId = command.conversationId,
-                        conversationMessageId = currentMessage.id.value,
-                        memberId = command.memberId,
-                        file = compositeResult.image,
-                        mimeType = "image/png",
-                        width = compositeCommand.canvasWidth,
-                        height = compositeCommand.canvasHeight
+            /* STEP 2: 미디어 저장 */
+            logger.info { ">>> 미디어 저장 시작" }
+            withContext(Dispatchers.IO) {
+                createMediaUseCase.execute(
+                    listOf(
+                        CreateMediaCommand(
+                            conversationId = command.conversationId,
+                            conversationMessageId = currentMessage.id.value,
+                            memberId = command.memberId,
+                            file = creativeResult.imageBytes,
+                            mimeType = "image/png",
+                            width = 1024,
+                            height = 1024
+                        )
                     )
                 )
-            )
+            }
+            logger.info { ">>> 미디어 저장 완료" }
 
-            /* -----------------------------
-             * STEP 4: Final AI message
-             * ----------------------------- */
-            currentMessage = conversationMessageManager.updateMessageStatus(
-                conversation = currentConversation,
-                message = currentMessage,
-                nextStatus = COMPLETED
-            )
+            /* STEP 3: 최종 완료 */
+            logger.info { ">>> 최종 완료 처리" }
+            withContext(Dispatchers.IO) {
+                conversationMessageManager.updateMessageStatus(
+                    conversation = conversation,
+                    message = currentMessage,
+                    nextStatus = MessageStatus.COMPLETED
+                )
 
-            conversationMessageManager.completeAiMessage(
-                conversation = conversation,
-                messageId = currentMessage.id,
-                aiResponse = buildAiResponse(creativeResult),
-                revisionOf = currentMessage.revisionOf ?: throw CustomException(
-                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
-                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
-                ),
-                parentMessageId = currentMessage.parentMessageId
-            )
+                conversationMessageManager.completeAiMessage(
+                    conversation = conversation,
+                    messageId = currentMessage.id,
+                    aiResponse = buildAiResponse(),
+                    revisionOf = currentMessage.revisionOf ?: throw CustomException(
+                        code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
+                        data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
+                    ),
+                    parentMessageId = currentMessage.parentMessageId
+                )
+            }
+            logger.info { ">>> 최종 완료" }
+
         } catch (e: CancellationException) {
+            logger.warn { "AI 파이프라인 취소됨" }
             throw e
+
         } catch (e: Exception) {
-            currentMessage = conversationMessageManager.updateMessageStatus(
-                conversation = currentConversation,
-                message = currentMessage,
-                nextStatus = FAILED
-            )
-            handleFailure(
-                conversation = conversation,
-                aiMessageId = currentMessage.id,
-                revisionOf = currentMessage.revisionOf ?: throw CustomException(
-                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
-                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
-                ),
-                parentMessageId = currentMessage.parentMessageId,
-                e = e
-            )
+            logger.error(e) {
+                """
+                AI 파이프라인 실패
+                conversationId: ${command.conversationId}
+                currentStatus: ${currentMessage.status}
+                에러: ${e::class.simpleName}
+                메시지: ${e.message}
+                """.trimIndent()
+            }
+
+            withContext(Dispatchers.IO) {
+                conversationMessageManager.updateMessageStatus(
+                    conversation = conversation,
+                    message = currentMessage,
+                    nextStatus = MessageStatus.FAILED
+                )
+            }
+
+            handleFailure(conversation, currentMessage, e)
         }
     }
 
     private suspend fun handleFailure(
         conversation: Conversation,
-        aiMessageId: ConversationMessageId,
-        revisionOf: ConversationMessageId,
-        parentMessageId: ConversationMessageId?,
+        aiMessage: ConversationMessage,
         e: Exception
     ) {
-        conversationMessageManager.completeAiMessage(
-            conversation = conversation,
-            messageId = aiMessageId,
-            aiResponse = "AI processing failed.\nReason: ${e.message}",
-            revisionOf = revisionOf,
-            parentMessageId = parentMessageId
-        )
+        logger.error { "실패 처리 시작: messageId=${aiMessage.id}" }
 
-        throw RuntimeException("AI processing failed", e)
+        withContext(Dispatchers.IO) {
+            conversationMessageManager.completeAiMessage(
+                conversation = conversation,
+                messageId = aiMessage.id,
+                aiResponse = buildFailureResponse(e),
+                revisionOf = aiMessage.revisionOf ?: throw CustomException(
+                    code = ConversationApplicationExceptionCode.CONVERSATION_MESSAGE_REVISION_OF_NOT_FOUND,
+                    data = "[Conversation] AI 메시지의 revisionOf가 존재하지 않습니다."
+                ),
+                parentMessageId = aiMessage.parentMessageId
+            )
+        }
+
+        throw e
     }
 
-    private fun buildAiResponse(
-        result: AiCreativeOrchestrator.AiCreativeResult
-    ): String {
+    private fun buildAiResponse(): String {
         return """
-        🎨 AI Creative Completed
+        🎨 AI 디자인 완성
         
-        ✍️ Copywriting:
-        ${result.copyWrite}
-        
-        🖼 Image has been generated and saved.
-    """.trimIndent()
+        프로페셔널한 Instagram 광고 이미지가 생성되었습니다.
+        한글 텍스트가 포함된 완성된 디자인입니다.
+        """.trimIndent()
     }
 
+    private fun buildFailureResponse(e: Exception): String {
+        return """
+        ❌ AI 처리 실패
+        
+        에러 타입: ${e::class.simpleName}
+        에러 메시지: ${e.message}
+        ${if (e.cause != null) "원인: ${e.cause?.message}" else ""}
+        
+        잠시 후 다시 시도해주세요.
+        """.trimIndent()
+    }
 }

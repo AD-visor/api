@@ -26,4 +26,9 @@ dependencies {
     compileOnly("org.springframework.data:spring-data-jpa")
     compileOnly("org.mybatis:mybatis:3.5.19")
     compileOnly("org.mybatis:mybatis-spring:3.0.5")
+
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 }

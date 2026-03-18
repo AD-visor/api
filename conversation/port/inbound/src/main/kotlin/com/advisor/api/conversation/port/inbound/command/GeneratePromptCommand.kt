@@ -8,5 +8,6 @@ data class GeneratePromptCommand(
     val conversation: Conversation,
     val messages: List<ConversationMessageView>,
     val userRequest: String,
-    val promptType: PromptType
+    val promptType: PromptType,
+    val additionalData: Map<String, Any> = emptyMap()
 )
