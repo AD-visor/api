@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":payment:domain"))
-    implementation(project(":payment:port:outbound"))
+    implementation(project(":payment:port"))
     implementation(project(":common"))
 
     // Spring

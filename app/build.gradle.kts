@@ -18,7 +18,7 @@ dependencies {
 
     implementation(project(":payment:adapter:inbound"))
     implementation(project(":payment:adapter:outbound"))
-    implementation(project(":payment:port:outbound"))
+    implementation(project(":payment:port"))
     implementation(project(":payment:application"))
 
     implementation(project(":conversation:adapter:inbound"))

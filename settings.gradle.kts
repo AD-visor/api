@@ -31,8 +31,7 @@ include(":subscription:adapter:outbound")
 // Payment
 include(":payment:application")
 include(":payment:domain")
-include(":payment:port:inbound")
-include(":payment:port:outbound")
+include(":payment:port")
 include(":payment:adapter:inbound")
 include(":payment:adapter:outbound")
 
