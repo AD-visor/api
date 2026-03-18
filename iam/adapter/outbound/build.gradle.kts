@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":iam:domain"))
-    implementation(project(":iam:port:outbound"))
+    implementation(project(":iam:port"))
     implementation(project(":common"))
 
     // Spring

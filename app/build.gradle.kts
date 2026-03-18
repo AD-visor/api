@@ -8,7 +8,7 @@ dependencies {
 
     implementation(project(":iam:adapter:inbound"))
     implementation(project(":iam:adapter:outbound"))
-    implementation(project(":iam:port:outbound"))
+    implementation(project(":iam:port"))
     implementation(project(":iam:application"))
 
     implementation(project(":subscription:adapter:inbound"))

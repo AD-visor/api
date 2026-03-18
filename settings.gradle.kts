@@ -9,8 +9,7 @@ include(":common")
 // Iam
 include(":iam:application")
 include(":iam:domain")
-include(":iam:port:inbound")
-include(":iam:port:outbound")
+include(":iam:port")
 include(":iam:adapter:inbound")
 include(":iam:adapter:outbound")
 
