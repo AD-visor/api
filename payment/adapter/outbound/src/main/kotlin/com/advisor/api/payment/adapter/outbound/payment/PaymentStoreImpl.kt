@@ -3,7 +3,7 @@ package com.advisor.api.payment.adapter.outbound.payment
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.payment.domain.payment.Payment
-import com.advisor.api.payment.domain.payment.PaymentStore
+import com.advisor.api.payment.port.outbound.PaymentStore
 import org.springframework.stereotype.Repository
 
 @Repository

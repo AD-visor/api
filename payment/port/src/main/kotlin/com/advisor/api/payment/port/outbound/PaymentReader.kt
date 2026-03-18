@@ -1,5 +1,6 @@
-package com.advisor.api.payment.domain.payment
+package com.advisor.api.payment.port.outbound
 
+import com.advisor.api.payment.port.inbound.PaymentView
 import java.time.Instant
 
 interface PaymentReader {

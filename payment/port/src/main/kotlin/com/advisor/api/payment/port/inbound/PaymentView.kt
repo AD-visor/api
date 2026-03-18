@@ -1,4 +1,4 @@
-package com.advisor.api.payment.domain.payment
+package com.advisor.api.payment.port.inbound
 
 import java.time.Instant
 

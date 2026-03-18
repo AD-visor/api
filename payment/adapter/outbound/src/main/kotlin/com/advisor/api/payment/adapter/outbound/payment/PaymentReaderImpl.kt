@@ -1,7 +1,7 @@
 package com.advisor.api.payment.adapter.outbound.payment
 
-import com.advisor.api.payment.domain.payment.PaymentReader
-import com.advisor.api.payment.domain.payment.PaymentView
+import com.advisor.api.payment.port.inbound.PaymentView
+import com.advisor.api.payment.port.outbound.PaymentReader
 import org.springframework.stereotype.Repository
 import java.time.Instant
 
