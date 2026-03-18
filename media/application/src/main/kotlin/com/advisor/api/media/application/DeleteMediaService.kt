@@ -2,7 +2,7 @@ package com.advisor.api.media.application
 
 import com.advisor.api.common.core.domain.vo.identifier.MediaId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.api.media.domain.MediaStore
+import com.advisor.api.media.port.outbound.MediaStore
 import com.advisor.api.media.port.inbound.DeleteMediaUseCase
 import com.advisor.api.media.port.inbound.command.DeleteMediaCommand
 import com.advisor.api.media.port.outbound.FileStoragePort

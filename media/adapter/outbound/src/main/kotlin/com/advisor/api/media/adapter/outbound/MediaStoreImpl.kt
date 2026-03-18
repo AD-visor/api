@@ -4,7 +4,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MediaId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.media.domain.Media
-import com.advisor.api.media.domain.MediaStore
+import com.advisor.api.media.port.outbound.MediaStore
 import org.springframework.stereotype.Repository
 
 @Repository

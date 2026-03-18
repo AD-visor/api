@@ -1,7 +1,8 @@
-package com.advisor.api.media.domain
+package com.advisor.api.media.port.outbound
 
 import com.advisor.api.common.core.domain.vo.identifier.MediaId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.media.domain.Media
 
 interface MediaStore {
     fun save(media: Media)
