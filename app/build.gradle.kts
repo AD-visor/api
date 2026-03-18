@@ -23,7 +23,7 @@ dependencies {
 
     implementation(project(":conversation:adapter:inbound"))
     implementation(project(":conversation:adapter:outbound"))
-    implementation(project(":conversation:port:outbound"))
+    implementation(project(":conversation:port"))
     implementation(project(":conversation:application"))
 
     implementation(project(":token_usage:adapter:inbound"))

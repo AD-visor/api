@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":conversation:domain"))
-    implementation(project(":conversation:port:outbound"))
+    implementation(project(":conversation:port"))
     implementation(project(":common"))
 
     implementation(project(":ai_prompt_core"))

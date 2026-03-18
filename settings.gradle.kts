@@ -16,8 +16,7 @@ include(":iam:adapter:outbound")
 // Conversation
 include(":conversation:application")
 include(":conversation:domain")
-include(":conversation:port:inbound")
-include(":conversation:port:outbound")
+include(":conversation:port")
 include(":conversation:adapter:inbound")
 include(":conversation:adapter:outbound")
 
