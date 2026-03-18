@@ -7,17 +7,18 @@ import com.advisor.api.media.port.outbound.result.ImageFetchResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
+import org.apache.hc.client5.http.classic.HttpClient
 import org.apache.hc.client5.http.classic.methods.HttpGet
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.springframework.stereotype.Component
 
 @Component
-class ImageFetchAdapter : ImageFetchPort {
+class ImageFetchAdapter(
+    private val httpClient: HttpClient
+): ImageFetchPort {
 
     private val logger = KotlinLogging.logger {}
-
-    private val httpClient = HttpClients.createDefault()
 
     override suspend fun fetch(command: ImageFetchCommand.Fetch): ImageFetchResult {
         val input = command.imageUrl
@@ -55,41 +56,49 @@ class ImageFetchAdapter : ImageFetchPort {
         }
     }
 
-    fun fetchFromUrl(imageUrl: String): ImageFetchResult {
-        logger.info { "        📥 이미지 다운로드 시작" }
+    private suspend fun fetchFromUrl(imageUrl: String): ImageFetchResult {
+        return withContext(Dispatchers.IO) {
+            logger.info { "        📥 이미지 다운로드 시작" }
 
-        // ✅ URL을 그대로 사용 (재인코딩 없음)
-        val request = HttpGet(imageUrl)
-        val response = httpClient.executeOpen(null, request, null)
+            // ✅ URL을 그대로 사용 (재인코딩 없음)
+            val request = HttpGet(imageUrl)
+            val response = httpClient.executeOpen(null, request, null)
 
-        response.use { response ->
-            val statusCode = response.code
+            response.use { response ->
+                val statusCode = response.code
 
-            if (statusCode != 200) {
-                val body = try {
-                    EntityUtils.toString(response.entity)
-                } catch (e: Exception) {
-                    "응답 본문 읽기 실패"
-                }
+                if (statusCode != 200) {
+                    val body = try {
+                        EntityUtils.toString(response.entity)
+                    } catch (e: Exception) {
+                        "응답 본문 읽기 실패"
+                    }
 
-                logger.error {
-                    """
+                    logger.error {
+                        """
                     ❌ HTTP 에러
                     - 상태 코드: $statusCode
                     - 응답: ${body.take(300)}
                     """.trimIndent()
+                    }
+
+                    throw CustomException(
+                        MediaInfrastructureExceptionCode.MEDIA_FILE_DOWNLOAD_FAILURE,
+                        "[Media] HTTP $statusCode - 이미지 다운로드 실패"
+                    )
                 }
 
-                throw CustomException(
-                    MediaInfrastructureExceptionCode.MEDIA_FILE_DOWNLOAD_FAILURE,
-                    "[Media] HTTP $statusCode - 이미지 다운로드 실패"
-                )
+                val entity = response.entity
+                    ?: throw CustomException(
+                        MediaInfrastructureExceptionCode.MEDIA_FILE_NOT_FOUND,
+                        "[Media] 응답 본문이 없습니다 (entity is null)"
+                    )
+
+                val imageBytes = EntityUtils.toByteArray(entity)
+                logger.info { "        ✅ 다운로드 완료: ${imageBytes.size} bytes" }
+
+                ImageFetchResult(imageBytes)
             }
-
-            val imageBytes = EntityUtils.toByteArray(response.entity)
-            logger.info { "        ✅ 다운로드 완료: ${imageBytes.size} bytes" }
-
-            return ImageFetchResult(imageBytes)
         }
     }
 }

@@ -28,7 +28,7 @@ class LocalFileStorageAdapter: FileStoragePort {
         } catch (e: Exception) {
             logger.error(e) { "파일 저장 실패: $name" }
             throw CustomException(
-                MediaInfrastructureExceptionCode.MEDIA_FILE_DOWNLOAD_FAILURE,
+                MediaInfrastructureExceptionCode.MEDIA_FILE_SAVE_FAILURE,
                 "[Media] 파일 저장 실패: ${e.message}"
             )
         }

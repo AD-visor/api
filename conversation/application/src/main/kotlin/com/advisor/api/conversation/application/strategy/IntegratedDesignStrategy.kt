@@ -64,23 +64,6 @@ class IntegratedDesignStrategy(
         return response
     }
 
-    private fun extractCopyWrite(userRequest: String): String {
-        return when {
-            userRequest.contains("\"") -> {
-                // "텍스트" 형태에서 추출
-                val start = userRequest.indexOf("\"")
-                val end = userRequest.indexOf("\"", start + 1)
-                if (end > start) {
-                    userRequest.substring(start + 1, end)
-                } else {
-                    userRequest.take(15)
-                }
-            }
-            userRequest.length <= 20 -> userRequest
-            else -> userRequest.take(15) + "..."
-        }
-    }
-
     private suspend fun generateMarketingCopy(
         conversation: Conversation,
         messages: List<ConversationMessageView>,

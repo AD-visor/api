@@ -91,9 +91,6 @@ class ConversationController(
                     에러 메시지: ${e.message}
                     """.trimIndent()
                 }
-
-                // ✅ 스택트레이스 출력
-                e.printStackTrace()
             }
         }
 
