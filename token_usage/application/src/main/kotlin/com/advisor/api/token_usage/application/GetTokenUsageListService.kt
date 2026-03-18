@@ -1,7 +1,7 @@
 package com.advisor.api.token_usage.application
 
 
-import com.advisor.api.token_usage.domain.TokenUsageReader
+import com.advisor.api.token_usage.port.outbound.TokenUsageReader
 import com.advisor.api.token_usage.port.inbound.GetTokenUsageListUseCase
 import com.advisor.api.token_usage.port.inbound.query.GetTokenUsageListQuery
 import com.advisor.api.token_usage.port.inbound.result.GetTokenUsageResult

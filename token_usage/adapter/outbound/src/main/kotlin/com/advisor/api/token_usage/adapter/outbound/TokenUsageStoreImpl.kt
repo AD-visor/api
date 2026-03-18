@@ -3,7 +3,7 @@ package com.advisor.api.token_usage.adapter.outbound
 import com.advisor.api.common.core.domain.vo.identifier.TokenUsageId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.token_usage.domain.TokenUsage
-import com.advisor.api.token_usage.domain.TokenUsageStore
+import com.advisor.api.token_usage.port.outbound.TokenUsageStore
 import org.springframework.stereotype.Repository
 
 @Repository

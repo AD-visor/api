@@ -1,4 +1,4 @@
-package com.advisor.api.token_usage.domain
+package com.advisor.api.token_usage.port.outbound
 
 import java.time.Instant
 
