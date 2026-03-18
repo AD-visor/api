@@ -1,4 +1,4 @@
-package com.advisor.api.iam.domain.member
+package com.advisor.api.iam.port.inbound.member.view
 
 import java.time.Instant
 

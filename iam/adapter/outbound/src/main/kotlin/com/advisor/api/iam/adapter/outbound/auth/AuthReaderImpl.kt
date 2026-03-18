@@ -1,7 +1,7 @@
 package com.advisor.api.iam.adapter.outbound.auth
 
-import com.advisor.api.iam.domain.auth.AuthReader
-import com.advisor.api.iam.domain.auth.AuthView
+import com.advisor.api.iam.port.outbound.auth.AuthReader
+import com.advisor.api.iam.port.inbound.auth.view.AuthView
 import org.springframework.stereotype.Repository
 
 
