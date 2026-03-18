@@ -11,8 +11,13 @@ import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.Ge
 import com.advisor.api.conversation.port.inbound.*
 import com.advisor.api.conversation.port.inbound.command.ArchiveConversationCommand
 import com.advisor.api.conversation.port.inbound.command.DeleteConversationCommand
+import com.advisor.api.conversation.port.inbound.command.ProcessConversationCommand
 import com.advisor.api.conversation.port.inbound.query.GetConversationMetadataListQuery
 import com.advisor.api.conversation.port.inbound.query.GetConversationQuery
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -28,7 +33,10 @@ class ConversationController(
     private val archiveConversationUseCase: ArchiveConversationUseCase,
     private val getConversationUseCase: GetConversationUseCase,
     private val getConversationListUseCase: GetConversationListUseCase,
+    private val applicationScope: CoroutineScope
 ) {
+    private val logger = KotlinLogging.logger {}
+
     @PostMapping
     fun createConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
@@ -51,22 +59,43 @@ class ConversationController(
     @PostMapping("/{conversationId}/respond")
     fun processConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @PathVariable("conversationId") conversationId: String,
+        @PathVariable conversationId: String,
         @RequestBody dto: ProcessConversationReqDto
     ): ResponseEntity<BaseApiResponse<Unit>> {
-        val command = dto.toCommand(
-            conversationId = conversationId.toLong(),
-            memberId = member.id
-        )
-
-        processConversationUseCase.execute(command)
-
         val apiResponse = BaseApiResponse<Unit>(
             success = true,
             message = "사용자 메시지 전송 성공",
             data = null,
             httpStatus = HttpStatus.CREATED
         )
+
+        applicationScope.launch {
+            try {
+                processConversationUseCase.execute(
+                    ProcessConversationCommand(
+                        conversationId = conversationId.toLong(),
+                        aiMessageId = dto.aiMessageId?.toLong(),
+                        memberId = member.id,
+                        body = dto.userRequest
+                    )
+                )
+            } catch (e: Exception) {
+                // ✅ 상세한 에러 로깅
+                logger.error(e) {
+                    """
+                    ❌ AI 처리 실패
+                    conversationId: $conversationId
+                    memberId: ${member.id}
+                    userRequest: ${dto.userRequest.take(100)}...
+                    에러 타입: ${e::class.simpleName}
+                    에러 메시지: ${e.message}
+                    """.trimIndent()
+                }
+
+                // ✅ 스택트레이스 출력
+                e.printStackTrace()
+            }
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
@@ -75,7 +104,7 @@ class ConversationController(
     fun updateConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
         @RequestBody dto: UpdateConversationReqDto,
-        @PathVariable("conversationId") conversationId: String
+        @PathVariable conversationId: String
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = dto.toCommand(
             id = conversationId.toLong(),
@@ -97,7 +126,7 @@ class ConversationController(
     @DeleteMapping("/{conversationId}")
     fun deleteConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @PathVariable("conversationId") conversationId: String
+        @PathVariable conversationId: String
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = DeleteConversationCommand(
             id = conversationId.toLong(),
@@ -119,7 +148,7 @@ class ConversationController(
     @PatchMapping("/{conversationId}/archive")
     fun archiveConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @PathVariable("conversationId") conversationId: String
+        @PathVariable conversationId: String
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = ArchiveConversationCommand(
             id = conversationId.toLong(),
@@ -141,7 +170,7 @@ class ConversationController(
     @GetMapping("/{conversationId}")
     fun getConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @PathVariable("conversationId") conversationId: String
+        @PathVariable conversationId: String
     ): ResponseEntity<BaseApiResponse<GetConversationResDto>> {
         val query = GetConversationQuery(
             id = conversationId.toLong(),

@@ -10,6 +10,9 @@ import com.advisor.api.conversation.port.outbound.response.AiClientResponse
 import com.advisor.api.conversation.port.outbound.response.AiImageResponse
 import com.advisor.api.media.port.outbound.ImageFetchPort
 import com.advisor.api.media.port.outbound.command.ImageFetchCommand
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import mu.KotlinLogging
 import org.springframework.ai.chat.messages.AssistantMessage
 import org.springframework.ai.chat.messages.Message
 import org.springframework.ai.chat.messages.SystemMessage
@@ -26,12 +29,14 @@ import org.springframework.stereotype.Component
 import org.springframework.util.MimeTypeUtils
 
 @Component
-class GeminiAiClientAdapter(
+class OpenAiClientAdapter(
     private val imageFetchPot: ImageFetchPort,
     @Qualifier("googleGenAiChatModel") private val chatModel: ChatModel,
     private val imageModel: ImageModel
 ) : AiClientPort {
-    override fun generateText(request: AiClientRequest): AiClientResponse {
+    private val looger = KotlinLogging.logger {  }
+
+    override suspend  fun generateText(request: AiClientRequest): AiClientResponse {
         val messages = createSpringAiMessages(request)
         val prompt = Prompt(messages)
         val chatResponse = chatModel.call(prompt)
@@ -59,7 +64,7 @@ class GeminiAiClientAdapter(
         )
     }
 
-    override fun generateImage(request: AiClientRequest): AiImageResponse {
+    override suspend fun generateImage(request: AiClientRequest): AiImageResponse {
         // 1. 이미지 생성 옵션 설정 (크기, 품질 등)
         val options = ImageOptionsBuilder.builder()
             .height(1024)
@@ -74,10 +79,12 @@ class GeminiAiClientAdapter(
                     .joinToString(" ") { it.value }
             }
         val imagePrompt = ImagePrompt(promptText, options)
-        val imageResponse = imageModel.call(imagePrompt)
+        val imageResponse = withContext(Dispatchers.IO) {
+            imageModel.call(imagePrompt)
+        }
 
         // 3. 결과 URL 추출
-        val imageUrl = imageResponse.result?.output?.url
+        val imageUrl = imageResponse.result?.output?.b64Json
             ?: throw CustomException(
                 PromptAdapterExceptionCode.PROMPT_EMPTY_RESPONSE,
                 "[Prompt] 이미지 생성 모델 응답이 비어 있습니다."
