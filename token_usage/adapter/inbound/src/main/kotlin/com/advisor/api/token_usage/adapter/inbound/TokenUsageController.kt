@@ -6,7 +6,7 @@ import com.advisor.api.token_usage.port.inbound.GetTokenUsageListUseCase
 import com.advisor.api.token_usage.port.inbound.RecordTokenUsageUseCase
 import com.advisor.api.token_usage.port.inbound.command.RecordTokenUsageCommand
 import com.advisor.api.token_usage.port.inbound.query.GetTokenUsageListQuery
-import com.advisor.api.token_usage.port.inbound.result.GetTokenUsageResult
+import com.advisor.api.token_usage.port.inbound.view.TokenUsageView
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -25,7 +25,7 @@ class TokenUsageController(
     @GetMapping
     fun getTokenUsage(
         @AuthenticationPrincipal member: CustomUserDetails
-    ): ResponseEntity<BaseApiResponse<List<GetTokenUsageResult>>> {
+    ): ResponseEntity<BaseApiResponse<List<TokenUsageView>>> {
         val query = GetTokenUsageListQuery(
             memberId = member.id,
             startAt = null,
@@ -34,7 +34,7 @@ class TokenUsageController(
 
         val result = getTokenUsageListUseCase.execute(query)
 
-        val apiResponse = BaseApiResponse<List<GetTokenUsageResult>>(
+        val apiResponse = BaseApiResponse<List<TokenUsageView>>(
             success = true,
             message = "토큰 사용량 조회 성공",
             data = result,
