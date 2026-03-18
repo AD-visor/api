@@ -1,7 +1,7 @@
 package com.advisor.api.conversation.adapter.outbound.conversation.mapper
 
 import com.advisor.api.conversation.adapter.outbound.conversation.projection.ConversationMetadataProjection
-import com.advisor.api.conversation.domain.conversation.ConversationMetadataView
+import com.advisor.api.conversation.port.inbound.view.ConversationMetadataView
 import org.springframework.stereotype.Component
 
 @Component

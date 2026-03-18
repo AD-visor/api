@@ -1,5 +1,7 @@
-package com.advisor.api.conversation.domain.conversation
+package com.advisor.api.conversation.port.outbound
 
+import com.advisor.api.conversation.port.inbound.view.ConversationMetadataView
+import com.advisor.api.conversation.port.inbound.view.ConversationView
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 
 interface ConversationReader {

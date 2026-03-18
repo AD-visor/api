@@ -3,7 +3,7 @@ package com.advisor.api.conversation.application
 import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
-import com.advisor.api.conversation.domain.conversation.ConversationStore
+import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
 import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle

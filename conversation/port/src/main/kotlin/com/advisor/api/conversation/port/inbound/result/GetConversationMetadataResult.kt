@@ -1,6 +1,6 @@
 package com.advisor.api.conversation.port.inbound.result
 
-import com.advisor.api.conversation.domain.conversation.ConversationMetadataView
+import com.advisor.api.conversation.port.inbound.view.ConversationMetadataView
 import java.time.Instant
 
 data class GetConversationMetadataResult(

@@ -1,4 +1,4 @@
-package com.advisor.api.conversation.domain.conversation
+package com.advisor.api.conversation.port.inbound.view
 
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import java.time.Instant

@@ -5,8 +5,8 @@ import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
-import com.advisor.api.conversation.domain.conversation.ConversationReader
-import com.advisor.api.conversation.domain.conversation.ConversationStore
+import com.advisor.api.conversation.port.outbound.ConversationReader
+import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import com.advisor.api.conversation.domain.conversation.vo.MessageStatus

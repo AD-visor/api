@@ -1,6 +1,6 @@
 package com.advisor.api.conversation.application.refresher
 
-import com.advisor.api.conversation.domain.conversation.ConversationReader
+import com.advisor.api.conversation.port.outbound.ConversationReader
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional

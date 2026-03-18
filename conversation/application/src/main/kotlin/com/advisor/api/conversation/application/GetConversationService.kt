@@ -1,6 +1,6 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.conversation.domain.conversation.ConversationReader
+import com.advisor.api.conversation.port.outbound.ConversationReader
 import com.advisor.api.conversation.port.inbound.GetConversationUseCase
 import com.advisor.api.conversation.port.inbound.query.GetConversationQuery
 import com.advisor.api.conversation.port.inbound.result.GetConversationResult

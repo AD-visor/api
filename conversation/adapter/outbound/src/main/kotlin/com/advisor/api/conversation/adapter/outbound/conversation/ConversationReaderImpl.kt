@@ -2,9 +2,9 @@ package com.advisor.api.conversation.adapter.outbound.conversation
 
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.adapter.outbound.conversation.mapper.ConversationMapper
-import com.advisor.api.conversation.domain.conversation.ConversationMetadataView
-import com.advisor.api.conversation.domain.conversation.ConversationReader
-import com.advisor.api.conversation.domain.conversation.ConversationView
+import com.advisor.api.conversation.port.inbound.view.ConversationMetadataView
+import com.advisor.api.conversation.port.outbound.ConversationReader
+import com.advisor.api.conversation.port.inbound.view.ConversationView
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import jakarta.persistence.EntityManager
 import org.springframework.data.domain.PageRequest
