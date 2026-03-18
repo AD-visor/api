@@ -13,7 +13,7 @@ dependencies {
 
     implementation(project(":subscription:adapter:inbound"))
     implementation(project(":subscription:adapter:outbound"))
-    implementation(project(":subscription:port:outbound"))
+    implementation(project(":subscription:port"))
     implementation(project(":subscription:application"))
 
     implementation(project(":payment:adapter:inbound"))

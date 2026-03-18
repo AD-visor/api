@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":subscription:domain"))
-    implementation(project(":subscription:port:outbound"))
+    implementation(project(":subscription:port"))
     implementation(project(":common"))
 
     // Spring
