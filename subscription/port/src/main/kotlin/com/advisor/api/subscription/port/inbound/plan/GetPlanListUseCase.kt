@@ -1,7 +1,7 @@
 package com.advisor.api.subscription.port.inbound.plan
 
-import com.advisor.api.subscription.port.inbound.plan.result.GetPlanResult
+import com.advisor.api.subscription.port.inbound.plan.view.PlanView
 
 interface GetPlanListUseCase {
-    fun execute(): List<GetPlanResult>
+    fun execute(): List<PlanView>
 }

@@ -3,10 +3,10 @@ package com.advisor.api.subscription.adapter.inbound.plan
 import com.advisor.api.common.core.presentation.BaseApiResponse
 import com.advisor.api.subscription.adapter.inbound.plan.dto.request.CreatePlanReqDto
 import com.advisor.api.subscription.adapter.inbound.plan.dto.request.UpdatePlanReqDto
-import com.advisor.api.subscription.adapter.inbound.plan.dto.response.PlanResDto
 import com.advisor.api.subscription.port.inbound.plan.*
 import com.advisor.api.subscription.port.inbound.plan.command.DeletePlanCommand
 import com.advisor.api.subscription.port.inbound.plan.command.UndeletePlanCommand
+import com.advisor.api.subscription.port.inbound.plan.view.PlanView
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -34,14 +34,14 @@ class PlanController(
     }
 
     @GetMapping
-    fun getPlans(): ResponseEntity<BaseApiResponse<List<PlanResDto>>> {
+    fun getPlans(): ResponseEntity<BaseApiResponse<List<PlanView>>> {
         val results = getPlanListUseCase.execute()
 
-        val response = BaseApiResponse<List<PlanResDto>>(
+        val response = BaseApiResponse<List<PlanView>>(
             success = true,
             message = "플랜 조회 성공",
             httpStatus = HttpStatus.OK,
-            data = results.map { PlanResDto.fromResult(it) }
+            data = results
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(response)
