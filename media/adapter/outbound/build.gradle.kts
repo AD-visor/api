@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":media:domain"))
-    implementation(project(":media:port:outbound"))
+    implementation(project(":media:port"))
     implementation(project(":common"))
 
     // Spring

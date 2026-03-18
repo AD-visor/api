@@ -9,7 +9,7 @@ dependencies {
 
     implementation(project(":ai_prompt_core"))
 
-    implementation(project(":media:port:outbound"))
+    implementation(project(":media:port"))
 
     // Spring
     implementation("org.springframework:spring-context")

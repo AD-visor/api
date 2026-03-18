@@ -46,8 +46,7 @@ include(":token_usage:adapter:outbound")
 // Media
 include(":media:application")
 include(":media:domain")
-include(":media:port:inbound")
-include(":media:port:outbound")
+include(":media:port")
 include(":media:adapter:inbound")
 include(":media:adapter:outbound")
 

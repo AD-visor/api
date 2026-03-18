@@ -33,7 +33,7 @@ dependencies {
 
     implementation(project(":media:adapter:inbound"))
     implementation(project(":media:adapter:outbound"))
-    implementation(project(":media:port:outbound"))
+    implementation(project(":media:port"))
     implementation(project(":media:application"))
 
     // Spring
