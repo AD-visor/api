@@ -6,14 +6,14 @@ import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.Cre
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.ProcessConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.request.UpdateConversationReqDto
 import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.CreateConversationResDto
-import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.GetConversationMetadataResDto
-import com.advisor.api.conversation.adapter.inbound.conversation.dto.response.GetConversationResDto
 import com.advisor.api.conversation.port.inbound.*
 import com.advisor.api.conversation.port.inbound.command.ArchiveConversationCommand
 import com.advisor.api.conversation.port.inbound.command.DeleteConversationCommand
 import com.advisor.api.conversation.port.inbound.command.ProcessConversationCommand
 import com.advisor.api.conversation.port.inbound.query.GetConversationMetadataListQuery
 import com.advisor.api.conversation.port.inbound.query.GetConversationQuery
+import com.advisor.api.conversation.port.inbound.view.ConversationMetadataView
+import com.advisor.api.conversation.port.inbound.view.ConversationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -168,7 +168,7 @@ class ConversationController(
     fun getConversation(
         @AuthenticationPrincipal member: CustomUserDetails,
         @PathVariable conversationId: String
-    ): ResponseEntity<BaseApiResponse<GetConversationResDto>> {
+    ): ResponseEntity<BaseApiResponse<ConversationView>> {
         val query = GetConversationQuery(
             id = conversationId.toLong(),
             memberId = member.id
@@ -176,10 +176,10 @@ class ConversationController(
 
         val result = getConversationUseCase.execute(query)
 
-        val response = BaseApiResponse<GetConversationResDto>(
+        val response = BaseApiResponse<ConversationView>(
             success = true,
             message = "대화 조회 성공",
-            data = GetConversationResDto.fromResult(result),
+            data = result,
             httpStatus = HttpStatus.OK
         )
 
@@ -189,15 +189,15 @@ class ConversationController(
     @GetMapping
     fun getConversationList(
         @AuthenticationPrincipal member: CustomUserDetails
-    ): ResponseEntity<BaseApiResponse<List<GetConversationMetadataResDto>>> {
+    ): ResponseEntity<BaseApiResponse<List<ConversationMetadataView>>> {
         val query = GetConversationMetadataListQuery(member.id)
 
         val results = getConversationListUseCase.execute(query)
 
-        val response = BaseApiResponse<List<GetConversationMetadataResDto>>(
+        val response = BaseApiResponse<List<ConversationMetadataView>>(
             success = true,
             message = "대화 목록 조회 성공",
-            data = results.map { GetConversationMetadataResDto.fromResult(it) },
+            data = results,
             httpStatus = HttpStatus.OK
         )
 
