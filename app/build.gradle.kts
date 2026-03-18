@@ -28,7 +28,7 @@ dependencies {
 
     implementation(project(":token_usage:adapter:inbound"))
     implementation(project(":token_usage:adapter:outbound"))
-    implementation(project(":token_usage:port:outbound"))
+    implementation(project(":token_usage:port"))
     implementation(project(":token_usage:application"))
 
     implementation(project(":media:adapter:inbound"))

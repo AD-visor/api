@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":token_usage:domain"))
-    implementation(project(":token_usage:port:outbound"))
+    implementation(project(":token_usage:port"))
     implementation(project(":common"))
 
     // Spring
