@@ -1,7 +1,7 @@
 package com.advisor.api.token_usage.adapter.outbound
 
 import com.advisor.api.token_usage.port.outbound.TokenUsageReader
-import com.advisor.api.token_usage.port.outbound.TokenUsageView
+import com.advisor.api.token_usage.port.inbound.view.TokenUsageView
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import java.time.Instant
