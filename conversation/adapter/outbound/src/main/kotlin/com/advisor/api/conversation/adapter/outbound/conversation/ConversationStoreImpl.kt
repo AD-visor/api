@@ -5,7 +5,7 @@ import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.conversation.domain.conversation.Conversation
-import com.advisor.api.conversation.domain.conversation.ConversationStore
+import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import org.springframework.stereotype.Repository
 

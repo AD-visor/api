@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":media:port:inbound"))
+    implementation(project(":media:port"))
     implementation(project(":common"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")

@@ -5,11 +5,11 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
-import com.advisor.api.subscription.domain.subscription.SubscriptionStore
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import com.advisor.api.subscription.port.inbound.subscription.UpdateSubscriptionUseCase
 import com.advisor.api.subscription.port.inbound.subscription.command.UpdateSubscriptionCommand
+import com.advisor.api.subscription.port.outbound.subscription.SubscriptionStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

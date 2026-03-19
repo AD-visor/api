@@ -1,6 +1,6 @@
 package com.advisor.api.iam.adapter.outbound.auth
 
-import com.advisor.api.iam.domain.auth.AuthView
+import com.advisor.api.iam.port.inbound.auth.view.AuthView
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

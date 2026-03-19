@@ -6,10 +6,10 @@ import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.subscription.domain.plan.Plan
 import com.advisor.api.subscription.domain.plan.PlanProps
-import com.advisor.api.subscription.domain.plan.PlanStore
 import com.advisor.api.subscription.domain.plan.vo.MonthlyLimit
 import com.advisor.api.subscription.port.inbound.plan.CreatePlanUseCase
 import com.advisor.api.subscription.port.inbound.plan.command.CreatePlanCommand
+import com.advisor.api.subscription.port.outbound.plan.PlanStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant

@@ -4,12 +4,12 @@ plugins {
 
 dependencies {
     implementation(project(":conversation:domain"))
-    implementation(project(":conversation:port:outbound"))
+    implementation(project(":conversation:port"))
     implementation(project(":common"))
 
     implementation(project(":ai_prompt_core"))
 
-    implementation(project(":media:port:outbound"))
+    implementation(project(":media:port"))
 
     // Spring
     implementation("org.springframework:spring-context")

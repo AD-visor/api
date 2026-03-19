@@ -1,8 +1,8 @@
 package com.advisor.api.subscription.adapter.outbound.plan
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.subscription.domain.plan.PlanView
-import com.advisor.api.subscription.domain.plan.PlanReader
+import com.advisor.api.subscription.port.inbound.plan.view.PlanView
+import com.advisor.api.subscription.port.outbound.plan.PlanReader
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 

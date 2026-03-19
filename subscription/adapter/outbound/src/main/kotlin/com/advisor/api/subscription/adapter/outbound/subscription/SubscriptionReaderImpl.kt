@@ -1,9 +1,9 @@
 package com.advisor.api.subscription.adapter.outbound.subscription
 
 import com.advisor.api.common.exception.CustomException
-import com.advisor.api.subscription.domain.subscription.SubscriptionReader
-import com.advisor.api.subscription.domain.subscription.SubscriptionView
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
+import com.advisor.api.subscription.port.inbound.subscription.view.SubscriptionView
+import com.advisor.api.subscription.port.outbound.subscription.SubscriptionReader
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 

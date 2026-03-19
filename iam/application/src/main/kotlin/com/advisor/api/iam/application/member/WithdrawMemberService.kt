@@ -2,10 +2,10 @@ package com.advisor.api.iam.application.member
 
 import com.advisor.api.iam.port.inbound.auth.DeleteAuthUseCase
 import com.advisor.api.iam.port.inbound.auth.command.DeleteAuthCommand
+import com.advisor.api.iam.port.inbound.member.DeleteMemberUseCase
 import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand
 import com.advisor.api.iam.port.inbound.member.command.WithdrawMemberCommand
-import com.advisor.api.iam.port.inbound.member.usecase.DeleteMemberUseCase
-import com.advisor.api.iam.port.inbound.member.usecase.WithdrawMemberUseCase
+import com.advisor.api.iam.port.inbound.member.WithdrawMemberUseCase
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

@@ -1,6 +1,6 @@
 package com.advisor.api.subscription.adapter.outbound.plan
 
-import com.advisor.api.subscription.domain.plan.PlanView
+import com.advisor.api.subscription.port.inbound.plan.view.PlanView
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

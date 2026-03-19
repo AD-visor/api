@@ -8,12 +8,12 @@ import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.subscription.domain.subscription.Subscription
 import com.advisor.api.subscription.domain.subscription.SubscriptionProps
-import com.advisor.api.subscription.domain.subscription.SubscriptionReader
-import com.advisor.api.subscription.domain.subscription.SubscriptionStore
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import com.advisor.api.subscription.port.inbound.subscription.RegisterSubscriptionUseCase
 import com.advisor.api.subscription.port.inbound.subscription.command.RegisterSubscriptionCommand
+import com.advisor.api.subscription.port.outbound.subscription.SubscriptionReader
+import com.advisor.api.subscription.port.outbound.subscription.SubscriptionStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant

@@ -3,7 +3,7 @@ package com.advisor.api.iam.adapter.outbound.member
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.iam.domain.member.Member
-import com.advisor.api.iam.domain.member.MemberStore
+import com.advisor.api.iam.port.outbound.member.MemberStore
 import org.springframework.stereotype.Repository
 
 @Repository

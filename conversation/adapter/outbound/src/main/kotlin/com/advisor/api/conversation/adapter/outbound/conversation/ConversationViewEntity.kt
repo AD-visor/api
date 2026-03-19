@@ -1,6 +1,6 @@
 package com.advisor.api.conversation.adapter.outbound.conversation
 
-import com.advisor.api.conversation.domain.conversation.ConversationView
+import com.advisor.api.conversation.port.inbound.view.ConversationView
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessageView
 import jakarta.persistence.*
 import org.springframework.data.annotation.Immutable
@@ -49,7 +49,6 @@ class ConversationViewEntity(
     fun toModel(messages: List<ConversationMessageView>): ConversationView {
         return ConversationView(
             id = id,
-            memberId = memberId,
             businessType = businessType,
             productName = productName,
             description = description,

@@ -7,7 +7,7 @@ import com.advisor.api.subscription.port.inbound.subscription.*
 import com.advisor.api.subscription.port.inbound.subscription.command.UpdateSubscriptionStatusCommand
 import com.advisor.api.subscription.port.inbound.subscription.command.UseTokensCommand
 import com.advisor.api.subscription.port.inbound.subscription.query.GetMemberSubscriptionQuery
-import com.advisor.api.subscription.port.inbound.subscription.result.GetSubscriptionResult
+import com.advisor.api.subscription.port.inbound.subscription.view.SubscriptionView
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -132,7 +132,7 @@ class SubscriptionController(
     @GetMapping
     fun getMemberSubscription(
         @AuthenticationPrincipal member: CustomUserDetails,
-    ): ResponseEntity<BaseApiResponse<GetSubscriptionResult>> {
+    ): ResponseEntity<BaseApiResponse<SubscriptionView>> {
         val query = GetMemberSubscriptionQuery(member.id)
         val result = getMemberSubscriptionUseCase.execute(query)
 

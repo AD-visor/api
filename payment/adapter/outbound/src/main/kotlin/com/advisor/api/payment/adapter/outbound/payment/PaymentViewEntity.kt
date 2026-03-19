@@ -1,6 +1,6 @@
 package com.advisor.api.payment.adapter.outbound.payment
 
-import com.advisor.api.payment.domain.payment.PaymentView
+import com.advisor.api.payment.port.inbound.PaymentView
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

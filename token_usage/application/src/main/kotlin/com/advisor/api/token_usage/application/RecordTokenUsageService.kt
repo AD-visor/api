@@ -5,7 +5,7 @@ import com.advisor.api.common.core.domain.vo.identifier.*
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.token_usage.domain.TokenUsage
 import com.advisor.api.token_usage.domain.TokenUsageProps
-import com.advisor.api.token_usage.domain.TokenUsageStore
+import com.advisor.api.token_usage.port.outbound.TokenUsageStore
 import com.advisor.api.token_usage.port.inbound.RecordTokenUsageUseCase
 import com.advisor.api.token_usage.port.inbound.command.RecordTokenUsageCommand
 import org.springframework.stereotype.Service

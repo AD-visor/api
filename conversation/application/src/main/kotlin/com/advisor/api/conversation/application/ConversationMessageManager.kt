@@ -4,7 +4,7 @@ import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.conversation.domain.conversation.Conversation
-import com.advisor.api.conversation.domain.conversation.ConversationStore
+import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.domain.conversation.entity.ConversationMessage
 import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
 import org.springframework.stereotype.Component

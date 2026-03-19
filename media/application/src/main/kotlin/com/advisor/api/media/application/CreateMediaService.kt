@@ -7,7 +7,7 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.media.domain.Media
 import com.advisor.api.media.domain.MediaProps
-import com.advisor.api.media.domain.MediaStore
+import com.advisor.api.media.port.outbound.MediaStore
 import com.advisor.api.media.domain.vo.MediaPath
 import com.advisor.api.media.domain.vo.MediaType
 import com.advisor.api.media.domain.vo.MimeType

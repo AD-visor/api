@@ -1,6 +1,6 @@
 package com.advisor.api.token_usage.application.refresher
 
-import com.advisor.api.token_usage.domain.TokenUsageReader
+import com.advisor.api.token_usage.port.outbound.TokenUsageReader
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional

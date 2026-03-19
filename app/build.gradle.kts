@@ -8,32 +8,32 @@ dependencies {
 
     implementation(project(":iam:adapter:inbound"))
     implementation(project(":iam:adapter:outbound"))
-    implementation(project(":iam:port:outbound"))
+    implementation(project(":iam:port"))
     implementation(project(":iam:application"))
 
     implementation(project(":subscription:adapter:inbound"))
     implementation(project(":subscription:adapter:outbound"))
-    implementation(project(":subscription:port:outbound"))
+    implementation(project(":subscription:port"))
     implementation(project(":subscription:application"))
 
     implementation(project(":payment:adapter:inbound"))
     implementation(project(":payment:adapter:outbound"))
-    implementation(project(":payment:port:outbound"))
+    implementation(project(":payment:port"))
     implementation(project(":payment:application"))
 
     implementation(project(":conversation:adapter:inbound"))
     implementation(project(":conversation:adapter:outbound"))
-    implementation(project(":conversation:port:outbound"))
+    implementation(project(":conversation:port"))
     implementation(project(":conversation:application"))
 
     implementation(project(":token_usage:adapter:inbound"))
     implementation(project(":token_usage:adapter:outbound"))
-    implementation(project(":token_usage:port:outbound"))
+    implementation(project(":token_usage:port"))
     implementation(project(":token_usage:application"))
 
     implementation(project(":media:adapter:inbound"))
     implementation(project(":media:adapter:outbound"))
-    implementation(project(":media:port:outbound"))
+    implementation(project(":media:port"))
     implementation(project(":media:application"))
 
     // Spring

@@ -3,7 +3,7 @@ package com.advisor.api.subscription.adapter.outbound.plan
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.exception.CustomException
 import com.advisor.api.subscription.domain.plan.Plan
-import com.advisor.api.subscription.domain.plan.PlanStore
+import com.advisor.api.subscription.port.outbound.plan.PlanStore
 import org.springframework.stereotype.Repository
 
 @Repository
