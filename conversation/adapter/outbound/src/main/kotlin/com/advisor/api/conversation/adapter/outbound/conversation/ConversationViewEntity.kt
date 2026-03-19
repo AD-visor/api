@@ -49,7 +49,6 @@ class ConversationViewEntity(
     fun toModel(messages: List<ConversationMessageView>): ConversationView {
         return ConversationView(
             id = id,
-            memberId = memberId,
             businessType = businessType,
             productName = productName,
             description = description,

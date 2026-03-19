@@ -5,7 +5,6 @@ import java.time.Instant
 
 data class ConversationView(
     val id: Long,
-    val memberId: Long,
     val businessType: String,
     val productName: String,
     val description: String,
