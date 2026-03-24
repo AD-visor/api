@@ -17,6 +17,18 @@ interface TokenUsageSummaryJpaReader : JpaRepository<TokenUsageSummaryViewEntity
 
     @Query("""
         SELECT t FROM TokenUsageSummaryViewEntity t
+        WHERE t.subscriptionId = :subscriptionId
+          AND t.memberId = :memberId
+          AND t.billingMonth = :billingMonth
+    """)
+    fun findBySubscriptionIdAndMemberIdAndBillingMonth(
+        subscriptionId: Long,
+        memberId: Long,
+        billingMonth: Instant
+    ): List<TokenUsageSummaryViewEntity>
+
+    @Query("""
+        SELECT t FROM TokenUsageSummaryViewEntity t
         WHERE t.memberId = :memberId
           AND t.billingMonth = :billingMonth
         ORDER BY t.billingMonth DESC

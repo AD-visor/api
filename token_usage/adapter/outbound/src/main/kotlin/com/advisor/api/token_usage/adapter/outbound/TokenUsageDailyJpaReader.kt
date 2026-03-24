@@ -13,9 +13,9 @@ interface TokenUsageDailyJpaReader : JpaRepository<TokenUsageDailyEntity, Long> 
         ORDER BY t.usageDate ASC
     """)
     fun findBySubscriptionIdAndMemberIdAndUsageDateBetween(
-        subscriptionId: Long?,
-        memberId: Long?,
-        from: Instant?,
-        to: Instant?
+        subscriptionId: Long,
+        memberId: Long,
+        from: Instant,
+        to: Instant
     ): List<TokenUsageDailyEntity>
 }

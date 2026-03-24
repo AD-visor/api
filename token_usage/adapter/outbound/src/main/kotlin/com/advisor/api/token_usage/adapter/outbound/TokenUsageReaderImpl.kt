@@ -42,19 +42,19 @@ class TokenUsageReaderImpl(
     }
 
     override fun findMonthlySummary(
-        subscriptionId: Long?,
-        memberId: Long?,
+        subscriptionId: Long,
+        memberId: Long,
         month: YearMonth
     ): List<MonthlyTokenUsageView> {
         val billingMonth = month.atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant()
 
-        return when {
-            subscriptionId != null -> summaryJpaReader
-                .findBySubscriptionIdAndBillingMonth(subscriptionId, billingMonth)
-            memberId != null -> summaryJpaReader
-                .findByMemberIdAndBillingMonth(memberId, billingMonth)
-            else -> emptyList()
-        }.map { it.toView() }
+        return summaryJpaReader
+            .findBySubscriptionIdAndMemberIdAndBillingMonth(
+                subscriptionId = subscriptionId,
+                memberId = memberId,
+                billingMonth = billingMonth
+            )
+            .map { it.toView() }
     }
 
     override fun findDailySummary(

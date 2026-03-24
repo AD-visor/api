@@ -20,8 +20,8 @@ interface TokenUsageReader {
     ): List<TokenUsageView>
 
     fun findMonthlySummary(
-        subscriptionId: Long?,
-        memberId: Long?,
+        subscriptionId: Long,
+        memberId: Long,
         month: YearMonth
     ): List<MonthlyTokenUsageView>
 
