@@ -1,5 +1,6 @@
 package com.advisor.api.token_usage.adapter.outbound
 
+import com.advisor.api.token_usage.port.inbound.view.DailyTokenUsageView
 import com.advisor.api.token_usage.port.inbound.view.MonthlyTokenUsageView
 import com.advisor.api.token_usage.port.outbound.TokenUsageReader
 import com.advisor.api.token_usage.port.inbound.view.TokenUsageView
@@ -13,6 +14,7 @@ import java.time.ZoneOffset
 class TokenUsageReaderImpl(
     private val jpaReader: TokenUsageJpaReader,
     private val summaryJpaReader: TokenUsageSummaryJpaReader,
+    private val dailyJpaReader: TokenUsageDailyJpaReader,
     private val em: EntityManager
 ): TokenUsageReader {
     override fun findTokenUsageViewsBySubscriptionId(
@@ -53,6 +55,22 @@ class TokenUsageReaderImpl(
                 .findByMemberIdAndBillingMonth(memberId, billingMonth)
             else -> emptyList()
         }.map { it.toView() }
+    }
+
+    override fun findDailySummary(
+        subscriptionId: Long,
+        memberId: Long,
+        from: Instant,
+        to: Instant
+    ): List<DailyTokenUsageView> {
+        return dailyJpaReader
+            .findBySubscriptionIdAndMemberIdAndUsageDateBetween(
+                subscriptionId = subscriptionId,
+                memberId = memberId,
+                from = from,
+                to = to
+            )
+            .map { it.toView() }
     }
 
     override fun refreshView() {
