@@ -13,9 +13,6 @@ dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
-    // Image
-    implementation("com.microsoft.playwright:playwright:1.57.0")
-
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")
     compileOnly("org.springframework.data:spring-data-jpa")
