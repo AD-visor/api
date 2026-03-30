@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 import java.time.Instant
 import java.time.YearMonth
 import java.time.ZoneOffset
@@ -60,7 +59,7 @@ class TokenUsageController(
     @GetMapping("/monthly")
     fun getMonthlyTokenUsage(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @RequestParam(required = false) subscriptionId: Long,
+        @RequestParam(required = true) subscriptionId: Long,
         @RequestParam(required = false) yearMonth: String?
     ): ResponseEntity<BaseApiResponse<List<MonthlyTokenUsageView>>> {
         val targetMonth = yearMonth?.let { YearMonth.parse(it) } ?: YearMonth.now()

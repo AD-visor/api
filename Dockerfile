@@ -8,7 +8,7 @@ COPY . .
 RUN --mount=type=cache,target=/root/.gradle \
     ./gradlew :app:bootJar --no-daemon -x test --parallel \
     && java -Djarmode=layertools \
-         -jar app/build/libs/app.jar \
+         -jar app/build/libs/app-*.jar \
          extract --destination /workspace/extracted
 
 
@@ -49,13 +49,6 @@ USER appuser
 EXPOSE 8080
 
 ENV SPRING_PROFILES_ACTIVE=production
-
-HEALTHCHECK \
-    --interval=15s \
-    --timeout=5s \
-    --start-period=40s \
-    --retries=3 \
-    CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 ENTRYPOINT ["java", \
     "-XX:+UseZGC", \
