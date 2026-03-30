@@ -1,0 +1,17 @@
+# 모든 모듈의 빌드 결과물 제외
+**/build/
+build
+**/out/
+**/bin/
+**/.DS_Store
+
+# Gradle 관련 캐시 및 설정 제외
+.gradle/
+.idea/
+*.gradle
+
+# Git 관련 파일 제외
+.git
+.gitignore
+
+*.log

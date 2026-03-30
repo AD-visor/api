@@ -13,7 +13,6 @@ import com.advisor.api.token_usage.port.inbound.query.GetTokenUsageListQuery
 import com.advisor.api.token_usage.port.inbound.view.DailyTokenUsageView
 import com.advisor.api.token_usage.port.inbound.view.MonthlyTokenUsageView
 import com.advisor.api.token_usage.port.inbound.view.TokenUsageView
-import com.sun.jdi.request.InvalidRequestStateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -60,13 +59,10 @@ class TokenUsageController(
     @GetMapping("/monthly")
     fun getMonthlyTokenUsage(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @RequestParam(required = false) subscriptionId: Long,
+        @RequestParam(required = true) subscriptionId: Long,
         @RequestParam(required = false) yearMonth: String?
     ): ResponseEntity<BaseApiResponse<List<MonthlyTokenUsageView>>> {
-        val targetMonth = yearMonth?.let {
-            runCatching { YearMonth.parse(it) }
-                .getOrElse { throw InvalidRequestStateException("yearMonth 형식이 올바르지 않습니다. 예: 2024-03") }
-        } ?: YearMonth.now()
+        val targetMonth = yearMonth?.let { YearMonth.parse(it) } ?: YearMonth.now()
 
         val query = GetMonthlyTokenUsageQuery(
             subscriptionId = subscriptionId,

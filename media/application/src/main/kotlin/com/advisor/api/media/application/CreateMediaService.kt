@@ -48,6 +48,6 @@ class CreateMediaService(
             fileSize = command.fileSize
         )
 
-        return Media.create(MediaId(snowFlakeIdUtil.generateId().toLong()), mediaProps)
+        return Media.create(MediaId(snowFlakeIdUtil.generateId()), mediaProps)
     }
 }

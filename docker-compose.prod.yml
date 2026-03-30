@@ -1,0 +1,5 @@
+# docker-compose.prod.yml
+services:
+  api-server:
+    build:
+      target: production
