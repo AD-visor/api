@@ -3,4 +3,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework:spring-context")
+
+    // Database
+    compileOnly("jakarta.persistence:jakarta.persistence-api")
+    compileOnly("org.springframework.data:spring-data-jpa")
 }
