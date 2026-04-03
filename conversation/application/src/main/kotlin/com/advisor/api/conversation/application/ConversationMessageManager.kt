@@ -1,7 +1,7 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.port.outbound.ConversationStore
@@ -29,7 +29,7 @@ class ConversationMessageManager(
         conversationStore.save(updatedConversation)
         conversationStore.saveNewMessage(message)
 
-        domainEventPublisher.publish(updatedConversation)
+        domainEventPublisher.publishFrom(updatedConversation)
 
         return Pair(updatedConversation, message)
     }
@@ -49,7 +49,7 @@ class ConversationMessageManager(
         conversationStore.save(updatedConversation)
         conversationStore.saveNewMessage(aiMessage)
 
-        domainEventPublisher.publish(updatedConversation)
+        domainEventPublisher.publishFrom(updatedConversation)
 
         return aiMessage
     }
@@ -68,7 +68,7 @@ class ConversationMessageManager(
         conversationStore.save(updatedConversation)
         conversationStore.saveNewMessage(updatedMessage)
 
-        domainEventPublisher.publish(updatedConversation)
+        domainEventPublisher.publishFrom(updatedConversation)
 
         return updatedMessage
     }
@@ -91,7 +91,7 @@ class ConversationMessageManager(
         conversationStore.save(updatedConversation)
         conversationStore.saveNewMessage(message)
 
-        domainEventPublisher.publish(updatedConversation)
+        domainEventPublisher.publishFrom(updatedConversation)
 
         return Pair(updatedConversation, message)
     }

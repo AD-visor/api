@@ -9,6 +9,10 @@ abstract class AggregateRoot<ID : Identifier<out Serializable>>(id: ID): BaseDom
     val domainEventList: List<DomainEvent> get() = domainEvents
 
     fun addDomainEvent(event: DomainEvent) {
+        event.aggregateType = this::class.simpleName
+            ?: throw IllegalStateException("익명 클래스는 AggregateRoot로 사용할 수 없습니다")
+        event.aggregateId = id.value.toString()
+
         domainEvents.add(event)
     }
 

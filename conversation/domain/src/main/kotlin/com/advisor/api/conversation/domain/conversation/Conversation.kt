@@ -67,7 +67,11 @@ class Conversation private constructor (
             parentMessageId = parentMessageId
         )
 
-        conversation.addDomainEvent(AiResponseGeneratedEvent())
+        conversation.addDomainEvent(AiResponseGeneratedEvent(
+            conversationId = id.value,
+            conversationMessageId = message.id.value,
+            usedTokens = body.length / 4L
+        ))
 
         return Pair(conversation, message)
     }
