@@ -11,6 +11,7 @@ import com.advisor.api.iam.port.inbound.auth.command.RenewTokenCommand
 import com.advisor.api.iam.port.inbound.auth.result.RenewTokenResult
 import com.advisor.api.iam.port.outbound.auth.AuthTokenPort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
@@ -18,6 +19,7 @@ class RenewTokenService(
     private val authStore: AuthStore,
     private val authTokenPort: AuthTokenPort
 ): RenewTokenUseCase {
+    @Transactional
     override fun execute(command: RenewTokenCommand): RenewTokenResult {
         val memberId = MemberId(command.memberId)
         val auth = validateRefreshToken(memberId, command.refreshToken)
