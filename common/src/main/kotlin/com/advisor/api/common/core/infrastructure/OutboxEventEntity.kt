@@ -4,6 +4,8 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.time.Instant
 
 @Entity
@@ -22,7 +24,8 @@ class OutboxEventEntity(
     val eventType: String,
 
     @Column(columnDefinition = "jsonb")
-    val payload: String,
+    @JdbcTypeCode(SqlTypes.JSON)
+    val payload: Map<String, *>,
 
     @Column(nullable = false)
     val createdAt: Instant = Instant.now()

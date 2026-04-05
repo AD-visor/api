@@ -28,8 +28,8 @@ class RoutingDomainEventPublisher(
             }
 
             EventChannel.BOTH -> {
-                internalPublisher.publish(event)
                 externalPublisher.publish(event)
+                internalPublisher.publish(event)
             }
         }
     }
