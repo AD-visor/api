@@ -6,5 +6,5 @@ dependencies {
 
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")
-    compileOnly("org.springframework.data:spring-data-jpa")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
 }
