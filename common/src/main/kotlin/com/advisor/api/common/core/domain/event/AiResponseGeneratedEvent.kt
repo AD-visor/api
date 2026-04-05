@@ -1,6 +1,5 @@
-package com.advisor.api.conversation.domain.conversation.event
+package com.advisor.api.common.core.domain.event
 
-import com.advisor.api.common.core.domain.event.EventChannel
 import com.advisor.api.common.core.domain.vo.DomainEvent
 
 class AiResponseGeneratedEvent(

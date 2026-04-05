@@ -1,5 +1,6 @@
 package com.advisor.api.conversation.application.listener
 
+import com.advisor.api.common.core.domain.event.AiResponseGeneratedEvent
 import com.advisor.api.common.core.domain.vo.DomainEvent
 import com.advisor.api.conversation.application.refresher.RefreshConversationViewService
 import com.advisor.api.conversation.domain.conversation.event.*
