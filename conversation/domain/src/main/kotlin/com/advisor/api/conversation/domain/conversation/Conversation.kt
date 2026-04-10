@@ -72,6 +72,7 @@ class Conversation private constructor (
             AiResponseGeneratedEvent(
                 conversationId = id.value,
                 conversationMessageId = message.id.value,
+                memberId = memberId.value,
                 usedTokens = body.length / 4L,
             )
         )
