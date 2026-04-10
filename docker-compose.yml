@@ -14,54 +14,97 @@ services:
       - ad-visor-network
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: ad-visor-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     networks:
       - ad-visor-network
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_log:/var/lib/zookeeper/log
 
   kafka:
-    image: confluentinc/cp-kafka:7.5.0
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: ad-visor-kafka
     depends_on:
       - zookeeper
     ports:
       - "9092:9092"
+      - "29092:29092"
     environment:
+      KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     networks:
       - ad-visor-network
+    volumes:
+      - kafka_data:/var/lib/kafka/data
 
-  connect:
-    image: debezium/connect:2.5
+  # ── Debezium (CDC) ──────────────────────────────────────────
+  debezium:
+    image: debezium/connect:2.6
+    container_name: ad-visor-debezium
     depends_on:
-      - kafka
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     ports:
       - "8083:8083"
     environment:
-      BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: connect_configs
-      OFFSET_STORAGE_TOPIC: connect_offsets
-      STATUS_STORAGE_TOPIC: connect_status
-
-      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: debezium-connect-group
+      CONFIG_STORAGE_TOPIC: debezium_connect_configs
+      OFFSET_STORAGE_TOPIC: debezium_connect_offsets
+      STATUS_STORAGE_TOPIC: debezium_connect_statuses
+      CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      STATUS_STORAGE_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - ad-visor-network
 
-  connect-init:
-    image: curlimages/curl
+  # ── Debezium 커넥터 자동 등록 ──────────────────────────────
+  debezium-init:
+    image: alpine:3.19
+    container_name: ad-visor-debezium-init
     depends_on:
-      - connect
-    volumes:
-      - ./connector:/config
-    entrypoint: ["/bin/sh", "-c", "chmod +x /config/connect-init.sh && /config/connect-init.sh"]
+      debezium:
+        condition: service_healthy
     networks:
       - ad-visor-network
+    env_file:
+      - .env
+    volumes:
+      - ./debezium:/config
+    command:
+      - sh
+      - -c
+      - |
+        apk add --no-cache gettext curl
+        envsubst '$$DB_USERNAME $$DB_PASSWORD $$DB_NAME' < /config/outbox-connector.json > /tmp/connector.json
+        echo "=== 커넥터 설정 ==="
+        cat /tmp/connector.json
+        echo "=== Debezium에 커넥터 등록 ==="
+        curl -v -X POST http://debezium:8083/connectors \
+          -H 'Content-Type: application/json' \
+          -d @/tmp/connector.json
+        echo "Debezium connector registered successfully"
 
 networks:
   ad-visor-network:

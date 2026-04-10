@@ -6,6 +6,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
 
   db:
     image: postgres:16-alpine
@@ -31,7 +33,7 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
 
-  connect:
-    depends_on:
-      db:
-        condition: service_healthy
+volumes:
+  zookeeper_data:
+  zookeeper_log:
+  kafka_data:
