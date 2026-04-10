@@ -7,4 +7,7 @@ dependencies {
     // Database
     compileOnly("jakarta.persistence:jakarta.persistence-api")
     compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // Kafka
+    implementation("org.springframework.kafka:spring-kafka")
 }

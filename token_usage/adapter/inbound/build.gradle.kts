@@ -1,5 +1,6 @@
 dependencies {
     implementation(project(":token_usage:port"))
+    implementation(project(":subscription:port"))
     implementation(project(":common"))
 
     // Spring

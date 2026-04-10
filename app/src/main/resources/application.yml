@@ -60,27 +60,17 @@ spring:
           #response-format: ${OPENAI_IMAGE_RESPONSE_FORMAT}
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     consumer:
-      group-id: token-usage-group
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
       auto-offset-reset: earliest
+      enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      enable-auto-commit: false
-
-    listener:
-      ack-mode: manual_immediate
-      concurrency: 3
-
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 logging:
   level:
-    org.hibernate.sql: debug
     org.hibernate.type: trace
-
 jwt:
   refresh:
     secret: ${JWT_REFRESH_SECRET}
