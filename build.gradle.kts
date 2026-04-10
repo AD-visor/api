@@ -28,12 +28,14 @@ subprojects {
 	dependencyManagement {
 		imports {
 			mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.4")
-			mavenBom("org.springframework.ai:spring-ai-bom:2.0.0-M3")
+			mavenBom("org.springframework.ai:spring-ai-bom:2.0.0-M4")
+			mavenBom("tools.jackson:jackson-bom:3.1.1")
 		}
 	}
 
 	dependencies {
 		// Kotlin
+		implementation("tools.jackson.core:jackson-databind")
 		implementation("tools.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("io.github.microutils:kotlin-logging:3.0.5")

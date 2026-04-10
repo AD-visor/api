@@ -3,3 +3,7 @@ services:
   api-server:
     build:
       target: production
+
+  debezium:
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092

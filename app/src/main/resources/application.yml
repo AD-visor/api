@@ -7,6 +7,7 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -58,11 +59,18 @@ spring:
           #quality: ${OPENAI_IMAGE_QUALITY}
           #response-format: ${OPENAI_IMAGE_RESPONSE_FORMAT}
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
 logging:
   level:
-    org.hibernate.sql: debug
     org.hibernate.type: trace
-
 jwt:
   refresh:
     secret: ${JWT_REFRESH_SECRET}

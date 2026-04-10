@@ -8,7 +8,7 @@ COPY . .
 RUN --mount=type=cache,target=/root/.gradle \
     ./gradlew :app:bootJar --no-daemon -x test --parallel \
     && java -Djarmode=layertools \
-         -jar app/build/libs/app-*.jar \
+         -jar app/build/libs/app.jar \
          extract --destination /workspace/extracted
 
 

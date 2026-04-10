@@ -1,6 +1,7 @@
 package com.advisor.api.conversation.domain.conversation
 
 import com.advisor.api.common.core.domain.AggregateRoot
+import com.advisor.api.common.core.domain.event.AiResponseGeneratedEvent
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.ConversationMessageId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
@@ -67,7 +68,14 @@ class Conversation private constructor (
             parentMessageId = parentMessageId
         )
 
-        conversation.addDomainEvent(AiResponseGeneratedEvent())
+        conversation.addDomainEvent(
+            AiResponseGeneratedEvent(
+                conversationId = id.value,
+                conversationMessageId = message.id.value,
+                memberId = memberId.value,
+                usedTokens = body.length / 4L,
+            )
+        )
 
         return Pair(conversation, message)
     }
