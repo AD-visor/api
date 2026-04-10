@@ -16,18 +16,12 @@ class RoutingDomainEventPublisher(
     private val logger = KotlinLogging.logger {}
 
     override fun publish(event: DomainEvent) {
-        logger.info("Routing event: ${event::class.simpleName} [id=${event.id}]")
+        logger.info { "Routing event: ${event::class.simpleName} [id=${event.id.value}, channel=${event.channel()}]" }
 
         when (event.channel()) {
-            EventChannel.INTERNAL -> {
-                internalPublisher.publish(event)
-            }
-
-            EventChannel.KAFKA -> {
-                externalPublisher.publish(event)
-            }
-
-            EventChannel.BOTH -> {
+            EventChannel.INTERNAL -> internalPublisher.publish(event)
+            EventChannel.KAFKA    -> externalPublisher.publish(event)
+            EventChannel.BOTH     -> {
                 externalPublisher.publish(event)
                 internalPublisher.publish(event)
             }
