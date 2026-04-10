@@ -18,8 +18,7 @@ class OutboxEventStoreImpl(
             id = event.id.value,
             aggregateType = event.aggregateType,
             aggregateId = event.aggregateId,
-            eventType = event::class.simpleName
-                ?: throw IllegalStateException("익명 클래스는 DomainEvent로 사용할 수 없습니다"),
+            eventType = event.eventType ?: "",
             payload = dataMap,
             createdAt = event.createdAt
         )

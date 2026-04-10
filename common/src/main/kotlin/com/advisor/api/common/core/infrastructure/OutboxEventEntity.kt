@@ -27,6 +27,15 @@ class OutboxEventEntity(
     @JdbcTypeCode(SqlTypes.JSON)
     val payload: Map<String, *>,
 
+    @Column(name = "published_at")
+    var publishedAt: Instant? = null,
+
+    @Column(name = "retry_count", nullable = false)
+    var retryCount: Int = 0,
+
+    @Column(name = "last_error", columnDefinition = "TEXT")
+    var lastError: String? = null,
+
     @Column(nullable = false)
     val createdAt: Instant = Instant.now()
 )
