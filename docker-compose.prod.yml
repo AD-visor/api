@@ -4,6 +4,6 @@ services:
     build:
       target: production
 
-  connect:
+  debezium:
     environment:
       BOOTSTRAP_SERVERS: kafka:9092

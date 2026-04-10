@@ -109,3 +109,8 @@ services:
 networks:
   ad-visor-network:
     driver: bridge
+
+volumes:
+  zookeeper_data:
+  zookeeper_log:
+  kafka_data:
