@@ -10,8 +10,6 @@ data class ConversationView(
     val description: String,
     val targetAudience: String,
     val toneStyle: String,
-    val speechStyle: String,
-    val contentLength: String,
     val platform: String,
     val messages: List<ConversationMessageView>,
     val createdAt: Instant,

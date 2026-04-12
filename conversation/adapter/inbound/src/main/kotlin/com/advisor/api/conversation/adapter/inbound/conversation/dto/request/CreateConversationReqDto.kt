@@ -8,8 +8,6 @@ data class CreateConversationReqDto(
     val description: String,
     val targetAudience: String,
     val toneStyle: String,
-    val speechStyle: String,
-    val contentLength: String,
     val platform: String,
 ) {
     fun toCommand(memberId: Long): CreateConversationCommand {
@@ -20,8 +18,6 @@ data class CreateConversationReqDto(
             description = description,
             targetAudience = targetAudience,
             toneStyle = toneStyle,
-            speechStyle = speechStyle,
-            contentLength = contentLength,
             platform = platform,
         )
     }

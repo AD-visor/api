@@ -11,8 +11,6 @@ object OutputConstraintScripts {
 
     fun tone(style: String) = "Tone & Manner: Adopt a $style tone. Ensure the output aligns with the professional standards of a Business Content Strategist."
 
-    fun speech(style: String) = "Speech Style: Finalize all sentences in a $style manner (e.g., using polite or formal sentence endings as appropriate)."
-
     fun format(promptType: PromptType) = when (promptType) {
         PromptType.COPY_WRITING -> OutputFormat.FREE_TEXT
         PromptType.INTEGRATED_DESIGN -> OutputFormat.IMAGE

@@ -5,15 +5,11 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationProps
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
-import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.Index
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
 
@@ -47,12 +43,6 @@ class ConversationEntity(
     val toneStyle: String,
 
     @Column(nullable = false)
-    val speechStyle: String,
-
-    @Column(nullable = false)
-    val contentLength: String,
-
-    @Column(nullable = false)
     val platform: String,
 
     @Column(nullable = false)
@@ -77,8 +67,6 @@ class ConversationEntity(
                 description = domain.description,
                 targetAudience = domain.targetAudience,
                 toneStyle = domain.toneStyle.value,
-                speechStyle = domain.speechStyle.value,
-                contentLength = domain.contentLength,
                 platform = domain.platform.value,
                 createdAt = domain.createdAt,
                 updatedAt = domain.updatedAt,
@@ -96,8 +84,6 @@ class ConversationEntity(
             description = description,
             targetAudience = targetAudience,
             toneStyle = ToneStyle.create(toneStyle),
-            speechStyle = SpeechStyle.create(speechStyle),
-            contentLength = contentLength,
             platform = ContentPlatform.create(platform),
             createdAt = createdAt,
             updatedAt = updatedAt,

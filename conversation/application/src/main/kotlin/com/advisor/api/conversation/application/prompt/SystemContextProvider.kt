@@ -71,7 +71,6 @@ class SystemContextProvider : PromptPhaseProvider<SystemContext> {
             appendLine("## OUTPUT SPECIFICATIONS")
             appendLine("- ${OutputConstraintScripts.language(constraint.language)}")
             appendLine("- ${OutputConstraintScripts.tone(constraint.toneStyle)}")
-            appendLine("- ${OutputConstraintScripts.speech(constraint.speechStyle)}")
 
             if (constraint.format == OutputFormat.IMAGE) {
                 appendLine("- ${OutputConstraintScripts.imageGenerationFormat()}")

@@ -5,7 +5,6 @@ import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
-import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
 import com.advisor.api.conversation.port.inbound.UpdateConversationUseCase
 import com.advisor.api.conversation.port.inbound.command.UpdateConversationCommand
@@ -31,8 +30,6 @@ class UpdateConversationService(
             newDescription = command.description ?: conversation.description,
             newTargetAudience = command.targetAudience ?: conversation.targetAudience,
             newToneStyle = command.toneStyle?.let { ToneStyle.create(it) } ?: conversation.toneStyle,
-            newSpeechStyle = command.speechStyle?.let { SpeechStyle.create(it) } ?: conversation.speechStyle,
-            newContentLength = command.contentLength ?: conversation.contentLength,
             newPlatform = command.platform?.let { ContentPlatform.create(it) } ?: conversation.platform
         )
 

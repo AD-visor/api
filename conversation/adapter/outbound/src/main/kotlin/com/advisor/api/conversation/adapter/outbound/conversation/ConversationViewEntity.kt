@@ -32,12 +32,6 @@ class ConversationViewEntity(
     val toneStyle: String,
 
     @Column(nullable = false)
-    val speechStyle: String,
-
-    @Column(nullable = false)
-    val contentLength: String,
-
-    @Column(nullable = false)
     val platform: String,
 
     @Column(nullable = false)
@@ -54,8 +48,6 @@ class ConversationViewEntity(
             description = description,
             targetAudience = targetAudience,
             toneStyle = toneStyle,
-            speechStyle = speechStyle,
-            contentLength = contentLength,
             platform = platform,
             messages = messages,
             createdAt = createdAt,

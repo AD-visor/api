@@ -8,7 +8,5 @@ data class UpdateConversationCommand(
     val description: String?,
     val targetAudience: String?,
     val toneStyle: String?,
-    val speechStyle: String?,
-    val contentLength: String?,
     val platform: String?
 )
