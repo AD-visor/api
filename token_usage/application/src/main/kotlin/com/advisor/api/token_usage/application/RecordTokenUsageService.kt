@@ -1,7 +1,7 @@
 package com.advisor.api.token_usage.application
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.*
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.token_usage.domain.TokenUsage
 import com.advisor.api.token_usage.domain.TokenUsageProps
@@ -51,6 +51,6 @@ class RecordTokenUsageService(
 
         tokenUsageStore.save(tokenUsage)
 
-        domainEventPublisher.publish(tokenUsage)
+        domainEventPublisher.publishFrom(tokenUsage)
     }
 }

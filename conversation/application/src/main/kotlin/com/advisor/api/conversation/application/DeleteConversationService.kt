@@ -1,8 +1,8 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.port.inbound.DeleteConversationUseCase
 import com.advisor.api.conversation.port.inbound.command.DeleteConversationCommand
@@ -25,6 +25,6 @@ class DeleteConversationService(
 
         conversationStore.delete(conversation.id)
 
-        domainEventPublisher.publish(updatedConversation)
+        domainEventPublisher.publishFrom(updatedConversation)
     }
 }

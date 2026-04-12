@@ -1,8 +1,8 @@
 package com.advisor.api.subscription.application.subscription
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.subscription.port.inbound.subscription.UseTokensUseCase
 import com.advisor.api.subscription.port.inbound.subscription.command.UseTokensCommand
 import com.advisor.api.subscription.port.outbound.plan.PlanStore
@@ -31,6 +31,6 @@ class UseTokensService(
 
         subscriptionStore.save(updatedSubscription)
 
-        domainEventPublisher.publish(updatedSubscription)
+        domainEventPublisher.publishFrom(updatedSubscription)
     }
 }

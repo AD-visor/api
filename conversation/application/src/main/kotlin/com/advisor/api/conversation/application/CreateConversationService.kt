@@ -1,8 +1,8 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationProps
@@ -46,7 +46,7 @@ class CreateConversationService(
 
         conversationStore.save(conversation)
 
-        domainEventPublisher.publish(conversation)
+        domainEventPublisher.publishFrom(conversation)
 
         return CreateConversationResult(conversation.id.value)
     }

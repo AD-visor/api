@@ -1,8 +1,8 @@
 package com.advisor.api.subscription.application.subscription
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.subscription.port.inbound.subscription.CancelSubscriptionUseCase
 import com.advisor.api.subscription.port.inbound.subscription.command.UpdateSubscriptionStatusCommand
 import com.advisor.api.subscription.port.outbound.subscription.SubscriptionStore
@@ -24,6 +24,6 @@ class CancelSubscriptionService(
 
         subscriptionStore.save(updatedSubscription)
 
-        domainEventPublisher.publish(updatedSubscription)
+        domainEventPublisher.publishFrom(updatedSubscription)
     }
 }

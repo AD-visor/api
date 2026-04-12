@@ -1,7 +1,7 @@
 package com.advisor.api.iam.application.member
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.iam.port.inbound.member.command.CreateMemberCommand
 import com.advisor.api.iam.domain.member.Member
 import com.advisor.api.iam.domain.member.MemberProps
@@ -33,13 +33,13 @@ class CreateMemberService(
 
         memberStore.save(member)
 
-        domainEventPublisher.publish(member)
+        domainEventPublisher.publishFrom(member)
     }
 
     private fun unDelete(existingMember: Member) {
         val updatedMember = existingMember.unDelete()
         memberStore.save(updatedMember)
 
-        domainEventPublisher.publish(updatedMember)
+        domainEventPublisher.publishFrom(updatedMember)
     }
 }

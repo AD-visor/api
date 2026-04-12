@@ -1,8 +1,8 @@
 package com.advisor.api.subscription.application.plan
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.Money
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.subscription.domain.plan.Plan
 import com.advisor.api.subscription.domain.plan.PlanProps
@@ -37,6 +37,6 @@ class CreatePlanService(
 
         planStore.save(plan)
 
-        domainEventPublisher.publish(plan)
+        domainEventPublisher.publishFrom(plan)
     }
 }

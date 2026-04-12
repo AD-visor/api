@@ -1,7 +1,7 @@
 package com.advisor.api.iam.application.member
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.iam.port.inbound.member.DeleteMemberUseCase
 import com.advisor.api.iam.port.inbound.member.command.DeleteMemberCommand
 import com.advisor.api.iam.port.outbound.member.MemberStore
@@ -18,6 +18,6 @@ class DeleteMemberService(
 
         memberStore.save(updatedMember)
 
-        domainEventPublisher.publish(updatedMember)
+        domainEventPublisher.publishFrom(updatedMember)
     }
 }

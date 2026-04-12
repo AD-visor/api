@@ -1,10 +1,10 @@
 package com.advisor.api.subscription.application.subscription
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.subscription.domain.subscription.Subscription
 import com.advisor.api.subscription.domain.subscription.SubscriptionProps
@@ -52,7 +52,7 @@ class RegisterSubscriptionService(
 
         subscriptionStore.save(subscription)
 
-        domainEventPublisher.publish(subscription)
+        domainEventPublisher.publishFrom(subscription)
     }
 
     private fun calculateExpiredAt(startedAt: Instant, term: String): Instant {
