@@ -9,13 +9,11 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.Date
 import javax.crypto.SecretKey
 
 @Component
-@EnableConfigurationProperties(JwtProperties::class)
 class JwtTokenProvider(
     private val props: JwtProperties
 ) : AuthTokenPort {

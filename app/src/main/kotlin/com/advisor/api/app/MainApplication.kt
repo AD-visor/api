@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 
 @SpringBootApplication(scanBasePackages = ["com.advisor.api"])
-@ConfigurationPropertiesScan
+@ConfigurationPropertiesScan(basePackages = ["com.advisor.api"])
 class MainApplication
 
 fun main(args: Array<String>) {
