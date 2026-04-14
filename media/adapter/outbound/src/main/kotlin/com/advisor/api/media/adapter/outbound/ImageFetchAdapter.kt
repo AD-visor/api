@@ -30,7 +30,7 @@ class ImageFetchAdapter(
     }
 
     private fun isBase64(input: String): Boolean {
-        return input.startsWith("data:image") || !input.startsWith("http")
+        return input.startsWith("data:image") || input.length > 5000
     }
 
     private fun decodeBase64Image(base64String: String): ImageFetchResult {
