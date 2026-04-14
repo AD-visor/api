@@ -20,7 +20,7 @@ class MediaController(
     @DeleteMapping("/{mediaId}")
     fun deleteMedia(
         @AuthenticationPrincipal member: CustomUserDetails,
-        @PathVariable("mediaId") mediaId: String
+        @PathVariable mediaId: String
     ): ResponseEntity<BaseApiResponse<Unit>> {
         val command = DeleteMediaCommand(
             mediaId = mediaId.toLong(),
