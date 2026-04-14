@@ -37,7 +37,6 @@ class SystemContextBuilder {
         val outputConstraint = OutputConstraintContext(
             language = "KOREAN",
             toneStyle = conversation.toneStyle.value,
-            speechStyle = conversation.speechStyle.value,
             format = outputFormat,
             outputSchema = OutputConstraintScripts.schema(promptType)
         )

@@ -1,4 +1,4 @@
-package com.advisor.api.iam.port.inbound.auth.result
+package com.advisor.api.iam.port.inbound.auth
 
 import com.advisor.api.iam.port.inbound.auth.command.OAuth2LogoutCommand
 

@@ -35,8 +35,6 @@ class ImageFetchAdapter(
 
     private fun decodeBase64Image(base64String: String): ImageFetchResult {
         return try {
-            logger.info { "        📦 Base64 데이터 디코딩 시작" }
-
             val pureBase64 = if (base64String.contains(",")) {
                 base64String.substringAfter(",")
             } else {
@@ -44,7 +42,8 @@ class ImageFetchAdapter(
             }
 
             val imageBytes = java.util.Base64.getDecoder().decode(pureBase64)
-            logger.info { "        ✅ 디코딩 완료: ${imageBytes.size} bytes" }
+
+            logger.debug { "Base64 decoded. Size: ${imageBytes.size} bytes" }
 
             ImageFetchResult(imageBytes)
         } catch (e: Exception) {
@@ -57,29 +56,14 @@ class ImageFetchAdapter(
 
     private suspend fun fetchFromUrl(imageUrl: String): ImageFetchResult {
         return withContext(Dispatchers.IO) {
-            logger.info { "        📥 이미지 다운로드 시작" }
+            logger.info { "이미지 다운로드 시작" }
 
-            // ✅ URL을 그대로 사용 (재인코딩 없음)
             val request = HttpGet(imageUrl)
-            val response = httpClient.executeOpen(null, request, null)
-
-            response.use { response ->
+            httpClient.executeOpen(null, request, null).use { response ->
                 val statusCode = response.code
 
                 if (statusCode != 200) {
-                    val body = try {
-                        EntityUtils.toString(response.entity)
-                    } catch (e: Exception) {
-                        "응답 본문 읽기 실패"
-                    }
-
-                    logger.error {
-                        """
-                    ❌ HTTP 에러
-                    - 상태 코드: $statusCode
-                    - 응답: ${body.take(300)}
-                    """.trimIndent()
-                    }
+                    logger.error { "HTTP Error $statusCode during image download" }
 
                     throw CustomException(
                         MediaInfrastructureExceptionCode.MEDIA_FILE_DOWNLOAD_FAILURE,
@@ -94,7 +78,7 @@ class ImageFetchAdapter(
                     )
 
                 val imageBytes = EntityUtils.toByteArray(entity)
-                logger.info { "        ✅ 다운로드 완료: ${imageBytes.size} bytes" }
+                logger.info { "다운로드 완료: ${imageBytes.size} bytes" }
 
                 ImageFetchResult(imageBytes)
             }

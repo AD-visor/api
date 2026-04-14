@@ -1,14 +1,13 @@
 package com.advisor.api.conversation.application
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.ConversationId
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.common.core.infrastructure.SnowFlakeIdUtil
 import com.advisor.api.conversation.domain.conversation.Conversation
 import com.advisor.api.conversation.domain.conversation.ConversationProps
 import com.advisor.api.conversation.port.outbound.ConversationStore
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
-import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
 import com.advisor.api.conversation.port.inbound.CreateConversationUseCase
 import com.advisor.api.conversation.port.inbound.command.CreateConversationCommand
@@ -32,8 +31,6 @@ class CreateConversationService(
             description = command.description,
             targetAudience = command.targetAudience,
             toneStyle = ToneStyle.create(command.toneStyle),
-            speechStyle = SpeechStyle.create(command.speechStyle),
-            contentLength = command.contentLength,
             platform = ContentPlatform.create(command.platform),
             createdAt = Instant.now(),
             updatedAt = Instant.now()
@@ -46,7 +43,7 @@ class CreateConversationService(
 
         conversationStore.save(conversation)
 
-        domainEventPublisher.publish(conversation)
+        domainEventPublisher.publishFrom(conversation)
 
         return CreateConversationResult(conversation.id.value)
     }

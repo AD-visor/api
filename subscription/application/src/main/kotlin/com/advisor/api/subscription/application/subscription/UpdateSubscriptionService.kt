@@ -1,10 +1,10 @@
 package com.advisor.api.subscription.application.subscription
 
-import com.advisor.api.common.core.domain.DomainEventPublisher
 import com.advisor.api.common.core.domain.vo.identifier.MemberId
 import com.advisor.api.common.core.domain.vo.identifier.PaymentId
 import com.advisor.api.common.core.domain.vo.identifier.PlanId
 import com.advisor.api.common.core.domain.vo.identifier.SubscriptionId
+import com.advisor.api.common.core.infrastructure.DomainEventPublisher
 import com.advisor.api.subscription.domain.subscription.vo.MonthlyUsage
 import com.advisor.api.subscription.domain.subscription.vo.SubscriptionStatus
 import com.advisor.api.subscription.port.inbound.subscription.UpdateSubscriptionUseCase
@@ -36,6 +36,6 @@ class UpdateSubscriptionService(
 
         subscriptionStore.save(updatedSubscription)
 
-        domainEventPublisher.publish(updatedSubscription)
+        domainEventPublisher.publishFrom(updatedSubscription)
     }
 }

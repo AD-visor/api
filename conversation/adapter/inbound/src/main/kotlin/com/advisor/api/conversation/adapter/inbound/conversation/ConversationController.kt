@@ -80,7 +80,6 @@ class ConversationController(
                     )
                 )
             } catch (e: Exception) {
-                // ✅ 상세한 에러 로깅
                 logger.error(e) {
                     """
                     ❌ AI 처리 실패

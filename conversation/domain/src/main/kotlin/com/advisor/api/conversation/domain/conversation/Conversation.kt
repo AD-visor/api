@@ -12,7 +12,6 @@ import com.advisor.api.conversation.domain.conversation.event.*
 import com.advisor.api.conversation.domain.conversation.vo.ContentPlatform
 import com.advisor.api.conversation.domain.conversation.vo.MessageRole
 import com.advisor.api.conversation.domain.conversation.vo.MessageStatus
-import com.advisor.api.conversation.domain.conversation.vo.SpeechStyle
 import com.advisor.api.conversation.domain.conversation.vo.ToneStyle
 import java.time.Instant
 
@@ -128,8 +127,6 @@ class Conversation private constructor (
         newDescription: String,
         newTargetAudience: String,
         newToneStyle: ToneStyle,
-        newSpeechStyle: SpeechStyle,
-        newContentLength: String,
         newPlatform: ContentPlatform
     ): Conversation {
         val updatedConversation = Conversation(id, props.copy(
@@ -138,8 +135,6 @@ class Conversation private constructor (
             description = newDescription,
             targetAudience = newTargetAudience,
             toneStyle = newToneStyle,
-            speechStyle = newSpeechStyle,
-            contentLength = newContentLength,
             platform = newPlatform,
             updatedAt = Instant.now()
         ))
@@ -235,8 +230,6 @@ class Conversation private constructor (
     val description: String get() = props.description
     val targetAudience: String get() = props.targetAudience
     val toneStyle: ToneStyle get() = props.toneStyle
-    val speechStyle: SpeechStyle get() = props.speechStyle
-    val contentLength: String get() = props.contentLength
     val platform: ContentPlatform get() = props.platform
     val updatedAt: Instant get() = props.updatedAt
     val createdAt: Instant get() = props.createdAt

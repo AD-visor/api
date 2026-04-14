@@ -6,7 +6,7 @@ import com.advisor.api.common.core.presentation.CustomUserDetails
 import com.advisor.api.iam.port.inbound.auth.RenewTokenUseCase
 import com.advisor.api.iam.port.inbound.auth.command.OAuth2LogoutCommand
 import com.advisor.api.iam.port.inbound.auth.command.RenewTokenCommand
-import com.advisor.api.iam.port.inbound.auth.result.OAuth2LogoutUseCase
+import com.advisor.api.iam.port.inbound.auth.OAuth2LogoutUseCase
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
